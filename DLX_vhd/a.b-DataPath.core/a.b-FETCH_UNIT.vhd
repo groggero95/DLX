@@ -58,7 +58,7 @@ component IRAM
 end component;
 
 
-signal NEW_PC, CUR_PC, NEXT_PC, TMP_INST_OUT : std_logic_vector(NB-1 downto 0);
+signal NEW_PC, CUR_PC, NEXT_PC, IRAM_OUT, TMP_INST_OUT: std_logic_vector(NB-1 downto 0);
 
 
 begin
@@ -67,10 +67,18 @@ N_PC : FD generic map (NB) port map (CLK,RST,ENABLE,NEXT_PC,NPC);
 
 PC : FD generic map (NB) port map (CLK,RST,ENABLE,NEW_PC,CUR_PC);
 
-imem : IRAM port map (RST,CUR_PC,TMP_INST_OUT);
+imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
 
 INST : FD generic map (NB) port map (CLK,RST,ENABLE,TMP_INST_OUT,INST_OUT);
 
+process(PC_SEL,IRAM_OUT)
+begin
+  case PC_SEL is
+    when '0' => TMP_INST_OUT <= IRAM_OUT;
+    when '1' => TMP_INST_OUT <= (others => '0');
+    when others => TMP_INST_OUT <= (others => '0');
+  end case;
+end process;
 -- 0 -> pc+4 | 1 -> from_alu
 pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,PC_SEL,NEW_PC);
 
