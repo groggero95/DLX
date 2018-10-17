@@ -141,7 +141,7 @@ begin  -- dlx_cu_rtl
 
           when memory => NEXT_INST1 <= write_back;
 
-          when write_back => if ((OPCODE = ITYPE_J)) then --or (OPCODE1 = ITYPE_J)) then
+          when write_back => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) ) then --or (OPCODE1 = ITYPE_J)) then
           					 	NEXT_INST1 <= stall_if;
           					 else
           					 	NEXT_INST1 <= fetch;
@@ -181,7 +181,7 @@ begin  -- dlx_cu_rtl
 
           when memory => NEXT_INST2 <= write_back;
 
-          when write_back => if ((OPCODE = ITYPE_J)) then-- or (OPCODE1 = ITYPE_J)) then
+          when write_back => if ((OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then-- or (OPCODE1 = ITYPE_J)) then
           					 	NEXT_INST2 <= stall_if;
           					 else
           					 	NEXT_INST2 <= fetch;
@@ -220,7 +220,7 @@ begin  -- dlx_cu_rtl
 
           when memory => NEXT_INST3 <= write_back;
 
-          when write_back => if ((OPCODE = ITYPE_J)) then-- or (OPCODE1 = ITYPE_J)) then
+          when write_back => if ((OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then-- or (OPCODE1 = ITYPE_J)) then
           					 	NEXT_INST3 <= stall_if;
           					 else
           					 	NEXT_INST3 <= fetch;
@@ -259,7 +259,7 @@ begin  -- dlx_cu_rtl
 
           when memory => NEXT_INST4 <= write_back;
 
-          when write_back => if ((OPCODE = ITYPE_J)) then-- or (OPCODE1 = ITYPE_J)) then
+          when write_back => if ((OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then-- or (OPCODE1 = ITYPE_J)) then
           					 	NEXT_INST4 <= stall_if;
           					 else
           					 	NEXT_INST4 <= fetch;
@@ -298,7 +298,7 @@ begin  -- dlx_cu_rtl
 
           when memory => NEXT_INST5 <= write_back;
 
-          when write_back => if ((OPCODE = ITYPE_J)) then -- or (OPCODE1 = ITYPE_J)) then
+          when write_back => if ((OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then -- or (OPCODE1 = ITYPE_J)) then
           					 	NEXT_INST5 <= stall_if;
           					 else
           					 	NEXT_INST5 <= fetch;
@@ -329,7 +329,7 @@ begin  -- dlx_cu_rtl
             
           when fetch =>  
             case OPCODE is
-              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => cw1 <= (CW_SIZE-1 => '1', others => '0');
+              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU | ITYPE_JAL | ITYPE_JR | ITYPE_JALR => cw1 <= (CW_SIZE-1 => '1', others => '0');
               when others => cw1 <= (CW_SIZE-1 => '0', others => '0');
             end case;
                 
@@ -345,10 +345,15 @@ begin  -- dlx_cu_rtl
 	                              	when others   =>   cw1(CW_SIZE-9) <= '0';                       
 	                            end case;
 
-                when ITYPE_J => 
+                when ITYPE_J | ITYPE_JAL => 
                                 cw1(CW_SIZE-1) <= '0';
                              	  cw1(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
                              	  cw1(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR | ITYPE_JALR => 
+                                cw1(CW_SIZE-1) <= '0';
+                                cw1(CW_SIZE-2 downto CW_SIZE-9) <= "11000100";
+                                cw1(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_ADDI | ITYPE_SUBI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_LB | ITYPE_LH | ITYPE_LW => 
                                    cw1(CW_SIZE-1) <= '0';
@@ -403,6 +408,18 @@ begin  -- dlx_cu_rtl
                 				        cw1(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
                             	  cw1(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
 
+                when ITYPE_JAL => cw1(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw1(CW_SIZE-10 downto CW_SIZE-20) <= "10010100001"; 
+                                  cw1(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR => cw1(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw1(CW_SIZE-10 downto CW_SIZE-20) <= "11100000001"; 
+                                  cw1(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JALR => cw1(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw1(CW_SIZE-10 downto CW_SIZE-20) <= "11110100001"; 
+                                  cw1(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                  
                 when ITYPE_ADDI  | ITYPE_ADDUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => 
                                    cw1(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                                    cw1(CW_SIZE-10 downto CW_SIZE-20) <= "11000000000"; 
@@ -485,7 +502,7 @@ begin  -- dlx_cu_rtl
 
           when memory => 
             case OPCODE3 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                cw1(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
                                cw1(CW_SIZE-21 downto CW_SIZE-24) <= "1000";
                                cw1(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
@@ -516,16 +533,16 @@ begin  -- dlx_cu_rtl
                                	  cw1(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
                                   cw1(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
-                when ITYPE_J | ITYPE_NOP => cw1 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_NOP => cw1 <= (others => '0');
               	when others => cw1 <= (others => '0');
             end case;
                     
 
           when write_back => 
             case OPCODE4 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                 cw1 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '1',others => '0');
-                when ITYPE_J | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw1 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw1 <= (others => '0');
                 when ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU =>  cw1 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '0',others => '0');
               	when others => cw1 <= (others => '0');             
             end case;
@@ -554,26 +571,31 @@ P_OUTPUTS_INST2: process(INST2,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC1,FUNC
             
           when fetch =>  
             case OPCODE is
-              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => cw2 <= (CW_SIZE-1 => '1', others => '0');
+              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU | ITYPE_JAL | ITYPE_JR | ITYPE_JALR => cw2 <= (CW_SIZE-1 => '1', others => '0');
               when others => cw2 <= (CW_SIZE-1 => '0', others => '0');
             end case;
                 
           when decode =>
             case OPCODE1 is
-              	when RTYPE  => 	cw2(CW_SIZE-1) <= '0';
-                             	  cw2(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
-                             	  cw2(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                when RTYPE  =>  cw2(CW_SIZE-1) <= '0';
+                                cw2(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
+                                cw2(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
 
-	                            case FUNC1 is
-	                              	when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw2(CW_SIZE-9) <= '1';               
-	                              	when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw2(CW_SIZE-9) <= '0';                 
-	                              	when others   =>   cw2(CW_SIZE-9) <= '0';                       
-	                            end case;
+                              case FUNC1 is
+                                  when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw2(CW_SIZE-9) <= '1';               
+                                  when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw2(CW_SIZE-9) <= '0';                 
+                                  when others   =>   cw2(CW_SIZE-9) <= '0';                       
+                              end case;
 
-                when ITYPE_J => 
+                when ITYPE_J | ITYPE_JAL => 
                                 cw2(CW_SIZE-1) <= '0';
-                             	  cw2(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
-                             	  cw2(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                                cw2(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
+                                cw2(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR | ITYPE_JALR => 
+                                cw2(CW_SIZE-1) <= '0';
+                                cw2(CW_SIZE-2 downto CW_SIZE-9) <= "11000100";
+                                cw2(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_ADDI | ITYPE_SUBI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_LB | ITYPE_LH | ITYPE_LW => 
                                    cw2(CW_SIZE-1) <= '0';
@@ -597,37 +619,49 @@ P_OUTPUTS_INST2: process(INST2,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC1,FUNC
 
           when execute =>
             case OPCODE2 is
-              	when RTYPE => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                when RTYPE => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                               cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
   
-	                            case FUNC2 is
-	                            	when RTYPE_SLL  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
-	                            	when RTYPE_SRL  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_SRA  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_ADD  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_ADDU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_SUB  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_SUBU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_AND  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
-	                            	when RTYPE_OR   => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
-	                            	when RTYPE_XOR  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
-	                            	when RTYPE_SEQ  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
-	                            	when RTYPE_SNE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
-	                            	when RTYPE_SLT  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGT  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when RTYPE_SLTU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGTU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLEU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGEU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when others   =>   cw2(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
-	                            end case;
+                              case FUNC2 is
+                                when RTYPE_SLL  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
+                                when RTYPE_SRL  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_SRA  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_ADD  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_ADDU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_SUB  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_SUBU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_AND  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
+                                when RTYPE_OR   => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
+                                when RTYPE_XOR  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
+                                when RTYPE_SEQ  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
+                                when RTYPE_SNE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
+                                when RTYPE_SLT  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGT  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGE  => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when RTYPE_SLTU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGTU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLEU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGEU => cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when others   =>   cw2(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
+                              end case;
 
                 when ITYPE_J => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
-                				        cw2(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
-                            	  cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                                cw2(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
+                                cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
 
+                when ITYPE_JAL => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw2(CW_SIZE-10 downto CW_SIZE-20) <= "10010100001"; 
+                                  cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11100000001"; 
+                                  cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JALR => cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11110100001"; 
+                                  cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                  
                 when ITYPE_ADDI  | ITYPE_ADDUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => 
                                    cw2(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                                    cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11000000000"; 
@@ -704,55 +738,55 @@ P_OUTPUTS_INST2: process(INST2,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC1,FUNC
                                   cw2(CW_SIZE-10 downto CW_SIZE-20) <= "11000111010"; 
                                   cw2(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
                                 
-              	when others =>  cw2 <= (others => '0');
+                when others =>  cw2 <= (others => '0');
             end case;  
 
 
           when memory => 
             case OPCODE3 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
                                cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1000";
                                cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SB  => cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SH  => cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SW  => cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LB | ITYPE_LBU => 
-                				  cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
+                          cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LH | ITYPE_LHU => 
-                				  cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
+                          cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LW  => cw2(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
+                                  cw2(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
                                   cw2(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
-                when ITYPE_J | ITYPE_NOP => cw2 <= (others => '0');
-              	when others => cw2 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_NOP => cw2 <= (others => '0');
+                when others => cw2 <= (others => '0');
             end case;
                     
 
           when write_back => 
             case OPCODE4 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                 cw2 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '1',others => '0');
-                when ITYPE_J | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw2 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw2 <= (others => '0');
                 when ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU =>  cw2 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '0',others => '0');
-              	when others => cw2 <= (others => '0');             
+                when others => cw2 <= (others => '0');             
             end case;
 
           when stall_if => cw2 <= (others => '0');
@@ -766,7 +800,7 @@ P_OUTPUTS_INST2: process(INST2,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC1,FUNC
           when stall_wb => cw2 <= (others => '0');
 
           when others => cw2 <=  (others => '0');
-        end case;
+        end case;      
           
     end process P_OUTPUTS_INST2;
 
@@ -779,26 +813,31 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
             
           when fetch =>  
             case OPCODE is
-              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => cw3 <= (CW_SIZE-1 => '1', others => '0');
+              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU | ITYPE_JAL | ITYPE_JR | ITYPE_JALR => cw3 <= (CW_SIZE-1 => '1', others => '0');
               when others => cw3 <= (CW_SIZE-1 => '0', others => '0');
             end case;
                 
           when decode =>
             case OPCODE1 is
-              	when RTYPE  => 	cw3(CW_SIZE-1) <= '0';
-                             	  cw3(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
-                             	  cw3(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                when RTYPE  =>  cw3(CW_SIZE-1) <= '0';
+                                cw3(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
+                                cw3(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
 
-	                            case FUNC1 is
-	                              	when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw3(CW_SIZE-9) <= '1';               
-	                              	when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw3(CW_SIZE-9) <= '0';                 
-	                              	when others   =>   cw3(CW_SIZE-9) <= '0';                       
-	                            end case;
+                              case FUNC1 is
+                                  when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw3(CW_SIZE-9) <= '1';               
+                                  when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw3(CW_SIZE-9) <= '0';                 
+                                  when others   =>   cw3(CW_SIZE-9) <= '0';                       
+                              end case;
 
-                when ITYPE_J => 
+                when ITYPE_J | ITYPE_JAL => 
                                 cw3(CW_SIZE-1) <= '0';
-                             	  cw3(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
-                             	  cw3(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                                cw3(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
+                                cw3(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR | ITYPE_JALR => 
+                                cw3(CW_SIZE-1) <= '0';
+                                cw3(CW_SIZE-2 downto CW_SIZE-9) <= "11000100";
+                                cw3(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_ADDI | ITYPE_SUBI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_LB | ITYPE_LH | ITYPE_LW => 
                                    cw3(CW_SIZE-1) <= '0';
@@ -822,37 +861,49 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
 
           when execute =>
             case OPCODE2 is
-              	when RTYPE => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                when RTYPE => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                               cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
   
-	                            case FUNC2 is
-	                            	when RTYPE_SLL  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
-	                            	when RTYPE_SRL  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_SRA  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_ADD  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_ADDU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_SUB  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_SUBU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_AND  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
-	                            	when RTYPE_OR   => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
-	                            	when RTYPE_XOR  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
-	                            	when RTYPE_SEQ  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
-	                            	when RTYPE_SNE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
-	                            	when RTYPE_SLT  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGT  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when RTYPE_SLTU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGTU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLEU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGEU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when others   =>   cw3(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
-	                            end case;
+                              case FUNC2 is
+                                when RTYPE_SLL  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
+                                when RTYPE_SRL  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_SRA  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_ADD  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_ADDU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_SUB  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_SUBU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_AND  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
+                                when RTYPE_OR   => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
+                                when RTYPE_XOR  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
+                                when RTYPE_SEQ  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
+                                when RTYPE_SNE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
+                                when RTYPE_SLT  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGT  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGE  => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when RTYPE_SLTU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGTU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLEU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGEU => cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when others   =>   cw3(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
+                              end case;
 
                 when ITYPE_J => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
-                				        cw3(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
-                            	  cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                                cw3(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
+                                cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
 
+                when ITYPE_JAL => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw3(CW_SIZE-10 downto CW_SIZE-20) <= "10010100001"; 
+                                  cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11100000001"; 
+                                  cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JALR => cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11110100001"; 
+                                  cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                  
                 when ITYPE_ADDI  | ITYPE_ADDUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => 
                                    cw3(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                                    cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11000000000"; 
@@ -929,55 +980,55 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
                                   cw3(CW_SIZE-10 downto CW_SIZE-20) <= "11000111010"; 
                                   cw3(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
                                 
-              	when others =>  cw3 <= (others => '0');
+                when others =>  cw3 <= (others => '0');
             end case;  
 
 
           when memory => 
             case OPCODE3 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
                                cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1000";
                                cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SB  => cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SH  => cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SW  => cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LB | ITYPE_LBU => 
-                				  cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
+                          cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LH | ITYPE_LHU => 
-                				  cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
+                          cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LW  => cw3(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
+                                  cw3(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
                                   cw3(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
-                when ITYPE_J | ITYPE_NOP => cw3 <= (others => '0');
-              	when others => cw3 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_NOP => cw3 <= (others => '0');
+                when others => cw3 <= (others => '0');
             end case;
                     
 
           when write_back => 
             case OPCODE4 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                 cw3 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '1',others => '0');
-                when ITYPE_J | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw3 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw3 <= (others => '0');
                 when ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU =>  cw3 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '0',others => '0');
-              	when others => cw3 <= (others => '0');             
+                when others => cw3 <= (others => '0');             
             end case;
 
           when stall_if => cw3 <= (others => '0');
@@ -991,7 +1042,8 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
           when stall_wb => cw3 <= (others => '0');
 
           when others => cw3 <=  (others => '0');
-        end case;           
+        end case; 
+
     end process P_OUTPUTS_INST3;
 
 
@@ -1003,26 +1055,31 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
             
           when fetch =>  
             case OPCODE is
-              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => cw4 <= (CW_SIZE-1 => '1', others => '0');
+              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU | ITYPE_JAL | ITYPE_JR | ITYPE_JALR => cw4 <= (CW_SIZE-1 => '1', others => '0');
               when others => cw4 <= (CW_SIZE-1 => '0', others => '0');
             end case;
                 
           when decode =>
             case OPCODE1 is
-              	when RTYPE  => 	cw4(CW_SIZE-1) <= '0';
-                             	  cw4(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
-                             	  cw4(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                when RTYPE  =>  cw4(CW_SIZE-1) <= '0';
+                                cw4(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
+                                cw4(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
 
-	                            case FUNC1 is
-	                              	when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw4(CW_SIZE-9) <= '1';               
-	                              	when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw4(CW_SIZE-9) <= '0';                 
-	                              	when others   =>   cw4(CW_SIZE-9) <= '0';                       
-	                            end case;
+                              case FUNC1 is
+                                  when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw4(CW_SIZE-9) <= '1';               
+                                  when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw4(CW_SIZE-9) <= '0';                 
+                                  when others   =>   cw4(CW_SIZE-9) <= '0';                       
+                              end case;
 
-                when ITYPE_J => 
+                when ITYPE_J | ITYPE_JAL => 
                                 cw4(CW_SIZE-1) <= '0';
-                             	  cw4(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
-                             	  cw4(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                                cw4(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
+                                cw4(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR | ITYPE_JALR => 
+                                cw4(CW_SIZE-1) <= '0';
+                                cw4(CW_SIZE-2 downto CW_SIZE-9) <= "11000100";
+                                cw4(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_ADDI | ITYPE_SUBI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_LB | ITYPE_LH | ITYPE_LW => 
                                    cw4(CW_SIZE-1) <= '0';
@@ -1046,37 +1103,49 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
 
           when execute =>
             case OPCODE2 is
-              	when RTYPE => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                when RTYPE => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                               cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
   
-	                            case FUNC2 is
-	                            	when RTYPE_SLL  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
-	                            	when RTYPE_SRL  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_SRA  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_ADD  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_ADDU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_SUB  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_SUBU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_AND  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
-	                            	when RTYPE_OR   => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
-	                            	when RTYPE_XOR  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
-	                            	when RTYPE_SEQ  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
-	                            	when RTYPE_SNE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
-	                            	when RTYPE_SLT  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGT  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when RTYPE_SLTU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGTU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLEU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGEU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when others   =>   cw4(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
-	                            end case;
+                              case FUNC2 is
+                                when RTYPE_SLL  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
+                                when RTYPE_SRL  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_SRA  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_ADD  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_ADDU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_SUB  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_SUBU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_AND  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
+                                when RTYPE_OR   => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
+                                when RTYPE_XOR  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
+                                when RTYPE_SEQ  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
+                                when RTYPE_SNE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
+                                when RTYPE_SLT  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGT  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGE  => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when RTYPE_SLTU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGTU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLEU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGEU => cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when others   =>   cw4(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
+                              end case;
 
                 when ITYPE_J => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
-                				        cw4(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
-                            	  cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                                cw4(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
+                                cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
 
+                when ITYPE_JAL => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw4(CW_SIZE-10 downto CW_SIZE-20) <= "10010100001"; 
+                                  cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11100000001"; 
+                                  cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JALR => cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11110100001"; 
+                                  cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                  
                 when ITYPE_ADDI  | ITYPE_ADDUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => 
                                    cw4(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                                    cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11000000000"; 
@@ -1153,55 +1222,55 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
                                   cw4(CW_SIZE-10 downto CW_SIZE-20) <= "11000111010"; 
                                   cw4(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
                                 
-              	when others =>  cw4 <= (others => '0');
+                when others =>  cw4 <= (others => '0');
             end case;  
 
 
           when memory => 
             case OPCODE3 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
                                cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1000";
                                cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SB  => cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SH  => cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SW  => cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LB | ITYPE_LBU => 
-                				  cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
+                          cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LH | ITYPE_LHU => 
-                				  cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
+                          cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LW  => cw4(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
+                                  cw4(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
                                   cw4(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
-                when ITYPE_J | ITYPE_NOP => cw4 <= (others => '0');
-              	when others => cw4 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_NOP => cw4 <= (others => '0');
+                when others => cw4 <= (others => '0');
             end case;
                     
 
           when write_back => 
             case OPCODE4 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                 cw4 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '1',others => '0');
-                when ITYPE_J | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw4 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw4 <= (others => '0');
                 when ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU =>  cw4 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '0',others => '0');
-              	when others => cw4 <= (others => '0');             
+                when others => cw4 <= (others => '0');             
             end case;
 
           when stall_if => cw4 <= (others => '0');
@@ -1215,7 +1284,7 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
           when stall_wb => cw4 <= (others => '0');
 
           when others => cw4 <=  (others => '0');
-        end case;
+        end case;  
 
     end process P_OUTPUTS_INST4;
 
@@ -1228,26 +1297,31 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
             
           when fetch =>  
             case OPCODE is
-              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => cw5 <= (CW_SIZE-1 => '1', others => '0');
+              when RTYPE | ITYPE_J | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU | ITYPE_JAL | ITYPE_JR | ITYPE_JALR => cw5 <= (CW_SIZE-1 => '1', others => '0');
               when others => cw5 <= (CW_SIZE-1 => '0', others => '0');
             end case;
                 
           when decode =>
             case OPCODE1 is
-              	when RTYPE  => 	cw5(CW_SIZE-1) <= '0';
-                             	  cw5(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
-                             	  cw5(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                when RTYPE  =>  cw5(CW_SIZE-1) <= '0';
+                                cw5(CW_SIZE-2 downto CW_SIZE-8) <= "1000011";
+                                cw5(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
 
-	                            case FUNC1 is
-	                              	when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw5(CW_SIZE-9) <= '1';               
-	                              	when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw5(CW_SIZE-9) <= '0';                 
-	                              	when others   =>   cw5(CW_SIZE-9) <= '0';                       
-	                            end case;
+                              case FUNC1 is
+                                  when RTYPE_SLL | RTYPE_SRL | RTYPE_ADDU | RTYPE_SUBU | RTYPE_SLTU | RTYPE_SGTU | RTYPE_SLEU | RTYPE_SGEU => cw5(CW_SIZE-9) <= '1';               
+                                  when RTYPE_SRA | RTYPE_ADD | RTYPE_SUB  | RTYPE_AND  | RTYPE_OR   | RTYPE_XOR  | RTYPE_SEQ  | RTYPE_SNE | RTYPE_SLT | RTYPE_SGT | RTYPE_SLE | RTYPE_SGE => cw5(CW_SIZE-9) <= '0';                 
+                                  when others   =>   cw5(CW_SIZE-9) <= '0';                       
+                              end case;
 
-                when ITYPE_J => 
+                when ITYPE_J | ITYPE_JAL => 
                                 cw5(CW_SIZE-1) <= '0';
-                             	  cw5(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
-                             	  cw5(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+                                cw5(CW_SIZE-2 downto CW_SIZE-9) <= "11000000";
+                                cw5(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR | ITYPE_JALR => 
+                                cw5(CW_SIZE-1) <= '0';
+                                cw5(CW_SIZE-2 downto CW_SIZE-9) <= "11000100";
+                                cw5(CW_SIZE-10 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_ADDI | ITYPE_SUBI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_LB | ITYPE_LH | ITYPE_LW => 
                                    cw5(CW_SIZE-1) <= '0';
@@ -1271,37 +1345,49 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
 
           when execute =>
             case OPCODE2 is
-              	when RTYPE => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                when RTYPE => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                               cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
   
-	                            case FUNC2 is
-	                            	when RTYPE_SLL  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
-	                            	when RTYPE_SRL  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_SRA  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
-	                            	when RTYPE_ADD  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_ADDU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
-	                            	when RTYPE_SUB  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_SUBU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
-	                            	when RTYPE_AND  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
-	                            	when RTYPE_OR   => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
-	                            	when RTYPE_XOR  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
-	                            	when RTYPE_SEQ  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
-	                            	when RTYPE_SNE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
-	                            	when RTYPE_SLT  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGT  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when RTYPE_SLTU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
-	                            	when RTYPE_SGTU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
-	                            	when RTYPE_SLEU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
-	                            	when RTYPE_SGEU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
-	                            	when others   =>   cw5(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
-	                            end case;
+                              case FUNC2 is
+                                when RTYPE_SLL  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100000";               
+                                when RTYPE_SRL  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_SRA  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11101100010";                        
+                                when RTYPE_ADD  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_ADDU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000000";                        
+                                when RTYPE_SUB  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_SUBU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000010";                        
+                                when RTYPE_AND  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110010000";                        
+                                when RTYPE_OR   => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110011100";                        
+                                when RTYPE_XOR  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110001100";                        
+                                when RTYPE_SEQ  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100100010";                        
+                                when RTYPE_SNE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100100110";                        
+                                when RTYPE_SLT  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGT  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGE  => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when RTYPE_SLTU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110110";                        
+                                when RTYPE_SGTU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111110";                        
+                                when RTYPE_SLEU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100110010";                        
+                                when RTYPE_SGEU => cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100111010";                        
+                                when others   =>   cw5(CW_SIZE-10 downto CW_SIZE-20) <= "00000000000";                        
+                              end case;
 
                 when ITYPE_J => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
-                				        cw5(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
-                            	  cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                                cw5(CW_SIZE-10 downto CW_SIZE-20) <= "10000000001"; 
+                                cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
 
+                when ITYPE_JAL => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw5(CW_SIZE-10 downto CW_SIZE-20) <= "10010100001"; 
+                                  cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JR => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11100000001"; 
+                                  cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+
+                when ITYPE_JALR => cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
+                                  cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11110100001"; 
+                                  cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
+                  
                 when ITYPE_ADDI  | ITYPE_ADDUI | ITYPE_SB | ITYPE_SH | ITYPE_SW | ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU => 
                                    cw5(CW_SIZE-1 downto CW_SIZE-9) <= (others => '0');
                                    cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11000000000"; 
@@ -1378,55 +1464,55 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
                                   cw5(CW_SIZE-10 downto CW_SIZE-20) <= "11000111010"; 
                                   cw5(CW_SIZE-21 downto CW_SIZE-26) <= (others => '0');
                                 
-              	when others =>  cw5 <= (others => '0');
+                when others =>  cw5 <= (others => '0');
             end case;  
 
 
           when memory => 
             case OPCODE3 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
                                cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1000";
                                cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SB  => cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1101";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SH  => cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1110";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_SW  => cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1111";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LB | ITYPE_LBU => 
-                				  cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
+                          cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1001";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LH | ITYPE_LHU => 
-                				  cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
+                          cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1010";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
                 when ITYPE_LW  => cw5(CW_SIZE-1 downto CW_SIZE-20) <= (others => '0');
-                               	  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
+                                  cw5(CW_SIZE-21 downto CW_SIZE-24) <= "1011";
                                   cw5(CW_SIZE-25 downto CW_SIZE-26) <= (others => '0');
                 
-                when ITYPE_J | ITYPE_NOP => cw5 <= (others => '0');
-              	when others => cw5 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_NOP => cw5 <= (others => '0');
+                when others => cw5 <= (others => '0');
             end case;
                     
 
           when write_back => 
             case OPCODE4 is
-              	when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI => 
+                when RTYPE | ITYPE_ADDI | ITYPE_ADDUI | ITYPE_SUBI | ITYPE_SUBUI | ITYPE_ANDI | ITYPE_ORI | ITYPE_XORI | ITYPE_SLLI | ITYPE_SRLI | ITYPE_SRAI | ITYPE_NOP | ITYPE_SEQI | ITYPE_SNEI | ITYPE_SLTI | ITYPE_SGTI | ITYPE_SLEI | ITYPE_SGEI | ITYPE_SLTUI | ITYPE_SGTUI | ITYPE_SLEUI | ITYPE_SGEUI | ITYPE_JAL | ITYPE_JALR => 
                                 cw5 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '1',others => '0');
-                when ITYPE_J | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw5 <= (others => '0');
+                when ITYPE_J | ITYPE_JR | ITYPE_SB | ITYPE_SH | ITYPE_SW => cw5 <= (others => '0');
                 when ITYPE_LB | ITYPE_LH | ITYPE_LW | ITYPE_LBU | ITYPE_LHU =>  cw5 <= (CW_SIZE-25 => '1', CW_SIZE-26 => '0',others => '0');
-              	when others => cw5 <= (others => '0');             
+                when others => cw5 <= (others => '0');             
             end case;
 
           when stall_if => cw5 <= (others => '0');
@@ -1440,7 +1526,7 @@ P_OUTPUTS_INST3: process(INST3,OPCODE,OPCODE1,OPCODE2,OPCODE3,OPCODE4,FUNC,FUNC1
           when stall_wb => cw5 <= (others => '0');
 
           when others => cw5 <=  (others => '0');
-        end case;
+        end case;  
                    
     end process P_OUTPUTS_INST5;
 
