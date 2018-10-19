@@ -83,4 +83,21 @@ To define the lateral shifts, left or right, and the rotation, we have simply pr
 
 \section{Logic comparison}
 
-The logic comparison requires the output of the subtraction between the two values to be compared. So, \textit{ADD\_OUT}, output of the adder, is here used as an input. Then,
+The logic comparison requires the output of the subtraction between the two values to be compared. So, \textit{ADD\_OUT}, output of the adder, is here used as an input. Then, all the bits of the result are \textit{NOR\_reduced}. This allows us to see if all the bits are equal to $0$, i.e. the two operands are equal.
+In this case, an additional signal \textit{US} is used, to differentiate between an unsigned or a signed comparison. While in the first case the schematic is the one presented in figure \ref{comp_us_fig}, for the signed case we have to differentiate. As a matter of fact, if the first digit is equal, the two numbers have the same sign, so we can use the same HW presented before. Differently, if the two bits differ, we use what is reported in \ref{comp_s_fig}. The equivalence of the two MSBs is performed through a \textsf{XNOR} gate. 
+
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{chapters/figures/comp_us}
+	\caption{Circuit for comparison - Unsigned}
+	\label{comp_us_fig}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{chapters/figures/comp_s1}
+	\caption{Comparison for signed case - different MSBs}
+	\label{comp_s_fig}
+\end{figure}

@@ -8,4 +8,5 @@
 \contentsline {section}{\numberline {2.2}Adder}{4}
 \contentsline {section}{\numberline {2.3}Logic}{4}
 \contentsline {section}{\numberline {2.4}Shifter}{6}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{7}
+\contentsline {section}{\numberline {2.5}Logic comparison}{6}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{8}
