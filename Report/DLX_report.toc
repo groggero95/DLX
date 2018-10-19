@@ -6,4 +6,6 @@
 \contentsline {chapter}{\numberline {2}Execution Unit}{3}
 \contentsline {section}{\numberline {2.1}Overview}{3}
 \contentsline {section}{\numberline {2.2}Adder}{4}
-\contentsline {chapter}{\numberline {A}Adder behavioural VHDL}{6}
+\contentsline {section}{\numberline {2.3}Logic}{4}
+\contentsline {section}{\numberline {2.4}Shifter}{6}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{7}

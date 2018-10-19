@@ -35,10 +35,52 @@ For this stage, a bunch of bits of the \textsf{CW} are used. Here are reported:
 
 \section{Adder}
 
-For the adder architecture, we decided not to start from scratches. As long as our P4 adder, designed during the laboratories, has a general description, we resized it to our architecture on 32 bits. This means that we have included the components capable of producing the \textsf{PG} propagate and generate signals and the \textsc{G} ones used to produce only the generate and so the final carry. We consider that therefore the result, in terms of performance can satisfy us. At the input of the block, we have also a \textit{C\_IN} signal, which is used to create, in cooperation with the inverter, the \text{2'S complement} of the input used (either immediate or coming from a register), in order to produce as a final result the signed sum. There are few control signals used for this unit. In figure \ref{adder_fig} is presented the simple schematic of the adder block
+For the adder architecture, we decided not to start from scratches. As long as our P4 adder, designed during the laboratories, has a general description, we resized it to our architecture on 32 bits. This means that we have included the components capable of producing the \textsf{PG} propagate and generate signals and the \textsc{G} ones used to produce only the generate and so the final carry. We consider that therefore the result, in terms of performance can satisfy us. At the input of the block, we have also a \textit{C\_IN} signal, which is used to create, in cooperation with the inverter, the \text{2'S complement} of the input used (either immediate or coming from a register), in order to produce as a final result the signed sum. There are few control signals used for this unit. In figure \ref{adder_fig} is presented the simple schematic of the adder block.
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{chapters/figures/adder}
+	%\includegraphics[width=\textwidth]{chapters/figures/adder}
 	\caption{Adder with inverter and related selection signal}
 	\label{adder_fig}
 \end{figure}
+
+
+\section{Logic}
+
+In order to perform some logic bitwise operations, we have reproduced the microarchitecture that has been used for the \textsf{T2}. Here, in figure \ref{logic_fig} is briefly reported the gates needed, that combined between each other, are capable of giving us the desired operations, as reported in the table \ref{logicT2_table}.
+
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{c|cccc}
+		\toprule
+				& S0 	& S1	& S2	& S3 \\
+		\midrule
+		AND		& 0		& 0		& 0		& 1	 \\
+		NAND	& 1		& 1		& 1		& 0	 \\
+		OR		& 0		& 1		& 1		& 0	 \\
+		NOR		& 1		& 0		& 0		& 0	 \\
+		XOR		& 0		& 1		& 1		& 0	 \\
+		XNOR	& 1		& 0		& 0		& 1	 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Combination of control signal for logic operations}
+	\label{logicT2_table} % here is the table label
+\end{table}
+
+The control signal \textit{S} is required to be on 4 bits: for this reason, we have implemented in our control word 4 bits for this purpose. In particular, the signal \textsf{OP\_SEL} plays this role. We could have used 3 bits on the \textit{CW} and design an encoder, but the savings in term of connection would have been ruined by the need of an additional decoder. Moreover, these bits are not switched most of the time, thus providing a not so relevant switching power dissipation.
+
+\begin{figure}
+	\centering
+	%\includegraphics[width=\textwidth]{chapters/figures/logicT2}
+	\includegraphics[scale=0.6]{chapters/figures/logicT2}
+	\caption{T2 logic for a single bit}
+	\label{logic_fig}
+\end{figure}
+
+\section{Shifter}
+
+To define the lateral shifts, left or right, and the rotation, we have simply provided a behavioral description of the circuit, as reported in appendix \ref{appendix1}. It generates a barrel shifter, thus providing the needed operation between the ones possible, and moving the bits of the first input by the quantity that is introduced by the second input.
+
+\section{Logic comparison}
+
+The logic comparison requires the output of the subtraction between the two values to be compared. So, \textit{ADD\_OUT}, output of the adder, is here used as an input. Then,
