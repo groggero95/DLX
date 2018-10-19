@@ -74,8 +74,8 @@ end component;
                         stall_wb                          
   );
 
-	signal INST1 : TYPE_STATE := reset;
-	signal NEXT_INST1 : TYPE_STATE := reset;
+  signal INST1 : TYPE_STATE := reset;
+  signal NEXT_INST1 : TYPE_STATE := reset;
 
   signal INST2 : TYPE_STATE := reset;
   signal NEXT_INST2 : TYPE_STATE := reset;
