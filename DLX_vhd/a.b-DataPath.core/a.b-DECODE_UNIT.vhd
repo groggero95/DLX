@@ -123,15 +123,15 @@ begin
   case (BR_TYPE) is
     when "10" => 
               if (unsigned(OUT1) = 0) then
-                TO_IMM1 <= (others  => '0');
-              else
                 TO_IMM1 <= EXT1;
+              else
+                TO_IMM1 <= (others  => '0');
               end if;
     when "11" => 
               if (unsigned(OUT1) /= 0) then
-                TO_IMM1 <= (others  => '0');
-              else
                 TO_IMM1 <= EXT1;
+              else
+                TO_IMM1 <= (others  => '0');
               end if;
       
     when others =>  TO_IMM1 <= EXT1;
