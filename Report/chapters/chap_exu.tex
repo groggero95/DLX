@@ -101,3 +101,33 @@ In this case, an additional signal \textit{US} is used, to differentiate between
 	\caption{Comparison for signed case - different MSBs}
 	\label{comp_s_fig}
 \end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{chapters/figures/comp_mux}
+	\caption{Mux to select the required condition}
+	\label{comp_mux_fig}
+\end{figure}
+
+
+Followingly, the value corresponding to the logic comparison needed is chosen by a mux, whose selection signal is represented by \textit{OP\_SEL}, and assigned to the lowest bit of the output signal \textit{SOUT}, as shown in figure \ref{comp_mux_fig}. All the other bits of this signal are independetly set to $0$.
+
+\section{Multiplier}
+
+For our multiplier we again reused the \textit{Booth} architecture that has been designed for the laboratories. As said, the multiplication is usually supposed to be divided in more than one stage, but here it works on a single one, thus reducing the operating frequency. However, we decided to include this component in order to include the MUL in our instruction set. 
+
+\section{PC adder}
+\noindent
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\begin{center}
+		\includegraphics[scale=0.6]{chapters/figures/pc_add}
+	\end{center}
+	\caption{PC adder}
+	\label{pc_add_fig}
+\end{wrapfigure}
+
+In order to perform correctly some jump instruction, the temporary PC needs a +4, which, due to the design of our datapath, can not be performed by the adder. An additional adder, reported in figure \ref{pc_add_fig} is in charge of this specific operation.
+
+
+
+
