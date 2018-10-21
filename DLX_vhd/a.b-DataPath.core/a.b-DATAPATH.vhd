@@ -12,10 +12,11 @@ entity DATAPATH is
             FN : integer := 11
         );
 	port (   CLK          : IN  std_logic;
-           ENIF         : IN  std_logic;
-           ENDEC        : IN  std_logic;
-           ENEX         : IN  std_logic;
-           ENMEM        : IN  std_logic;
+           STALL        : IN  std_logic;
+           --ENIF         : IN  std_logic;
+           --ENDEC        : IN  std_logic;
+           --ENEX         : IN  std_logic;
+           --ENMEM        : IN  std_logic;
   		     RST          : IN  std_logic;
            JMP          : IN  std_logic; -- jump or immediate bit 
            RI           : IN  std_logic;    
@@ -50,7 +51,8 @@ component FETCH_UNIT
   			LS: integer:= 5
   			);
   port   (  CLK :       IN  std_logic;
-            ENABLE :    IN  std_logic;
+          --ENABLE :    IN  std_logic;
+            STALL :     IN  std_logic;
             RST :       IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
@@ -65,7 +67,7 @@ component DECODE_UNIT
   generic (NB: integer := 32;
   			RS: integer:= 32
   			);
-  port   (  ENABLE :  IN std_logic;
+  port   ( -- ENABLE :  IN std_logic;
             CLK :     IN std_logic;
             RST :     IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
@@ -102,7 +104,7 @@ component EXECUTION_UNIT
            	C : 			IN std_logic_vector(NB-1 downto 0);
            	D : 			IN std_logic_vector(NB-1 downto 0);
            	DEST_IN : 		IN std_logic_vector(LS-1 downto 0);
-           	ENABLE : 		IN std_logic;
+          -- 	ENABLE : 		IN std_logic;
            	CLK :			IN std_logic;
            	RST : 			IN std_logic;
            	US :			IN std_logic;
@@ -124,7 +126,7 @@ component MEMORY_UNIT
 	generic ( NB : integer := 32;
 			  LS : integer := 5);
 	port ( CLK :     IN  std_logic;
-         ENABLE :  IN  std_logic;
+       --  ENABLE :  IN  std_logic;
          RST :     IN  std_logic;
          DEST_IN :   IN  std_logic_vector(LS-1 downto 0);
          FROM_MEM :  IN  std_logic_vector(NB-1 downto 0);
@@ -166,14 +168,24 @@ signal US_TO_EX: std_logic;
 
 begin
 
+-- TODO remove enable from pc counter/register and put a signal to introduce stall
+-- TODO evaluate the removal of the ENABLE from all registers
+--ife_unit : FETCH_UNIT port map(CLK,ENIF,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
+--                                                                                                                             --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
+--dec_unit : DECODE_UNIT port map (ENDEC,CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,DEST_FROM_DECU);
 
-ife_unit : FETCH_UNIT port map(CLK,ENIF,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
-
-dec_unit : DECODE_UNIT port map (ENDEC,CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,DEST_FROM_DECU);
-
-exe_unit : EXECUTION_UNIT port map (A,B,C,D,DEST_FROM_DECU,ENEX,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
+--exe_unit : EXECUTION_UNIT port map (A,B,C,D,DEST_FROM_DECU,ENEX,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
  
-mem_unit : MEMORY_UNIT port map (CLK,ENMEM,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_TO_WB,TMP_MEM,DEST_FROM_MEMU);
+--mem_unit : MEMORY_UNIT port map (CLK,ENMEM,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_TO_WB,TMP_MEM,DEST_FROM_MEMU);
+
+ife_unit : FETCH_UNIT port map(CLK,STALL,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
+                                                                                                                             --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
+dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,DEST_FROM_DECU);
+
+exe_unit : EXECUTION_UNIT port map (A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
+ 
+mem_unit : MEMORY_UNIT port map (CLK,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_TO_WB,TMP_MEM,DEST_FROM_MEMU);
+
 
 wrb_unit : WRITE_BACK_UNIT port map (MEM_ALU_SEL,DEST_FROM_MEMU,ALU_TO_WB,TMP_MEM,DATA_WB,DEST_FROM_WRBU);
 

@@ -36,7 +36,7 @@ generic ( NB : integer := 32;
 port (
     CLOCK   : IN  std_logic;
     RST     : IN  std_logic;
-    ENABLE  : IN  std_logic;
+    --ENABLE  : IN  std_logic;
     RW      : IN  std_logic; -- read haigh write low
     D_TYPE  : IN  std_logic_vector(1 downto 0);
     US      : IN  std_logic;
@@ -56,9 +56,10 @@ component dlx_cu
             FUNC      : IN std_logic_vector(F_SIZE-1 downto 0);
 
             -- FIRST PIPE STAGE OUTPUTS
-            ENIF        : OUT std_logic;    -- 1 -> en   | 0 -> dis 
+            --ENIF        : OUT std_logic;    -- 1 -> en   | 0 -> dis 
+            STALL       : OUT std_logic;    -- 1 -> en   | 0 -> dis 
             -- SECOND PIPE STAGE OUTPUTS
-            ENDEC       : OUT std_logic;
+            --ENDEC       : OUT std_logic;
             JMP         : OUT std_logic;     --
             RI          : OUT std_logic;
             BR_TYPE     : OUT std_logic_vector(1 downto 0);
@@ -66,14 +67,14 @@ component dlx_cu
             RD2         : OUT std_logic;     -- enables the read port 2 of the register file
             US          : OUT std_logic;     -- decides wether the operation is signed (0) or unsigned (1)           
             -- THIRD PIPE STAGE OUTPUTS
-            ENEX        : OUT std_logic;
+            --ENEX        : OUT std_logic;
             MUX1_SEL    : OUT std_logic;     -- select operand A (from RF) or C (immediate)
             MUX2_SEL    : OUT std_logic;     -- select operand B (from RF) or D (immediate)    
             UN_SEL      : OUT std_logic_vector(2 downto 0); -- unit select
             OP_SEL      : OUT std_logic_vector(3 downto 0); -- operation select
             PC_SEL      : OUT std_logic;    -- 0 -> pc+4 | 1 -> j/b
             -- FOURTH PIPE STAGE OUTPUTS
-            ENMEM       : OUT std_logic;
+            --ENMEM       : OUT std_logic;
             RW          : OUT std_logic;
             D_TYPE      : OUT std_logic_vector(1 downto 0);
             -- FIFTH PIPE STAGE OUTPUTS
@@ -90,10 +91,11 @@ component DATAPATH
             FN : integer := 11
         );
   port (  CLK          : IN  std_logic;
-          ENIF         : IN  std_logic;
-          ENDEC        : IN  std_logic;
-          ENEX         : IN  std_logic;
-          ENMEM        : IN  std_logic;
+          STALL        : IN  std_logic;
+          --ENIF         : IN  std_logic;
+          --ENDEC        : IN  std_logic;
+          --ENEX         : IN  std_logic;
+          --ENMEM        : IN  std_logic;
           RST          : IN  std_logic;
           JMP          : IN  std_logic; -- jump or immediate bit 
           RI           : IN  std_logic;    
@@ -126,6 +128,7 @@ signal OPCODE    : std_logic_vector(OP_SIZE-1 downto 0);
 signal FUNC      : std_logic_vector(F_SIZE-1 downto 0);
 -- FIRST PIPAGE OUTPUTS
 signal ENIF      : std_logic;    -- 1 -> en   | 0 -> dis 
+signal STALL     : std_logic;    
 -- SECOND PITAGE OUTPUTS
 signal ENDEC     : std_logic;
 signal JMP       : std_logic;     --
@@ -162,11 +165,12 @@ signal US_MEM, HAZARD : std_logic;
 
   begin  -- DLX
 
-dp : DATAPATH port map(CLK, ENIF, ENDEC, ENEX, ENMEM, RST, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, EXT_MEM_IN, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, FUNC, OPCODE);    
+dp : DATAPATH port map(CLK, STALL, RST, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, EXT_MEM_IN, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, FUNC, OPCODE);    
 
-cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,ENIF,ENDEC,JMP,RI,BR_TYPE,RD1,RD2,US,ENEX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,ENMEM,RW,D_TYPE,WR,MEM_ALU_SEL);
+cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL);
 
-mem: RAM port map (CLK, RST,ENMEM, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
+--mem: RAM port map (CLK, RST,ENMEM, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
+mem: RAM port map (CLK, RST, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
 
     
     

@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 package myTypes is
 
 -- Control unit input sizes
-	constant CW_SIZE	  : integer :=  26;
+	constant CW_SIZE	  : integer :=  23;--26;
     constant OP_SIZE : integer :=  6;                                              -- OPCODE field size
     constant F_SIZE    : integer :=  11;                                             -- FUNC field size
 

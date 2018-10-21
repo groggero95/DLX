@@ -8,7 +8,7 @@ generic ( NB : integer := 32;
 port (
     CLOCK   : IN  std_logic;
     RST 	: IN  std_logic;
-    ENABLE  : IN  std_logic;
+    --ENABLE  : IN  std_logic;
     RW      : IN  std_logic; -- read haigh write low
     D_TYPE	: IN  std_logic_vector(1 downto 0);
     US 		: IN  std_logic;
@@ -33,7 +33,7 @@ begin
       if RST='0' then
       	memory <= (others => (others => '0'));
       else
-	      if ENABLE = '1' then
+	      --if ENABLE = '1' then
 	        if RW = '1' then
 	        	case D_TYPE is
 		        	when "01" =>		-- BYTE
@@ -49,7 +49,7 @@ begin
 				    when others =>
 				    	memory <= memory;
 			    end case;
-	        end if;
+	        --end if;
 	        address_buff <= ADDRESS;
 	      end if;
 	  end if;
