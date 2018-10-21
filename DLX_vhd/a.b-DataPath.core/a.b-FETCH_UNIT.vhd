@@ -89,8 +89,11 @@ end process;
 -- 0 -> pc+4 | 1 -> from_alu
 pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,PC_SEL,NEW_PC);
 
-FUNC <= TMP_INST_OUT(10 downto 0);
-OPCODE <= TMP_INST_OUT(NB-1 downto NB-6);
+--FUNC <= TMP_INST_OUT(10 downto 0);
+--OPCODE <= TMP_INST_OUT(NB-1 downto NB-6);
+
+FUNC <= IRAM_OUT(10 downto 0);
+OPCODE <= IRAM_OUT(NB-1 downto NB-6);
 
 adder : process(CUR_PC)
 begin
