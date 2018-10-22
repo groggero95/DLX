@@ -11,4 +11,6 @@
 \contentsline {section}{\numberline {2.5}Logic comparison}{6}
 \contentsline {section}{\numberline {2.6}Multiplier}{8}
 \contentsline {section}{\numberline {2.7}PC adder}{8}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{9}
+\contentsline {chapter}{\numberline {3}Write Back}{9}
+\contentsline {section}{\numberline {3.1}Overview}{9}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{10}
