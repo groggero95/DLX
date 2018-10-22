@@ -6,15 +6,15 @@ entity RAM is
 generic ( NB : integer := 32;
           LS : integer := 5);
 port (
-    CLOCK   : IN  std_logic;
+    CLOCK   	: IN  std_logic;
     RST 	: IN  std_logic;
-    ENABLE  : IN  std_logic;
-    RW      : IN  std_logic; -- read haigh write low
+    ENABLE  	: IN  std_logic;
+    RW      	: IN  std_logic; -- write high
     D_TYPE	: IN  std_logic_vector(1 downto 0);
     US 		: IN  std_logic;
-    ADDRESS : IN  std_logic_vector(LS-1 downto 0);
-    MEMIN   : IN  std_logic_vector(NB-1 downto 0);
-    MEMOUT  : OUT std_logic_vector(NB-1 downto 0)
+    ADDRESS 	: IN  std_logic_vector(LS-1 downto 0);
+    MEMIN   	: IN  std_logic_vector(NB-1 downto 0);
+    MEMOUT  	: OUT std_logic_vector(NB-1 downto 0)
   );
 end RAM;
 

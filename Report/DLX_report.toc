@@ -13,5 +13,8 @@
 \contentsline {section}{\numberline {3.5}Logic comparison}{7}
 \contentsline {section}{\numberline {3.6}Multiplier}{9}
 \contentsline {section}{\numberline {3.7}PC adder}{9}
-\contentsline {chapter}{\numberline {4}Write Back}{10}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{12}
+\contentsline {chapter}{\numberline {4}Memory Stage}{10}
+\contentsline {section}{\numberline {4.1}Embedded part}{10}
+\contentsline {section}{\numberline {4.2}External RAM}{11}
+\contentsline {chapter}{\numberline {5}Write Back}{12}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{14}
