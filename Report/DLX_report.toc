@@ -3,14 +3,15 @@
 \contentsline {section}{\numberline {1.1}Full Adder}{1}
 \contentsline {subsection}{\numberline {1.1.1}Area and power estimation}{2}
 \contentsline {section}{\numberline {1.2}Ripple Carry Adder}{2}
-\contentsline {chapter}{\numberline {2}Execution Unit}{3}
-\contentsline {section}{\numberline {2.1}Overview}{3}
-\contentsline {section}{\numberline {2.2}Adder}{4}
-\contentsline {section}{\numberline {2.3}Logic}{4}
-\contentsline {section}{\numberline {2.4}Shifter}{6}
-\contentsline {section}{\numberline {2.5}Logic comparison}{6}
-\contentsline {section}{\numberline {2.6}Multiplier}{8}
-\contentsline {section}{\numberline {2.7}PC adder}{8}
-\contentsline {chapter}{\numberline {3}Write Back}{9}
-\contentsline {section}{\numberline {3.1}Overview}{9}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{10}
+\contentsline {chapter}{\numberline {2}Fetch Stage}{3}
+\contentsline {section}{\numberline {2.1}Introduction}{3}
+\contentsline {chapter}{\numberline {3}Execution Stage}{4}
+\contentsline {section}{\numberline {3.1}Overview}{4}
+\contentsline {section}{\numberline {3.2}Adder}{5}
+\contentsline {section}{\numberline {3.3}Logic}{5}
+\contentsline {section}{\numberline {3.4}Shifter}{7}
+\contentsline {section}{\numberline {3.5}Logic comparison}{7}
+\contentsline {section}{\numberline {3.6}Multiplier}{9}
+\contentsline {section}{\numberline {3.7}PC adder}{9}
+\contentsline {chapter}{\numberline {4}Write Back}{10}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{12}
