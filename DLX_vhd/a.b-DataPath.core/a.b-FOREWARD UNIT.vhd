@@ -9,27 +9,30 @@ entity FOREWARD_UNIT is
   generic (NB: integer := 32;
   			LS: integer:= 5
   			);
-  port 	 (  Rs_EX 		: IN  std_logic_vector(LS-1 downto 0);
+  port 	 (  INST_EX		: IN  TYPE_STATE;
+  			INST_MEM	: IN  TYPE_STATE;
+  			INST_T_EX	: IN  std_logic;
+  			Rs_EX 		: IN  std_logic_vector(LS-1 downto 0);
             Rt_EX 		: IN  std_logic_vector(LS-1 downto 0);
             Rd_MEM 		: IN  std_logic_vector(LS-1 downto 0); -- dest from MEM stage
             Rd_WB 		: IN  std_logic_vector(LS-1 downto 0); -- dest from WB stage
             CTL_MUX1	: OUT std_logic_vector(1 downto 0);
             CTL_MUX2 	: OUT std_logic_vector(1 downto 0)
-            );
+   );
 end FOREWARD_UNIT;
 
 architecture BEHAVIOR of FOREWARD_UNIT is
 
 
-component FD
-	Generic (NB : integer := 32);
-	Port (	CK:	In	std_logic;
-		RESET:	In	std_logic;
-		EN : In std_logic;
-		D:	In	std_logic_vector (NB-1 downto 0);
-		Q:	Out	std_logic_vector (NB-1 downto 0) 
-		);
-end component;
+--component FD
+--	Generic (NB : integer := 32);
+--	Port (	CK:	In	std_logic;
+--		RESET:	In	std_logic;
+--		EN : In std_logic;
+--		D:	In	std_logic_vector (NB-1 downto 0);
+--		Q:	Out	std_logic_vector (NB-1 downto 0) 
+--		);
+--end component;
 
 
 component MUX21_generic
@@ -42,11 +45,11 @@ end component;
 
 begin
 
-foreward_mux1 : process (Rd_MEM,Rs_EX,Rd_WB)
+foreward_mux1 : process (Rd_MEM,Rs_EX,Rd_WB,INST_EX,INST_MEM)
 begin
-	if Rd_MEM = Rs_EX and (active_ex/mem) then
+	if Rd_MEM = Rs_EX and INST_EX /= stall_if and Rd_MEM /= ADD_ZERO then
 		CTL_MUX1 <= "01"; -- from alu out
-	elsif (Rd_WB = Rs_EX and active_mem/wb ) then
+	elsif Rd_WB = Rs_EX and INST_MEM /= stall_if and Rd_WB /= ADD_ZERO then
 		CTL_MUX1 <= "10"; -- from wb
 	else
 	 	CTL_MUX1 <= "00"; 
@@ -54,16 +57,18 @@ begin
 end process;
 
 
-foreward_mux2 : process (Rd_MEM,Rs_EX,Rd_WB)
+foreward_mux2 : process (Rd_MEM,Rs_EX,Rd_WB,Rt_EX,INST_EX,INST_MEM,INST_T_EX)
 begin
-	if (r_type_exe) then
-		if Rd_MEM = Rt_EX and (active_ex/mem) then
-			CTL_MUX1 <= "01";
-		elsif (Rd_WB = Rt_EX and active_mem/wb ) then
-			CTL_MUX1 <= "10";
+	if (INST_T_EX = '1') then
+		if Rd_MEM = Rt_EX and INST_EX /= stall_if and Rd_MEM /= ADD_ZERO then
+			CTL_MUX2 <= "01";
+		elsif (Rd_WB = Rt_EX and INST_MEM /= stall_if and Rd_WB /= ADD_ZERO ) then
+			CTL_MUX2 <= "10";
 		else
-		 	CTL_MUX1 <= "00"; 
+		 	CTL_MUX2 <= "00"; 
 		end if;
+	else
+		CTL_MUX2 <= "00"; 
 	end if;
 end process;
 

@@ -23,26 +23,13 @@ begin
 	begin
 
 		if RESET='0' then -- active high reset 
-	      TMP_Q <= (others =>'0'); 
+	      	TMP_Q <= (others =>'0'); 
 	  	elsif CK'event and CK='1' then -- positive edge triggered:
-	    	--if (EN = '1') then
-	      		TMP_Q <= D; -- input is written on output
-	    	--else
-	     -- 		TMP_Q <= (others => '0');
-	    	--end if;
+	      	TMP_Q <= D; -- input is written on output
 	  	end if;
 	end process;
 
 	Q <= TMP_Q;
-	--process(EN)
-	--begin
-	--	if (EN = '1') then
-	--		Q <= TMP_Q;
-	--	else
-	--		Q <= (others => '0');
-	--	end if;
-
-	--end process;
 
 end BEHAV;
 

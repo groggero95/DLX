@@ -14,10 +14,8 @@ entity dlx_cu is
             FUNC      : IN std_logic_vector(F_SIZE-1 downto 0);
 
             -- FIRST PIPE STAGE OUTPUTS
-            --ENIF      	: OUT std_logic;    -- 1 -> en   | 0 -> dis 
             STALL      	: OUT std_logic;    -- 1 -> en   | 0 -> dis 
             -- SECOND PIPE STAGE OUTPUTS
-            --ENDEC     	: OUT std_logic;
             JMP        	: OUT std_logic;     --
             RI          : OUT std_logic;
             BR_TYPE   	: OUT std_logic_vector(1 downto 0);
@@ -25,19 +23,22 @@ entity dlx_cu is
             RD2       	: OUT std_logic;     -- enables the read port 2 of the register file
             US        	: OUT std_logic;     -- decides wether the operation is signed (0) or unsigned (1)           
             -- THIRD PIPE STAGE OUTPUTS
-            --ENEX      	: OUT std_logic;
             MUX1_SEL  	: OUT std_logic;     -- select operand A (from RF) or C (immediate)
             MUX2_SEL  	: OUT std_logic;     -- select operand B (from RF) or D (immediate)    
             UN_SEL    	: OUT std_logic_vector(2 downto 0); -- unit select
             OP_SEL    	: OUT std_logic_vector(3 downto 0); -- operation select
             PC_SEL    	: OUT std_logic;    -- 0 -> pc+4 | 1 -> j/b
             -- FOURTH PIPE STAGE OUTPUTS
-            --ENMEM     	: OUT std_logic;
             RW        	: OUT std_logic;
             D_TYPE    	: OUT std_logic_vector(1 downto 0);
             -- FIFTH PIPE STAGE OUTPUTS
             WR        	: OUT std_logic;     -- enables the write port of the register file
-            MEM_ALU_SEL : OUT std_logic    
+            MEM_ALU_SEL : OUT std_logic;
+
+            -- SIGNAL USED FOR FOREWARDING
+            INST_T_EX	: OUT std_logic;
+            INST_EX		: OUT TYPE_STATE;
+            INST_MEM	: OUT TYPE_STATE
   );
 end dlx_cu;
 
@@ -46,29 +47,23 @@ architecture dlx_cu_fsm of dlx_cu is
 component FD
   Generic (NB : integer := 32);
   Port (  CK: In  std_logic;
-    RESET:  In  std_logic;
-    --EN : In std_logic;
-    D:  In  std_logic_vector (NB-1 downto 0);
-    Q:  Out std_logic_vector (NB-1 downto 0) 
+    	  RESET:  In  std_logic;
+    	  D:  In  std_logic_vector (NB-1 downto 0);
+    	  Q:  Out std_logic_vector (NB-1 downto 0) 
     );
 end component;
                                 
   signal cw   : std_logic_vector(CW_SIZE - 1 downto 0); -- full control word read from cw_mem
-  signal cw1   : std_logic_vector(CW_SIZE - 1 downto 0);
-  signal cw2   : std_logic_vector(CW_SIZE - 1 downto 0);
-  signal cw3   : std_logic_vector(CW_SIZE - 1 downto 0);
-  signal cw4   : std_logic_vector(CW_SIZE - 1 downto 0);
-  signal cw5   : std_logic_vector(CW_SIZE - 1 downto 0);
+  
 
+	--type TYPE_STATE is (
+ --                       reset,
+ --                       fetch,
+ --                       stall_if
+ -- 	);
 
-	type TYPE_STATE is (
-                        reset,
-                        fetch,
-                        stall_if
-  	);
-
-  signal INST1 : TYPE_STATE := reset;
-  signal NEXT_INST1 : TYPE_STATE := reset;
+  signal INST, INST1, INST2, INST3 : TYPE_STATE := reset;
+  signal NEXT_INST : TYPE_STATE := reset;
 
   signal OPCODE1, OPCODE2, OPCODE3, OPCODE4 : std_logic_vector(OP_SIZE-1 downto 0);
   signal FUNC1, FUNC2 : std_logic_vector(F_SIZE-1 downto 0); 
@@ -78,6 +73,8 @@ end component;
   signal TMP22M, TMP21M : std_logic_vector(1 downto 0);
   signal TMP3E : std_logic_vector(2 downto 0);
   signal TMP4E : std_logic_vector(3 downto 0);
+
+  signal INST_TMP, INST_TMP1, INST_TMP2, INST_TMP3 : std_logic_vector(0 downto 0);
   
 
 begin  -- dlx_cu_rtl
@@ -95,9 +92,9 @@ begin  -- dlx_cu_rtl
     P_OPC : process(CLK, RST)          
     begin
         if RST='0' then -- Acrive low asyncronous reset
-            INST1 <= reset;
+            INST <= reset;
         elsif (CLK ='1' and CLK'EVENT) then 
-            INST1 <= NEXT_INST1;
+            INST <= NEXT_INST;
         end if;
     end process P_OPC;
 
@@ -105,38 +102,36 @@ begin  -- dlx_cu_rtl
 
     -- In this process we decide which will bw the next state acording to where we are now 
     -- and what are our input
-    P_NEXT_STATE_1 : process(INST1, OPCODE, OPCODE1, FUNC)
+    P_NEXT_STATE : process(INST, OPCODE, OPCODE1, FUNC)
     begin
 
-        case INST1 is
+        case INST is
           
-          when reset => NEXT_INST1 <= fetch;
+          when reset => NEXT_INST <= fetch;
 
           when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) or (OPCODE = ITYPE_BEQZ) or (OPCODE = ITYPE_BNEZ) ) then 
-          					NEXT_INST1 <= stall_if;
+          					NEXT_INST <= stall_if;
           				else
-          					NEXT_INST1 <= fetch;
+          					NEXT_INST <= fetch;
           				end if;
 
           when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) or (OPCODE1 = ITYPE_BEQZ) or (OPCODE1 = ITYPE_BNEZ) ) then 
-          						NEXT_INST1 <= stall_if;
+          						NEXT_INST <= stall_if;
           					else
-          						NEXT_INST1 <= fetch;
+          						NEXT_INST <= fetch;
           					end if;
 
-          when others => NEXT_INST1 <= reset;	--TODO we need to  stall the pipe for 2 cycle (maybe 3) after a jump
+          when others => NEXT_INST <= reset;	--TODO we need to  stall the pipe for 2 cycle (maybe 3) after a jump
         
         end case;  
 
-    end process P_NEXT_STATE_1;
-
-
+    end process P_NEXT_STATE;
    
 
-    P_OUTPUTS_INST1: process(INST1,OPCODE,FUNC)
+    P_OUTPUTS_INST: process(INST,OPCODE,FUNC)
     begin
 
-        case INST1 is       
+        case INST is       
           	when reset =>   cw <= "00000000000000000000000";
             
           	when fetch =>  
@@ -245,7 +240,7 @@ begin  -- dlx_cu_rtl
         
         end case;
            
-    end process P_OUTPUTS_INST1;
+    end process P_OUTPUTS_INST;
 
 
 
@@ -311,6 +306,55 @@ pipe4_MM  : FD generic map(1) port map(CLK,RST,TMP23W,TMP11);
 WR <= TMP10(0);
 MEM_ALU_SEL <= TMP11(0);
 
+
+
+INST_TYPE : process( OPCODE )
+begin
+	case OPCODE is
+		when RTYPE => INST_TMP(0) <= '1';
+		when others => INST_TMP(0) <= '0';
+	end case;
+end process INST_TYPE;
+
+pipe1_INST  : FD generic map(1) port map(CLK,RST,INST_TMP,INST_TMP1); -- DECODE
+pipe2_INST  : FD generic map(1) port map(CLK,RST,INST_TMP1,INST_TMP2); -- EXECUTE
+
+INST_T_EX <= INST_TMP2(0);
+
+-- DECODE
+process(CLK, RST)          
+begin
+    if RST='0' then -- Acrive low asyncronous reset
+        INST1 <= reset;
+    elsif (CLK ='1' and CLK'EVENT) then 
+        INST1 <= INST;
+    end if;
+end process;
+
+-- EXECUTE
+process(CLK, RST)          
+begin
+    if RST='0' then -- Acrive low asyncronous reset
+        INST2 <= reset;
+    elsif (CLK ='1' and CLK'EVENT) then 
+        INST2 <= INST1;
+    end if;
+end process;
+
+
+-- MEMORY
+process(CLK, RST)          
+begin
+    if RST='0' then -- Acrive low asyncronous reset
+        INST3 <= reset;
+    elsif (CLK ='1' and CLK'EVENT) then 
+        INST3 <= INST2;
+    end if;
+end process;
+
+INST_EX  <= INST2;
+
+INST_MEM <= INST3;
 
 
 end dlx_cu_fsm;

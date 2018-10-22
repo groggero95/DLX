@@ -13,11 +13,10 @@ entity DATAPATH is
         );
 	port (   CLK          : IN  std_logic;
            STALL        : IN  std_logic;
-           --ENIF         : IN  std_logic;
-           --ENDEC        : IN  std_logic;
-           --ENEX         : IN  std_logic;
-           --ENMEM        : IN  std_logic;
   		     RST          : IN  std_logic;
+           INST_EX      : IN  TYPE_STATE;
+           INST_MEM     : IN  TYPE_STATE;
+           INST_T_EX    : IN  std_logic;
            JMP          : IN  std_logic; -- jump or immediate bit 
            RI           : IN  std_logic;    
   		     RD1          : IN  std_logic; -- read enable 1
@@ -65,10 +64,9 @@ end component;
 
 component DECODE_UNIT
   generic (NB: integer := 32;
-  			RS: integer:= 32
+  			   LS: integer:= 5
   			);
-  port   ( -- ENABLE :  IN std_logic;
-            CLK :     IN std_logic;
+  port   (  CLK :     IN std_logic;
             RST :     IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
@@ -80,17 +78,19 @@ component DECODE_UNIT
             RD1:      IN std_logic;
             RD2:      IN std_logic;
             WR:       IN std_logic;
-            ADD_WR:   IN std_logic_vector(getAddrSize(RS)-1 downto 0); 
-            ADD_RD1:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
-            ADD_RD2:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
-            DEST_IN : IN std_logic_vector(getAddrSize(RS)-1 downto 0);
+            ADD_WR:   IN std_logic_vector(LS-1 downto 0); 
+            ADD_RD1:  IN std_logic_vector(LS-1 downto 0);
+            ADD_RD2:  IN std_logic_vector(LS-1 downto 0);
+            DEST_IN : IN std_logic_vector(LS-1 downto 0);
             HAZARD:   OUT std_logic;
             US_TO_EX: OUT std_logic;
-            A : 			OUT std_logic_vector(NB-1 downto 0);
-  			    B : 			OUT std_logic_vector(NB-1 downto 0);
-           	C : 			OUT std_logic_vector(NB-1 downto 0);
-           	D : 			OUT std_logic_vector(NB-1 downto 0);
-           	DEST_OUT: OUT std_logic_vector(getAddrSize(RS)-1 downto 0)
+            A :       OUT std_logic_vector(NB-1 downto 0);
+            B :       OUT std_logic_vector(NB-1 downto 0);
+            C :       OUT std_logic_vector(NB-1 downto 0);
+            D :       OUT std_logic_vector(NB-1 downto 0);
+            RT:       OUT std_logic_vector(LS-1 downto 0); 
+            RS:       OUT std_logic_vector(LS-1 downto 0); 
+            DEST_OUT: OUT std_logic_vector(LS-1 downto 0)
           );
 end component;
 
@@ -99,24 +99,27 @@ component EXECUTION_UNIT
   generic (NB: integer := 32;
   			LS: integer:= 5
   			);
-  port 	 ( 	A : 			IN std_logic_vector(NB-1 downto 0);
-  			    B : 			IN std_logic_vector(NB-1 downto 0);
-           	C : 			IN std_logic_vector(NB-1 downto 0);
-           	D : 			IN std_logic_vector(NB-1 downto 0);
-           	DEST_IN : 		IN std_logic_vector(LS-1 downto 0);
-          -- 	ENABLE : 		IN std_logic;
-           	CLK :			IN std_logic;
-           	RST : 			IN std_logic;
-           	US :			IN std_logic;
-           	MUX1_SEL : 		IN std_logic;
-           	MUX2_SEL : 		IN std_logic;
-           	UN_SEL : 		IN std_logic_vector(2 downto 0);
-           	OP_SEL :		IN std_logic_vector(3 downto 0);
+  port 	 ( 	FW_MUX1_SEL : IN std_logic_vector(1 downto 0);
+            FW_MUX2_SEL : IN std_logic_vector(1 downto 0);
+            FW_EX :  IN std_logic_vector(NB-1 downto 0);
+            FW_MEM : IN std_logic_vector(NB-1 downto 0);
+            A :       IN std_logic_vector(NB-1 downto 0);
+            B :       IN std_logic_vector(NB-1 downto 0);
+            C :       IN std_logic_vector(NB-1 downto 0);
+            D :       IN std_logic_vector(NB-1 downto 0);
+            DEST_IN :     IN std_logic_vector(LS-1 downto 0);
+            CLK :     IN std_logic;
+            RST :       IN std_logic;
+            US :      IN std_logic;
+            MUX1_SEL :    IN std_logic;
+            MUX2_SEL :    IN std_logic;
+            UN_SEL :    IN std_logic_vector(2 downto 0);
+            OP_SEL :    IN std_logic_vector(3 downto 0);
             US_MEM :    OUT std_logic;
-            TEMP_PC :   	OUT std_logic_vector(NB-1 downto 0);
-           	ALU_OUT :		OUT std_logic_vector(NB-1 downto 0);
-           	IMM_OUT : 		OUT std_logic_vector(NB-1 downto 0); -- ???
-           	DEST_OUT: 		OUT std_logic_vector(LS-1 downto 0)
+            TEMP_PC :   OUT std_logic_vector(NB-1 downto 0);
+            ALU_OUT :   OUT std_logic_vector(NB-1 downto 0);
+            IMM_OUT :     OUT std_logic_vector(NB-1 downto 0);
+            DEST_OUT:     OUT std_logic_vector(LS-1 downto 0)
           );
 end component;
 
@@ -151,9 +154,25 @@ component WRITE_BACK_UNIT
 	);
 end component;
 
+component FOREWARD_UNIT
+  generic (NB: integer := 32;
+           LS: integer:= 5
+        );
+  port   (  INST_EX     : IN  TYPE_STATE;
+            INST_MEM    : IN  TYPE_STATE;
+            INST_T_EX   : IN  std_logic;
+            Rs_EX       : IN  std_logic_vector(LS-1 downto 0);
+            Rt_EX       : IN  std_logic_vector(LS-1 downto 0);
+            Rd_MEM      : IN  std_logic_vector(LS-1 downto 0); -- dest from MEM stage
+            Rd_WB       : IN  std_logic_vector(LS-1 downto 0); -- dest from WB stage
+            CTL_MUX1    : OUT std_logic_vector(1 downto 0);
+            CTL_MUX2    : OUT std_logic_vector(1 downto 0)
+  );
+end component;
+
 
 signal A, B, C, D : std_logic_vector(NB-1 downto 0);
-signal DEST_FROM_DECU, DEST_FROM_EXEU, DEST_FROM_MEMU, DEST_FROM_WRBU : std_logic_vector(LS-1 downto 0);
+signal DEST_FROM_DECU, DEST_FROM_EXEU, DEST_FROM_MEMU, DEST_FROM_WRBU, RS, RT : std_logic_vector(LS-1 downto 0);
 signal ALU_OUT : std_logic_vector(NB-1 downto 0);
 signal ALU_TO_WB : std_logic_vector(NB-1 downto 0);
 signal MEM_TO_WB : std_logic_vector(NB-1 downto 0);
@@ -163,31 +182,38 @@ signal NPC : std_logic_vector(NB-1 downto 0);
 signal TEMP_PC : std_logic_vector(NB-1 downto 0);
 signal TMP_MEM : std_logic_vector(NB-1 downto 0);
 
-signal US_TO_EX: std_logic;
-
+signal US_TO_EX : std_logic;
+signal FW_MUX1_SEL, FW_MUX2_SEL : std_logic_vector(1 downto 0);
 
 begin
 
--- TODO remove enable from pc counter/register and put a signal to introduce stall
--- TODO evaluate the removal of the ENABLE from all registers
---ife_unit : FETCH_UNIT port map(CLK,ENIF,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
---                                                                                                                             --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
---dec_unit : DECODE_UNIT port map (ENDEC,CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,DEST_FROM_DECU);
-
---exe_unit : EXECUTION_UNIT port map (A,B,C,D,DEST_FROM_DECU,ENEX,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
- 
---mem_unit : MEMORY_UNIT port map (CLK,ENMEM,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_TO_WB,TMP_MEM,DEST_FROM_MEMU);
-
 ife_unit : FETCH_UNIT port map(CLK,STALL,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
                                                                                                                              --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
-dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,DEST_FROM_DECU);
+dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
 
-exe_unit : EXECUTION_UNIT port map (A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
+exe_unit : EXECUTION_UNIT port map (FW_MUX1_SEL,FW_MUX2_SEL,ALU_OUT,DATA_WB,A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
  
 mem_unit : MEMORY_UNIT port map (CLK,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_TO_WB,TMP_MEM,DEST_FROM_MEMU);
 
-
 wrb_unit : WRITE_BACK_UNIT port map (MEM_ALU_SEL,DEST_FROM_MEMU,ALU_TO_WB,TMP_MEM,DATA_WB,DEST_FROM_WRBU);
+
+fw_unit : FOREWARD_UNIT port map (INST_EX,INST_MEM,INST_T_EX,RS,RT,DEST_FROM_EXEU,DEST_FROM_MEMU,FW_MUX1_SEL,FW_MUX2_SEL);
+
+---- from cu
+--INST_EX     : IN  TYPE_STATE;
+--INST_MEM    : IN  TYPE_STATE;
+--INST_T_EX   : IN  std_logic;
+--INST_T_MEM  : IN  std_logic;
+
+--Rs_EX       : IN  std_logic_vector(LS-1 downto 0);
+--Rt_EX       : IN  std_logic_vector(LS-1 downto 0);
+
+--Rd_MEM      : IN  std_logic_vector(LS-1 downto 0); -- dest from MEM stage
+--Rd_WB       : IN  std_logic_vector(LS-1 downto 0); -- dest from WB stage
+
+--CTL_MUX1    : OUT std_logic_vector(1 downto 0);
+--CTL_MUX2    : OUT std_logic_vector(1 downto 0)
+
 
 EXT_MEM_ADD <= ALU_OUT(LS-1 downto 0);
 

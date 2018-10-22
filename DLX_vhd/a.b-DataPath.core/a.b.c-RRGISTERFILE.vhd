@@ -47,6 +47,7 @@ begin
 			if( WR ='1') then 
 				if (((RD1 = '1') and (ADD_WR = ADD_RD1)) or ((RD2 = '1') and (ADD_WR = ADD_RD2))) then
 					HAZARD <= '1';
+					REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN;
 				else
 					REGISTERS(to_integer(unsigned(ADD_WR))) <= DATAIN;
 					HAZARD <= '0';
