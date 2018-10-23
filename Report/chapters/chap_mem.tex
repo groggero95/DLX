@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\graphicspath{chapters/figures/}
-\chapter{Memory Stage}
+\section{Memory Stage}
 \label{chap_mem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This stage can be divided in two major parts: the registers that contains the addresses and the data to be written in the memory or read from the memory and the RAM. The former is actually embedded in the processor, while the latter one is actually external, but provides an interface and some signals to communicate with the processor itself. 
-\section{Embedded part}
+\subsection{Embedded part}
 The part included in the datapath is mainly made up of three different registers, which are used to store different values coming from different units:
 \begin{itemize}
 	\item \textit{dest\_reg}, which is used to save the address of the commit register, to be passed to the following write back stage
@@ -28,7 +28,7 @@ All these registers share the same reset, clock and enable signals. They differ 
 	\label{reg_table}
 \end{table}
 
-\section{External RAM}
+\subsection{External RAM}
 \label{ram}
 The external RAM receives signals both from the datapath and from the CU. An overview can be seen in figure \ref{ext_ram_fig}. This part is external since it will not be synthesized. In particular, here are presented the most relevant ones:
 \begin{itemize}
