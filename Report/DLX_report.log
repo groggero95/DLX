@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  23 OCT 2018 00:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  23 OCT 2018 13:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -630,16 +630,22 @@ LaTeX Warning: No positions in optional float specifier.
 
 [10
 
-]) (./chapters/chap_wb.tex
+]
+<chapters/figures/ram_ext.png, id=68, 542.025pt x 377.15906pt>
+File: chapters/figures/ram_ext.png Graphic file (type png)
+<use chapters/figures/ram_ext.png>
+Package pdftex.def Info: chapters/figures/ram_ext.png  used on input line 47.
+(pdftex.def)             Requested size: 271.01183pt x 188.57907pt.
+) (./chapters/chap_wb.tex
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[11]
+[11 <./chapters/figures/ram_ext.png>]
 Chapter 5.
-<chapters/figures/wb_stage.png, id=72, 451.6875pt x 334.24875pt>
+<chapters/figures/wb_stage.png, id=74, 451.6875pt x 334.24875pt>
 File: chapters/figures/wb_stage.png Graphic file (type png)
 <use chapters/figures/wb_stage.png>
 Package pdftex.def Info: chapters/figures/wb_stage.png  used on input line 21.
@@ -688,10 +694,10 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [17] (./DLX_report.aux) ) 
 Here is how much of TeX's memory you used:
- 8381 strings out of 492982
- 124094 string characters out of 6134895
- 263028 words of memory out of 5000000
- 11741 multiletter control sequences out of 15000+600000
+ 8387 strings out of 492982
+ 124249 string characters out of 6134895
+ 263039 words of memory out of 5000000
+ 11746 multiletter control sequences out of 15000+600000
  14295 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,11n,77p,1013b,1608s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -709,10 +715,10 @@ e1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmtt10.pfb>
-Output written on DLX_report.pdf (19 pages, 450447 bytes).
+Output written on DLX_report.pdf (19 pages, 459211 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
+ 140 PDF objects out of 1000 (max. 8388607)
  87 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

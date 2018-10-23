@@ -30,7 +30,7 @@ All these registers share the same reset, clock and enable signals. They differ 
 
 \section{External RAM}
 \label{ram}
-The external RAM receives signals both from the datapath and from the CU. In particular, here are presented the most relevant ones:
+The external RAM receives signals both from the datapath and from the CU. An overview can be seen in figure \ref{ext_ram_fig}. This part is external since it will not be synthesized. In particular, here are presented the most relevant ones:
 \begin{itemize}
 	\item \textit{ENABLE, RW} are signals used to control the writing on the memory. They should be both high to complete a write
 	\item \textit{D\_TYPE} specifies the kind of data we are reading or writing in/from memory, i.e byte, half-word, word
@@ -42,5 +42,9 @@ The external RAM receives signals both from the datapath and from the CU. In par
 
 While the writing is performed synchronously only if the \textit{RW} signal is high, there is always a value in correspondence of the output signal. This means that a read always happens, and a value is written every time on the \textit{MEMOUT} signal. This value will be eventually discarded in the following stages.
 
-
-% add picture of memory here
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{chapters/figures/ram_ext}
+	\caption{Interface for external RAM}
+	\label{ext_ram_fig}
+\end{figure} 
