@@ -14,13 +14,13 @@ end MUX31_generic;
 
 architecture BEHAVIORAL of MUX31_generic is
 begin
-	process(A,B,SEL)
+	process(A,B,C,SEL)
 	begin
 		case SEL is
-		when "00" =>		Y <= A;  
-		when "01" =>		Y <= B;
-		when "10" =>		Y <= C;
-		when others => null;
+			when "00" =>		Y <= A;  
+			when "01" =>		Y <= B;
+			when "10" =>		Y <= C;
+			when others => Y <= (others => '0');
 		end case;
 	end process;
 end BEHAVIORAL;

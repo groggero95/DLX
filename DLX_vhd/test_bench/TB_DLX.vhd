@@ -33,7 +33,7 @@ begin
 	Port Map (Clock, Reset);
 	
 
-        PCLOCK : process(Clock)
+  PCLOCK : process(Clock)
 	begin
 		Clock <= not(Clock) after 0.5 ns;	
 	end process;

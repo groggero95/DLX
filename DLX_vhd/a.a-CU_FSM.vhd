@@ -107,13 +107,15 @@ begin  -- dlx_cu_rtl
 
         case INST is
           
-          when reset => NEXT_INST <= fetch;
+          	when reset => NEXT_INST <= fetch;
 
           when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) or (OPCODE = ITYPE_BEQZ) or (OPCODE = ITYPE_BNEZ) ) then 
           					NEXT_INST <= stall_if;
           				else
           					NEXT_INST <= fetch;
           				end if;
+
+			--when fetch => NEXT_INST <= fetch;
 
           when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) or (OPCODE1 = ITYPE_BEQZ) or (OPCODE1 = ITYPE_BNEZ) ) then 
           						NEXT_INST <= stall_if;

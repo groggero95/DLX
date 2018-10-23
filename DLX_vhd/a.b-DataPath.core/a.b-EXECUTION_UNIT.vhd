@@ -186,11 +186,6 @@ comparison : comparator port map (ADD_OUT, MSB,CA_OUT,OP_SEL(3 downto 1),US,COMP
 
 log_un : LOGIC port map (OP_SEL, TERM1, TERM2, LOGIC_OUT);
 
---destination_register : FD generic map (LS) port map (CLK,RST,ENABLE,TMP_DEST_OUT,DEST_OUT);
---output_register : FD port map (CLK,RST,ENABLE,MUX2_OUT,ALU_OUT);
---imm_register : FD port map (CLK,RST,ENABLE,B,IMM_OUT); -- da rivedere
---us_register : FD generic map (1) port map (CLK,RST,ENABLE,US_TMP1,US_TMP2);
-
 destination_register : FD generic map (LS) port map (CLK,RST,TMP_DEST_OUT,DEST_OUT);
 output_register : FD port map (CLK,RST,MUX2_OUT,ALU_OUT);
 imm_register : FD port map (CLK,RST,B,IMM_OUT); -- da rivedere

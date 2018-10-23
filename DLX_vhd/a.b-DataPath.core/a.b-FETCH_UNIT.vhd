@@ -10,14 +10,16 @@ entity FETCH_UNIT is
   			LS: integer:= 5
   			);
   port 	 (  CLK :       IN  std_logic;
-            STALL :    IN  std_logic;
+            STALL :     IN  std_logic;
             RST :       IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
             FUNC :      OUT std_logic_vector(F_SIZE-1 downto 0);
             OPCODE :    OUT std_logic_vector(OP_SIZE-1 downto 0);
             NPC :       OUT std_logic_vector(NB-1 downto 0);
-            INST_OUT :  OUT std_logic_vector(NB-1 downto 0)
+            INST_OUT :  OUT std_logic_vector(NB-1 downto 0);
+            MISS_HIT :  OUT std_logic;
+            FLUSH_CTL : OUT std_logic
           );
 end FETCH_UNIT;
 
@@ -27,11 +29,28 @@ architecture BEHAVIOR of FETCH_UNIT is
 component FD
 	Generic (NB : integer := 32);
 	Port (	CK:	In	std_logic;
-		RESET:	In	std_logic;
-		--EN : In std_logic;
-		D:	In	std_logic_vector (NB-1 downto 0);
-		Q:	Out	std_logic_vector (NB-1 downto 0) 
+      		RESET:	In	std_logic;
+      		D:	In	std_logic_vector (NB-1 downto 0);
+      		Q:	Out	std_logic_vector (NB-1 downto 0) 
 		);
+end component;
+
+component BP
+  generic(NB: integer     := 32;
+          BP_LEN: integer   := 4
+          );
+  port(
+        CLK       : in  std_logic;
+        RST       : in  std_logic;
+        EX_PC     : in  std_logic_vector(NB-1 downto 0);
+        CURR_PC   : IN  std_logic_vector(NB-1 downto 0);
+        NEXT_PC   : in  std_logic_vector(NB-1 downto 0);
+        NEW_PC    : in  std_logic_vector(NB-1 downto 0);
+        INST      : in  std_logic_vector(NB-1 downto 0);
+        MISS_HIT  : out std_logic;
+        FLUSH_CTL : out std_logic;
+        PRED      : out std_logic_vector(NB-1 downto 0) -- to the PC input
+    );
 end component;
 
 
@@ -58,8 +77,10 @@ component IRAM
 end component;
 
 
-signal NEW_PC, CUR_PC, NEXT_PC, IRAM_OUT, TMP_INST_OUT: std_logic_vector(NB-1 downto 0);
+signal NEW_PC, CUR_PC, NEXT_PC, IRAM_OUT, TMP_INST_OUT, PRED: std_logic_vector(NB-1 downto 0);
 signal TMP_RST : std_logic;
+signal M_H : std_logic;
+signal TMP_PC_SEL : std_logic;
 
 begin
 
@@ -72,9 +93,9 @@ begin
   end if;
 end process;
 
---TMP_RST <= RST and STALL;
+BP_UNIT : BP port map (CLK,RST,JB_INST,CUR_PC,NEXT_PC,NEW_PC,TMP_INST_OUT,M_H,FLUSH_CTL,PRED);
 
-PC : FD generic map (NB) port map (CLK,TMP_RST,NEW_PC,CUR_PC);
+PC : FD generic map (NB) port map (CLK,TMP_RST,PRED,CUR_PC);
 
 imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
 
@@ -90,8 +111,13 @@ begin
   end case;
 end process;
 
+MISS_HIT  <= M_H;
+
+TMP_PC_SEL <= PC_SEL and M_H;
+
 -- 0 -> pc+4 | 1 -> from_alu
-pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,PC_SEL,NEW_PC);
+pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,TMP_PC_SEL,NEW_PC);
+
 
 FUNC <= IRAM_OUT(10 downto 0);
 OPCODE <= IRAM_OUT(NB-1 downto NB-6);

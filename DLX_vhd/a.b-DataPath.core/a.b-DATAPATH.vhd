@@ -50,7 +50,6 @@ component FETCH_UNIT
   			LS: integer:= 5
   			);
   port   (  CLK :       IN  std_logic;
-          --ENABLE :    IN  std_logic;
             STALL :     IN  std_logic;
             RST :       IN  std_logic;
             PC_SEL :    IN  std_logic;
@@ -58,7 +57,9 @@ component FETCH_UNIT
             FUNC :      OUT std_logic_vector(F_SIZE-1 downto 0);
             OPCODE :    OUT std_logic_vector(OP_SIZE-1 downto 0);
             NPC :       OUT std_logic_vector(NB-1 downto 0);
-            INST_OUT :  OUT std_logic_vector(NB-1 downto 0)
+            INST_OUT :  OUT std_logic_vector(NB-1 downto 0);
+            MISS_HIT :  OUT std_logic;
+            FLUSH_CTL : OUT std_logic
           );
 end component;
 
@@ -68,6 +69,7 @@ component DECODE_UNIT
   			);
   port   (  CLK :     IN std_logic;
             RST :     IN std_logic;
+            STALL_RST:IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
             IMM2 :    IN std_logic_vector(NB-1 downto 0);
@@ -185,11 +187,17 @@ signal TMP_MEM : std_logic_vector(NB-1 downto 0);
 signal US_TO_EX : std_logic;
 signal FW_MUX1_SEL, FW_MUX2_SEL : std_logic_vector(1 downto 0);
 
+signal MISS_HIT, FLUSH_CTL, RST_DEC, STALL_IF : std_logic;
+
 begin
 
-ife_unit : FETCH_UNIT port map(CLK,STALL,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST);
+RST_DEC <= RST and (FLUSH_CTL nand MISS_HIT);
+
+STALL_IF <= (FLUSH_CTL nand MISS_HIT);
+
+ife_unit : FETCH_UNIT port map(CLK,STALL,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT,FLUSH_CTL);
                                                                                                                              --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
-dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
+dec_unit : DECODE_UNIT port map (CLK,RST,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
 
 exe_unit : EXECUTION_UNIT port map (FW_MUX1_SEL,FW_MUX2_SEL,ALU_OUT,DATA_WB,A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
  
@@ -198,22 +206,6 @@ mem_unit : MEMORY_UNIT port map (CLK,RST,DEST_FROM_EXEU,EXT_MEM_IN,ALU_OUT,ALU_T
 wrb_unit : WRITE_BACK_UNIT port map (MEM_ALU_SEL,DEST_FROM_MEMU,ALU_TO_WB,TMP_MEM,DATA_WB,DEST_FROM_WRBU);
 
 fw_unit : FOREWARD_UNIT port map (INST_EX,INST_MEM,INST_T_EX,RS,RT,DEST_FROM_EXEU,DEST_FROM_MEMU,FW_MUX1_SEL,FW_MUX2_SEL);
-
----- from cu
---INST_EX     : IN  TYPE_STATE;
---INST_MEM    : IN  TYPE_STATE;
---INST_T_EX   : IN  std_logic;
---INST_T_MEM  : IN  std_logic;
-
---Rs_EX       : IN  std_logic_vector(LS-1 downto 0);
---Rt_EX       : IN  std_logic_vector(LS-1 downto 0);
-
---Rd_MEM      : IN  std_logic_vector(LS-1 downto 0); -- dest from MEM stage
---Rd_WB       : IN  std_logic_vector(LS-1 downto 0); -- dest from WB stage
-
---CTL_MUX1    : OUT std_logic_vector(1 downto 0);
---CTL_MUX2    : OUT std_logic_vector(1 downto 0)
-
 
 EXT_MEM_ADD <= ALU_OUT(LS-1 downto 0);
 
