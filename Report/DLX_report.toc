@@ -8,21 +8,23 @@
 \contentsline {chapter}{\numberline {2}Datapath}{2}
 \contentsline {section}{\numberline {2.1}Fetch Stage}{2}
 \contentsline {subsection}{\numberline {2.1.1}Introduction}{2}
-\contentsline {section}{\numberline {2.2}Execution Stage}{2}
-\contentsline {subsection}{\numberline {2.2.1}Overview}{2}
-\contentsline {subsection}{\numberline {2.2.2}Adder}{3}
-\contentsline {subsection}{\numberline {2.2.3}Logic}{3}
-\contentsline {subsection}{\numberline {2.2.4}Shifter}{5}
-\contentsline {subsection}{\numberline {2.2.5}Logic comparison}{6}
-\contentsline {subsection}{\numberline {2.2.6}Multiplier}{7}
-\contentsline {subsection}{\numberline {2.2.7}PC adder}{7}
-\contentsline {section}{\numberline {2.3}Memory Stage}{7}
-\contentsline {subsection}{\numberline {2.3.1}Embedded part}{7}
-\contentsline {subsection}{\numberline {2.3.2}External RAM}{8}
-\contentsline {section}{\numberline {2.4}Write Back}{9}
+\contentsline {section}{\numberline {2.2}Decode Stage}{3}
+\contentsline {subsection}{\numberline {2.2.1}Introduction}{3}
+\contentsline {section}{\numberline {2.3}Execution Stage}{3}
+\contentsline {subsection}{\numberline {2.3.1}Overview}{3}
+\contentsline {subsection}{\numberline {2.3.2}Adder}{4}
+\contentsline {subsection}{\numberline {2.3.3}Logic}{4}
+\contentsline {subsection}{\numberline {2.3.4}Shifter}{6}
+\contentsline {subsection}{\numberline {2.3.5}Logic comparison}{6}
+\contentsline {subsection}{\numberline {2.3.6}Multiplier}{8}
+\contentsline {subsection}{\numberline {2.3.7}PC adder}{8}
+\contentsline {section}{\numberline {2.4}Memory Stage}{8}
+\contentsline {subsection}{\numberline {2.4.1}Embedded part}{8}
+\contentsline {subsection}{\numberline {2.4.2}External RAM}{9}
+\contentsline {section}{\numberline {2.5}Write Back}{9}
 \contentsline {chapter}{\numberline {3}Additional features}{11}
 \contentsline {section}{\numberline {3.1}Data forwarding}{11}
 \contentsline {section}{\numberline {3.2}Dynamic branch prediction}{11}
-\contentsline {chapter}{\numberline {4}Control Unit}{12}
-\contentsline {chapter}{\numberline {5}Synthesis}{13}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{14}
+\contentsline {chapter}{\numberline {4}Control Unit}{13}
+\contentsline {chapter}{\numberline {5}Synthesis}{14}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{15}

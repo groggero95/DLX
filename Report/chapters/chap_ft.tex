@@ -5,4 +5,21 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}
-The fetch stage is important to provide to our processor a new instruction at every clock cycle, if needed.  However, in this part of the pipeline, there are different components.
+The fetch stage is important to provide to our processor a new instruction at every clock cycle, if needed. It is the first stage that a function actually enters in its execution flow.
+
+Here are presented the signals involved:
+\begin{itemize}
+	\item \textit{CLK} is the usual clock signal needed to synchronize the system
+	\item \textit{STALL} is a control signal, that blocks the update of the \textsf{PC} and therefore does not let any other operations to be issued
+	\item \textit{RST} it's the canonical reset signal
+	\item \textit{RST\_DEC} \textbf{ALBI PLEASE ADD EXPLANATION HERE}
+	\item \textit{PC\_SEL} is a control signal which selects the next value of the \textit{PC}, either from the normal execution flow or from the ALU
+	\item \textit{JB\_INST} is the computed new \textit{PC} value coming from the \alu
+	\item \textit{FUNC} is a part of the instruction, for the \textsc{R\_TYPE} operations
+	\item \textit{OPCODE} represents the type of operation in the instruction set to be performed by the processor
+	\item \textit{NPC} which is the canonical updated \pc, pointing to the next instruction
+	\item \textit{INST\_OUT} is a signal that comes from the IRAM, after the instruction has been read
+	\item \textit{MISS\_HIT} is used to inform the system whether the prediction made was correct or not
+	\item \textit{FLUSH\_CTL} is a control signal which allows us to clean the pipe in case of a wrong prediction
+\end{itemize}
+
