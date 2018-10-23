@@ -12,6 +12,7 @@ entity FETCH_UNIT is
   port 	 (  CLK :       IN  std_logic;
             STALL :     IN  std_logic;
             RST :       IN  std_logic;
+            RST_DEC:    IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
             FUNC :      OUT std_logic_vector(F_SIZE-1 downto 0);
@@ -84,7 +85,7 @@ signal TMP_PC_SEL : std_logic;
 
 begin
 
-N_PC : FD generic map (NB) port map (CLK,RST,NEXT_PC,NPC);
+N_PC : FD generic map (NB) port map (CLK,RST_DEC,NEXT_PC,NPC);
 
 process(CLK)
 begin
@@ -99,7 +100,7 @@ PC : FD generic map (NB) port map (CLK,TMP_RST,PRED,CUR_PC);
 
 imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
 
-INST : FD generic map (NB) port map (CLK,RST,TMP_INST_OUT,INST_OUT);
+INST : FD generic map (NB) port map (CLK,RST_DEC,TMP_INST_OUT,INST_OUT);
 
 
 process(STALL,IRAM_OUT)

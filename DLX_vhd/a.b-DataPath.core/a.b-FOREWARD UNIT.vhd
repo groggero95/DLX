@@ -24,17 +24,6 @@ end FOREWARD_UNIT;
 architecture BEHAVIOR of FOREWARD_UNIT is
 
 
---component FD
---	Generic (NB : integer := 32);
---	Port (	CK:	In	std_logic;
---		RESET:	In	std_logic;
---		EN : In std_logic;
---		D:	In	std_logic_vector (NB-1 downto 0);
---		Q:	Out	std_logic_vector (NB-1 downto 0) 
---		);
---end component;
-
-
 component MUX21_generic
 	Generic (NB: integer:= 32);
 	Port (	A:	In	std_logic_vector(NB-1 downto 0) ;

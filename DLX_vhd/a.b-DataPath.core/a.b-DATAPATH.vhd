@@ -52,6 +52,7 @@ component FETCH_UNIT
   port   (  CLK :       IN  std_logic;
             STALL :     IN  std_logic;
             RST :       IN  std_logic;
+            RST_DEC:    IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
             FUNC :      OUT std_logic_vector(F_SIZE-1 downto 0);
@@ -69,7 +70,6 @@ component DECODE_UNIT
   			);
   port   (  CLK :     IN std_logic;
             RST :     IN std_logic;
-            STALL_RST:IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
             IMM2 :    IN std_logic_vector(NB-1 downto 0);
@@ -195,9 +195,9 @@ RST_DEC <= RST and (FLUSH_CTL nand MISS_HIT);
 
 STALL_IF <= (FLUSH_CTL nand MISS_HIT);
 
-ife_unit : FETCH_UNIT port map(CLK,STALL,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT,FLUSH_CTL);
+ife_unit : FETCH_UNIT port map(CLK,STALL,RST,RST_DEC,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT,FLUSH_CTL);
                                                                                                                              --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
-dec_unit : DECODE_UNIT port map (CLK,RST,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
+dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
 
 exe_unit : EXECUTION_UNIT port map (FW_MUX1_SEL,FW_MUX2_SEL,ALU_OUT,DATA_WB,A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
  

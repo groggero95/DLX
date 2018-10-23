@@ -11,7 +11,6 @@ entity DECODE_UNIT is
   			);
   port 	 (  CLK :     IN std_logic;
             RST :     IN std_logic;
-            STALL_RST:IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
             IMM2 :    IN std_logic_vector(NB-1 downto 0);
@@ -103,25 +102,25 @@ US_TO_EX <= US_TMP2(0);
 
 reg_file : register_file port map (CLK,RST,RD1,RD2,WR,ADD_WR,ADD_RD1,ADD_RD2,DATAIN,HAZARD,OUT1,OUT2);
 
-reg_a : FD port map (CLK,STALL_RST,OUT1,A);
+reg_a : FD port map (CLK,RST,OUT1,A);
 
-reg_b : FD port map (CLK,STALL_RST,OUT2,B);
+reg_b : FD port map (CLK,RST,OUT2,B);
 
 exted : SIGN_EXT port map (IMM1,US,JMP,EXT1);
 
-us_register : FD generic map (1) port map (CLK,STALL_RST,US_TMP1,US_TMP2);
+us_register : FD generic map (1) port map (CLK,RST,US_TMP1,US_TMP2);
 
-imm_reg1 : FD port map (CLK,STALL_RST,TO_IMM1,C);
+imm_reg1 : FD port map (CLK,RST,TO_IMM1,C);
 
-imm_reg2 : FD port map (CLK,STALL_RST,IMM2,D);
+imm_reg2 : FD port map (CLK,RST,IMM2,D);
 
 mux_dest : MUX21_generic generic map (LS) port map (ADD_RD2,DEST_IN,RI,DEST_ADD); -- aggiungere un mux per selezionare registro 31 da scrivere
 
-dest_reg : FD generic map (LS) port map (CLK,STALL_RST,DEST_ADD,DEST_OUT);
+dest_reg : FD generic map (LS) port map (CLK,RST,DEST_ADD,DEST_OUT);
 
-rs_reg : FD generic map (LS) port map (CLK,STALL_RST,ADD_RD1,RS);
+rs_reg : FD generic map (LS) port map (CLK,RST,ADD_RD1,RS);
 
-rt_reg : FD generic map (LS) port map (CLK,STALL_RST,ADD_RD2,RT);
+rt_reg : FD generic map (LS) port map (CLK,RST,ADD_RD2,RT);
 
 is_zero : process( BR_TYPE,OUT1, EXT1 )
 begin

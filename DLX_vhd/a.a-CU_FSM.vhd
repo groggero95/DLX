@@ -109,19 +109,30 @@ begin  -- dlx_cu_rtl
           
           	when reset => NEXT_INST <= fetch;
 
-          when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) or (OPCODE = ITYPE_BEQZ) or (OPCODE = ITYPE_BNEZ) ) then 
-          					NEXT_INST <= stall_if;
-          				else
-          					NEXT_INST <= fetch;
-          				end if;
+          --when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) or (OPCODE = ITYPE_BEQZ) or (OPCODE = ITYPE_BNEZ) ) then 
+          --					NEXT_INST <= stall_if;
+          --				else
+          --					NEXT_INST <= fetch;
+          --				end if;
 
-			--when fetch => NEXT_INST <= fetch;
+			when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then 
+	          					NEXT_INST <= stall_if;
+	          				else
+	          					NEXT_INST <= fetch;
+	          				end if;
 
-          when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) or (OPCODE1 = ITYPE_BEQZ) or (OPCODE1 = ITYPE_BNEZ) ) then 
-          						NEXT_INST <= stall_if;
-          					else
-          						NEXT_INST <= fetch;
-          					end if;
+          --when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) or (OPCODE1 = ITYPE_BEQZ) or (OPCODE1 = ITYPE_BNEZ) ) then 
+          --						NEXT_INST <= stall_if;
+          --					else
+          --						NEXT_INST <= fetch;
+          --					end if;
+
+
+           when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) ) then 
+	          						NEXT_INST <= stall_if;
+	          					else
+	          						NEXT_INST <= fetch;
+	          					end if;
 
           when others => NEXT_INST <= reset;	--TODO we need to  stall the pipe for 2 cycle (maybe 3) after a jump
         
