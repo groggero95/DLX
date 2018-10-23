@@ -43,20 +43,21 @@
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[11pt,  english, makeidx, a4paper, titlepage, oneside]{book}
+\documentclass[11pt, english, makeidx, a4paper, titlepage, oneside]{book}
 \usepackage{babel}
 \usepackage{fancyhdr}
 \usepackage{makeidx}
 \usepackage{titlesec}
 \usepackage{listings}
 \usepackage{booktabs}
+\usepackage{wrapfig}
 
 \newenvironment{listato}{\footnotesize}{\normalsize }
 
 %\pagestyle{empty}
 
 \textwidth 15.5cm
-\textheight 23cm
+\textheight 23 cm
 \topmargin -1cm
 \oddsidemargin -0.5cm
 \linespread{1.2}
@@ -149,8 +150,23 @@
 \mainmatter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Chapters
-\input{./chapters/chap1}
+%% Introduction
+\input{./chapters/chap_intro}
+%% Datapath chapter
+\chapter{Datapath}
+\input{./chapters/chap_ft}
 \input{./chapters/chap_exu}
+\input{./chapters/chap_mem}
+\input{./chapters/chap_wb}
+%% Chapter for additional DP feature
+\input{./chapters/chap_add_feat}
+
+%% Chapter for control unit
+\input{./chapters/chap_cu}
+
+%% Chapter for synthesis
+\input{./chapters/chap_synth}
+
 % \input{./chapters/chap_name}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
