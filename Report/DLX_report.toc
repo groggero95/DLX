@@ -17,4 +17,7 @@
 \contentsline {section}{\numberline {4.1}Embedded part}{10}
 \contentsline {section}{\numberline {4.2}External RAM}{11}
 \contentsline {chapter}{\numberline {5}Write Back}{12}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{14}
+\contentsline {chapter}{\numberline {6}Additional features}{14}
+\contentsline {section}{\numberline {6.1}Data forwarding}{14}
+\contentsline {section}{\numberline {6.2}Dynamic branch prediction}{14}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{15}
