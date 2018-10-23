@@ -3,8 +3,14 @@ use ieee.std_logic_1164.all;
 
 package myTypes is
 
+type TYPE_STATE is (
+                        reset,
+                        fetch,
+                        stall_if
+    );
+
 -- Control unit input sizes
-	constant CW_SIZE	  : integer :=  26;
+	constant CW_SIZE	  : integer :=  23;--26;
     constant OP_SIZE : integer :=  6;                                              -- OPCODE field size
     constant F_SIZE    : integer :=  11;                                             -- FUNC field size
 
@@ -100,6 +106,6 @@ package myTypes is
     constant ITYPE_SLEUI : std_logic_vector(OP_SIZE - 1 downto 0) :=  "111100";    -- ADDI1 RS1,RD,INP1
     constant ITYPE_SGEUI : std_logic_vector(OP_SIZE - 1 downto 0) :=  "111101";    -- ADDI1 RS1,RD,INP1
 
-
+    constant ADD_ZERO : std_logic_vector(4 downto 0) := "00000";
 end myTypes;
 

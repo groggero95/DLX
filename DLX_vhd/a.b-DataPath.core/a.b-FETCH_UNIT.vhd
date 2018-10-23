@@ -10,7 +10,7 @@ entity FETCH_UNIT is
   			LS: integer:= 5
   			);
   port 	 (  CLK :       IN  std_logic;
-            ENABLE :    IN  std_logic;
+            STALL :    IN  std_logic;
             RST :       IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
@@ -28,7 +28,7 @@ component FD
 	Generic (NB : integer := 32);
 	Port (	CK:	In	std_logic;
 		RESET:	In	std_logic;
-		EN : In std_logic;
+		--EN : In std_logic;
 		D:	In	std_logic_vector (NB-1 downto 0);
 		Q:	Out	std_logic_vector (NB-1 downto 0) 
 		);
@@ -59,31 +59,42 @@ end component;
 
 
 signal NEW_PC, CUR_PC, NEXT_PC, IRAM_OUT, TMP_INST_OUT: std_logic_vector(NB-1 downto 0);
-
+signal TMP_RST : std_logic;
 
 begin
 
-N_PC : FD generic map (NB) port map (CLK,RST,ENABLE,NEXT_PC,NPC);
+N_PC : FD generic map (NB) port map (CLK,RST,NEXT_PC,NPC);
 
-PC : FD generic map (NB) port map (CLK,RST,ENABLE,NEW_PC,CUR_PC);
+process(CLK)
+begin
+  if CLK'event and CLK = '1' then
+    TMP_RST <= RST;
+  end if;
+end process;
+
+--TMP_RST <= RST and STALL;
+
+PC : FD generic map (NB) port map (CLK,TMP_RST,NEW_PC,CUR_PC);
 
 imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
 
-INST : FD generic map (NB) port map (CLK,RST,ENABLE,TMP_INST_OUT,INST_OUT);
+INST : FD generic map (NB) port map (CLK,RST,TMP_INST_OUT,INST_OUT);
 
-process(PC_SEL,IRAM_OUT)
+
+process(STALL,IRAM_OUT)
 begin
-  case PC_SEL is
-    when '0' => TMP_INST_OUT <= IRAM_OUT;
-    when '1' => TMP_INST_OUT <= (others => '0');
+  case STALL is
+    when '1' => TMP_INST_OUT <= IRAM_OUT;
+    when '0' => TMP_INST_OUT <= (others => '0');
     when others => TMP_INST_OUT <= (others => '0');
   end case;
 end process;
+
 -- 0 -> pc+4 | 1 -> from_alu
 pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,PC_SEL,NEW_PC);
 
-FUNC <= TMP_INST_OUT(10 downto 0);
-OPCODE <= TMP_INST_OUT(NB-1 downto NB-6);
+FUNC <= IRAM_OUT(10 downto 0);
+OPCODE <= IRAM_OUT(NB-1 downto NB-6);
 
 adder : process(CUR_PC)
 begin

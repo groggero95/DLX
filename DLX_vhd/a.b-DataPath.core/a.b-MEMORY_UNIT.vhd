@@ -6,8 +6,7 @@ use IEEE.numeric_std.ALL;
 entity MEMORY_UNIT is
 	generic ( NB : integer := 32;
 			  LS : integer := 5);
-	port (	CLK : 		IN  std_logic;
-			ENABLE : 	IN  std_logic;
+	port (		CLK : 	IN  std_logic;
 			RST : 		IN  std_logic;
 			DEST_IN : 	IN  std_logic_vector(LS-1 downto 0);
 			FROM_MEM :	IN  std_logic_vector(NB-1 downto 0);
@@ -26,7 +25,7 @@ component FD
 	Generic (NB : integer := 32);
 	Port (	CK:	In	std_logic;
 		RESET:	In	std_logic;
-		EN : 	In std_logic;
+		--EN : In std_logic;
 		D:	In	std_logic_vector (NB-1 downto 0);
 		Q:	Out	std_logic_vector (NB-1 downto 0) 
 		);
@@ -36,13 +35,11 @@ end component;
 
 begin
 
+exec_reg : FD port map (CLK,RST,FROM_ALU,ALU_OUT);
 
+mem_reg : FD port map (CLK,RST,FROM_MEM,MEM_OUT);
 
-exec_reg : FD port map (CLK,RST,ENABLE,FROM_ALU,ALU_OUT);
-
-mem_reg : FD port map (CLK,RST,ENABLE,FROM_MEM,MEM_OUT);
-
-dest_reg : FD generic map (LS) port map (CLK,RST,ENABLE,DEST_IN,DEST_OUT);
+dest_reg : FD generic map (LS) port map (CLK,RST,DEST_IN,DEST_OUT);
 
 
 	

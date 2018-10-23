@@ -8,12 +8,15 @@ entity EXECUTION_UNIT is
   generic (NB: integer := 32;
   			LS: integer:= 5
   			);
-  port 	 ( 	A : 			IN std_logic_vector(NB-1 downto 0);
+  port 	 ( FW_MUX1_SEL : IN std_logic_vector(1 downto 0);
+            FW_MUX2_SEL : IN std_logic_vector(1 downto 0);
+            FW_EX :  IN std_logic_vector(NB-1 downto 0);
+            FW_MEM : IN std_logic_vector(NB-1 downto 0);
+            	A : 			IN std_logic_vector(NB-1 downto 0);
   		B : 			IN std_logic_vector(NB-1 downto 0);
            	C : 			IN std_logic_vector(NB-1 downto 0);
            	D : 			IN std_logic_vector(NB-1 downto 0);
            	DEST_IN : 		IN std_logic_vector(LS-1 downto 0);
-           	ENABLE : 		IN std_logic;
            	CLK :			IN std_logic;
            	RST : 			IN std_logic;
            	US :			IN std_logic;
@@ -83,7 +86,7 @@ component FD
 	Generic (NB : integer := 32);
 	Port (	CK:	In	std_logic;
 		RESET:	In	std_logic;
-		EN : In std_logic;
+		--EN : In std_logic;
 		D:	In	std_logic_vector (NB-1 downto 0);
 		Q:	Out	std_logic_vector (NB-1 downto 0) 
 		);
@@ -96,6 +99,16 @@ component MUX21_generic
 		B:	In	std_logic_vector(NB-1 downto 0);
 		SEL:	In	std_logic;
 		Y:	Out	std_logic_vector(NB-1 downto 0));
+end component;
+
+component MUX31_generic
+  Generic (NB: integer:= 32);
+  Port (  A : In  std_logic_vector(NB-1 downto 0);
+          B : In  std_logic_vector(NB-1 downto 0);
+          C : In  std_logic_vector(NB-1 downto 0);
+          SEL : In  std_logic_vector(1 downto 0);
+          Y : Out std_logic_vector(NB-1 downto 0)
+    );
 end component;
 
 component comparator
@@ -117,14 +130,14 @@ component MUX61_generic
 		C:	In	std_logic_vector(NB-1 downto 0);
 		D:	In	std_logic_vector(NB-1 downto 0);
 		E:	In	std_logic_vector(NB-1 downto 0);
-    F:  In  std_logic_vector(NB-1 downto 0);
+    		F:  In  std_logic_vector(NB-1 downto 0);
 		SEL:	In	std_logic_vector(2 downto 0);
 		Y:	Out	std_logic_vector(NB-1 downto 0));
 end component;
 
 
 
-signal TERM1, TERM2, TERM3 : std_logic_vector(NB-1 downto 0);
+signal TERM1, TERM2, TERM3, TERM4, TERM5 : std_logic_vector(NB-1 downto 0);
 signal MUX2_OUT: std_logic_vector(NB-1 downto 0);
 signal ADD_OUT, MUL_OUT, LOGIC_OUT, SHFT_OUT : std_logic_vector(NB-1 downto 0);
 signal CA_OUT: std_logic;
@@ -145,10 +158,14 @@ US_MEM <= US_TMP2(0);
 
 MSB <= TERM1(31) & TERM2(31);
 
-mux1 : MUX21_generic port map (A,D,MUX1_SEL,TERM1);
-mux2 : MUX21_generic port map (B,C,MUX2_SEL,TERM2);
+mux1 : MUX21_generic port map (A,D,MUX1_SEL,TERM4);
+mux2 : MUX21_generic port map (B,C,MUX2_SEL,TERM5);
 
---to_mem_reg : FD generic map (NB) port map (CLK,RST,ENABLE,B,);
+fW_mux1 : MUX31_generic port map (TERM4,FW_EX,FW_MEM,FW_MUX1_SEL,TERM1);
+fw_mux2 : MUX31_generic port map (TERM5,FW_EX,FW_MEM,FW_MUX2_SEL,TERM2);
+
+
+
 process(OP_SEL,TERM2)
 begin
 
@@ -169,10 +186,15 @@ comparison : comparator port map (ADD_OUT, MSB,CA_OUT,OP_SEL(3 downto 1),US,COMP
 
 log_un : LOGIC port map (OP_SEL, TERM1, TERM2, LOGIC_OUT);
 
-destination_register : FD generic map (LS) port map (CLK,RST,ENABLE,TMP_DEST_OUT,DEST_OUT);
-output_register : FD port map (CLK,RST,ENABLE,MUX2_OUT,ALU_OUT);
-imm_register : FD port map (CLK,RST,ENABLE,B,IMM_OUT); -- da rivedere
-us_register : FD generic map (1) port map (CLK,RST,ENABLE,US_TMP1,US_TMP2);
+--destination_register : FD generic map (LS) port map (CLK,RST,ENABLE,TMP_DEST_OUT,DEST_OUT);
+--output_register : FD port map (CLK,RST,ENABLE,MUX2_OUT,ALU_OUT);
+--imm_register : FD port map (CLK,RST,ENABLE,B,IMM_OUT); -- da rivedere
+--us_register : FD generic map (1) port map (CLK,RST,ENABLE,US_TMP1,US_TMP2);
+
+destination_register : FD generic map (LS) port map (CLK,RST,TMP_DEST_OUT,DEST_OUT);
+output_register : FD port map (CLK,RST,MUX2_OUT,ALU_OUT);
+imm_register : FD port map (CLK,RST,B,IMM_OUT); -- da rivedere
+us_register : FD generic map (1) port map (CLK,RST,US_TMP1,US_TMP2);
 
 mux_out : MUX61_generic port map (ADD_OUT,COMP_OUT,MUL_OUT,SHFT_OUT,LOGIC_OUT,JMP_RET,UN_SEL,MUX2_OUT);
 

@@ -7,10 +7,9 @@ use WORK.mfunc.all;
 
 entity DECODE_UNIT is
   generic (NB: integer := 32;
-  			   RS: integer:= 32
+  			   LS: integer:= 5
   			);
-  port 	 (  ENABLE :  IN std_logic;
-            CLK :     IN std_logic;
+  port 	 (  CLK :     IN std_logic;
             RST :     IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
@@ -22,17 +21,19 @@ entity DECODE_UNIT is
             RD1:      IN std_logic;
             RD2:      IN std_logic;
             WR:       IN std_logic;
-            ADD_WR:   IN std_logic_vector(getAddrSize(RS)-1 downto 0); 
-            ADD_RD1:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
-            ADD_RD2:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
-            DEST_IN : IN std_logic_vector(getAddrSize(RS)-1 downto 0);
+            ADD_WR:   IN std_logic_vector(LS-1 downto 0); 
+            ADD_RD1:  IN std_logic_vector(LS-1 downto 0);
+            ADD_RD2:  IN std_logic_vector(LS-1 downto 0);
+            DEST_IN : IN std_logic_vector(LS-1 downto 0);
             HAZARD:   OUT std_logic;
             US_TO_EX: OUT std_logic;
             A : 			OUT std_logic_vector(NB-1 downto 0);
   			    B : 			OUT std_logic_vector(NB-1 downto 0);
            	C : 			OUT std_logic_vector(NB-1 downto 0);
            	D : 			OUT std_logic_vector(NB-1 downto 0);
-           	DEST_OUT: OUT std_logic_vector(getAddrSize(RS)-1 downto 0)
+            RT:       OUT std_logic_vector(LS-1 downto 0); 
+            RS:       OUT std_logic_vector(LS-1 downto 0); 
+           	DEST_OUT: OUT std_logic_vector(LS-1 downto 0)
           );
 end DECODE_UNIT;
 
@@ -42,10 +43,9 @@ architecture BEHAVIOR of DECODE_UNIT is
 component FD
 	Generic (NB : integer := 32);
 	Port (	CK:	In	std_logic;
-		RESET:	In	std_logic;
-		EN : In std_logic;
-		D:	In	std_logic_vector (NB-1 downto 0);
-		Q:	Out	std_logic_vector (NB-1 downto 0) 
+		      RESET:	In	std_logic;
+		      D:	In	std_logic_vector (NB-1 downto 0);
+		      Q:	Out	std_logic_vector (NB-1 downto 0) 
 		);
 end component;
 
@@ -58,9 +58,9 @@ component register_file
          RD1:      IN std_logic;
          RD2:      IN std_logic;
          WR:       IN std_logic;
-         ADD_WR:   IN std_logic_vector(getAddrSize(RS)-1 downto 0); 
-         ADD_RD1:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
-         ADD_RD2:  IN std_logic_vector(getAddrSize(RS)-1 downto 0);
+         ADD_WR:   IN std_logic_vector(LS-1 downto 0); 
+         ADD_RD1:  IN std_logic_vector(LS-1 downto 0);
+         ADD_RD2:  IN std_logic_vector(LS-1 downto 0);
          DATAIN:   IN std_logic_vector(NB-1 downto 0);
          HAZARD:   OUT std_logic;
          OUT1:     OUT std_logic_vector(NB-1 downto 0);
@@ -89,7 +89,7 @@ end component;
 
 signal OUT1, OUT2 : std_logic_vector(NB-1 downto 0);
 signal EXT1: std_logic_vector(NB-1 downto 0);
-signal DEST_ADD : std_logic_vector(getAddrSize(RS)-1 downto 0);
+signal DEST_ADD : std_logic_vector(LS-1 downto 0);
 signal TO_IMM1 : std_logic_vector(NB-1 downto 0);
 signal US_TMP1, US_TMP2 : std_logic_vector(0 downto 0);
 
@@ -102,36 +102,40 @@ US_TO_EX <= US_TMP2(0);
 
 reg_file : register_file port map (CLK,RST,RD1,RD2,WR,ADD_WR,ADD_RD1,ADD_RD2,DATAIN,HAZARD,OUT1,OUT2);
 
-reg_a : FD port map (CLK,RST,ENABLE,OUT1,A);
+reg_a : FD port map (CLK,RST,OUT1,A);
 
-reg_b : FD port map (CLK,RST,ENABLE,OUT2,B);
+reg_b : FD port map (CLK,RST,OUT2,B);
 
 exted : SIGN_EXT port map (IMM1,US,JMP,EXT1);
 
-us_register : FD generic map (1) port map (CLK,RST,ENABLE,US_TMP1,US_TMP2);
+us_register : FD generic map (1) port map (CLK,RST,US_TMP1,US_TMP2);
 
-imm_reg1 : FD port map (CLK,RST,ENABLE,TO_IMM1,C);
+imm_reg1 : FD port map (CLK,RST,TO_IMM1,C);
 
-imm_reg2 : FD port map (CLK,RST,ENABLE,IMM2,D);
+imm_reg2 : FD port map (CLK,RST,IMM2,D);
 
-mux_dest : MUX21_generic generic map (getAddrSize(RS)) port map (ADD_RD2,DEST_IN,RI,DEST_ADD); -- aggiungere un mux per selezionare registro 31 da scrivere
+mux_dest : MUX21_generic generic map (LS) port map (ADD_RD2,DEST_IN,RI,DEST_ADD); -- aggiungere un mux per selezionare registro 31 da scrivere
 
-dest_reg : FD generic map (getAddrSize(RS)) port map (CLK,RST,ENABLE,DEST_ADD,DEST_OUT);
+dest_reg : FD generic map (LS) port map (CLK,RST,DEST_ADD,DEST_OUT);
+
+rs_reg : FD generic map (LS) port map (CLK,RST,ADD_RD1,RS);
+
+rt_reg : FD generic map (LS) port map (CLK,RST,ADD_RD2,RT);
 
 is_zero : process( BR_TYPE,OUT1, EXT1 )
 begin
   case (BR_TYPE) is
     when "10" => 
               if (unsigned(OUT1) = 0) then
-                TO_IMM1 <= (others  => '0');
-              else
                 TO_IMM1 <= EXT1;
+              else
+                TO_IMM1 <= (others  => '0');
               end if;
     when "11" => 
               if (unsigned(OUT1) /= 0) then
-                TO_IMM1 <= (others  => '0');
-              else
                 TO_IMM1 <= EXT1;
+              else
+                TO_IMM1 <= (others  => '0');
               end if;
       
     when others =>  TO_IMM1 <= EXT1;
