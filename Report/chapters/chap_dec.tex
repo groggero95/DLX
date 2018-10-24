@@ -5,4 +5,46 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}
-The fetch stage is important to provide to our processor a new instruction at every clock cycle, if needed.  However, in this part of the pipeline, there are different components.
+The decode stage is the second one. Here the instructions stored in the \textit{IRAM} that have been previously read are decomposed in order to correctly identify all the information regarding the operation that will be performed. In this way, we can read the correct source, target and destination address, as well as the immediate values. Moreover, also the \textsf{OPCODE}, which represents the particular instruction to be executed, is read.
+
+The most relevant signals involved in this stage are:
+\begin{itemize}
+	\item \textit{FLUSH} is a control signal, which is necessary to clean the pipe
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{}
+	\item \textit{A,B,C,D} are the outputs, storing the values coming from the \textsf{RF} and the two immediate values
+	\item \textit{RT, RS} are the addresses of the target and source address respectively, which are needed to implement the data forwarding
+	\item \textit{DEST\_OUT} is the address for the final commit during the write back stage
+\end{itemize}
+
+%FLUSH :   IN std_logic;
+%DATAIN :  IN std_logic_vector(NB-1 downto 0);
+%IMM1 :    IN std_logic_vector(NB-7 downto 0);
+%IMM2 :    IN std_logic_vector(NB-1 downto 0);
+%BR_TYPE : IN std_logic_vector(1 downto 0);
+%JMP :     IN std_logic;
+%RI:       IN std_logic;
+%US :      IN std_logic;
+%RD1:      IN std_logic;
+%RD2:      IN std_logic;
+%WR:       IN std_logic;
+%ADD_WR:   IN std_logic_vector(LS-1 downto 0); 
+%ADD_RD1:  IN std_logic_vector(LS-1 downto 0);
+%ADD_RD2:  IN std_logic_vector(LS-1 downto 0);
+%DEST_IN : IN std_logic_vector(LS-1 downto 0);
+%HAZARD:   OUT std_logic;
+%US_TO_EX: OUT std_logic;
