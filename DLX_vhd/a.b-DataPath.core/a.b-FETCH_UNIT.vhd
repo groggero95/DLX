@@ -19,8 +19,7 @@ entity FETCH_UNIT is
             OPCODE :    OUT std_logic_vector(OP_SIZE-1 downto 0);
             NPC :       OUT std_logic_vector(NB-1 downto 0);
             INST_OUT :  OUT std_logic_vector(NB-1 downto 0);
-            MISS_HIT :  OUT std_logic;
-            FLUSH_CTL : OUT std_logic
+            MISS_HIT :  OUT std_logic_vector( 1 downto 0)
           );
 end FETCH_UNIT;
 
@@ -36,6 +35,16 @@ component FD
 		);
 end component;
 
+component FD_INJ
+  Generic (NB : integer := 32);
+  Port (  CK: In  std_logic;
+    RESET:  In  std_logic;
+    INJ_ZERO : In std_logic;
+    D:  In  std_logic_vector (NB-1 downto 0);
+    Q:  Out std_logic_vector (NB-1 downto 0) 
+    );
+end component;
+
 component BP
   generic(NB: integer     := 32;
           BP_LEN: integer   := 4
@@ -48,8 +57,7 @@ component BP
         NEXT_PC   : in  std_logic_vector(NB-1 downto 0);
         NEW_PC    : in  std_logic_vector(NB-1 downto 0);
         INST      : in  std_logic_vector(NB-1 downto 0);
-        MISS_HIT  : out std_logic;
-        FLUSH_CTL : out std_logic;
+        MISS_HIT  : out std_logic_vector(1 downto 0);
         PRED      : out std_logic_vector(NB-1 downto 0) -- to the PC input
     );
 end component;
@@ -80,12 +88,17 @@ end component;
 
 signal NEW_PC, CUR_PC, NEXT_PC, IRAM_OUT, TMP_INST_OUT, PRED: std_logic_vector(NB-1 downto 0);
 signal TMP_RST : std_logic;
-signal M_H : std_logic;
+signal M_H : std_logic_vector(1 downto 0);
 signal TMP_PC_SEL : std_logic;
+
+signal flush : std_logic;
 
 begin
 
-N_PC : FD generic map (NB) port map (CLK,RST_DEC,NEXT_PC,NPC);
+flush <=  ((not M_H(1)) or (not M_H(0))) and STALL;
+
+--N_PC : FD generic map (NB) port map (CLK,flush,NEXT_PC,NPC);
+N_PC : FD_INJ generic map (NB) port map (CLK,RST,flush,NEXT_PC,NPC);
 
 process(CLK)
 begin
@@ -94,27 +107,39 @@ begin
   end if;
 end process;
 
-BP_UNIT : BP port map (CLK,RST,JB_INST,CUR_PC,NEXT_PC,NEW_PC,TMP_INST_OUT,M_H,FLUSH_CTL,PRED);
+BP_UNIT : BP port map (CLK,RST,JB_INST,CUR_PC,NEXT_PC,NEW_PC,TMP_INST_OUT,M_H,PRED);
 
 PC : FD generic map (NB) port map (CLK,TMP_RST,PRED,CUR_PC);
 
 imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
 
-INST : FD generic map (NB) port map (CLK,RST_DEC,TMP_INST_OUT,INST_OUT);
+flush_mux : MUX21_generic generic map (NB) port map (IRAM_OUT,"00000000000000000000000000000000",flush,TMP_INST_OUT);
+
+--INST : FD generic map (NB) port map (CLK,flush,TMP_INST_OUT,INST_OUT);
+INST : FD generic map (NB) port map (CLK,RST,TMP_INST_OUT,INST_OUT);
 
 
-process(STALL,IRAM_OUT)
-begin
-  case STALL is
-    when '1' => TMP_INST_OUT <= IRAM_OUT;
-    when '0' => TMP_INST_OUT <= (others => '0');
-    when others => TMP_INST_OUT <= (others => '0');
-  end case;
-end process;
+--process(STALL,IRAM_OUT)
+--begin
+--  case STALL is
+--    when '1' => TMP_INST_OUT <= IRAM_OUT;
+--    when '0' => TMP_INST_OUT <= (others => '0');
+--    when others => TMP_INST_OUT <= (others => '0');
+--  end case;
+--end process;
+
+--process(flush,IRAM_OUT)
+--begin
+--  case flush is
+--    when '1' => TMP_INST_OUT <= IRAM_OUT;
+--    when '0' => TMP_INST_OUT <= (others => '0');
+--    when others => TMP_INST_OUT <= (others => '0');
+--  end case;
+--end process;
 
 MISS_HIT  <= M_H;
 
-TMP_PC_SEL <= PC_SEL and M_H;
+TMP_PC_SEL <= PC_SEL; 
 
 -- 0 -> pc+4 | 1 -> from_alu
 pc_mux : MUX21_generic generic map (NB) port map (JB_INST,NEXT_PC,TMP_PC_SEL,NEW_PC);

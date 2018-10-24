@@ -11,6 +11,7 @@ entity DECODE_UNIT is
   			);
   port 	 (  CLK :     IN std_logic;
             RST :     IN std_logic;
+            FLUSH :   IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
             IMM2 :    IN std_logic_vector(NB-1 downto 0);
@@ -40,13 +41,14 @@ end DECODE_UNIT;
 architecture BEHAVIOR of DECODE_UNIT is
 
 
-component FD
-	Generic (NB : integer := 32);
-	Port (	CK:	In	std_logic;
-		      RESET:	In	std_logic;
-		      D:	In	std_logic_vector (NB-1 downto 0);
-		      Q:	Out	std_logic_vector (NB-1 downto 0) 
-		);
+component FD_INJ
+  Generic (NB : integer := 32);
+  Port (  CK: In  std_logic;
+    RESET:  In  std_logic;
+    INJ_ZERO : In std_logic;
+    D:  In  std_logic_vector (NB-1 downto 0);
+    Q:  Out std_logic_vector (NB-1 downto 0) 
+    );
 end component;
 
 
@@ -102,25 +104,25 @@ US_TO_EX <= US_TMP2(0);
 
 reg_file : register_file port map (CLK,RST,RD1,RD2,WR,ADD_WR,ADD_RD1,ADD_RD2,DATAIN,HAZARD,OUT1,OUT2);
 
-reg_a : FD port map (CLK,RST,OUT1,A);
+reg_a : FD_INJ port map (CLK,RST,FLUSH,OUT1,A);
 
-reg_b : FD port map (CLK,RST,OUT2,B);
+reg_b : FD_INJ port map (CLK,RST,FLUSH,OUT2,B);
 
 exted : SIGN_EXT port map (IMM1,US,JMP,EXT1);
 
-us_register : FD generic map (1) port map (CLK,RST,US_TMP1,US_TMP2);
+us_register : FD_INJ generic map (1) port map (CLK,RST,FLUSH,US_TMP1,US_TMP2);
 
-imm_reg1 : FD port map (CLK,RST,TO_IMM1,C);
+imm_reg1 : FD_INJ port map (CLK,RST,FLUSH,TO_IMM1,C);
 
-imm_reg2 : FD port map (CLK,RST,IMM2,D);
+imm_reg2 : FD_INJ port map (CLK,RST,FLUSH,IMM2,D);
 
 mux_dest : MUX21_generic generic map (LS) port map (ADD_RD2,DEST_IN,RI,DEST_ADD); -- aggiungere un mux per selezionare registro 31 da scrivere
 
-dest_reg : FD generic map (LS) port map (CLK,RST,DEST_ADD,DEST_OUT);
+dest_reg : FD_INJ generic map (LS) port map (CLK,RST,FLUSH,DEST_ADD,DEST_OUT);
 
-rs_reg : FD generic map (LS) port map (CLK,RST,ADD_RD1,RS);
+rs_reg : FD_INJ generic map (LS) port map (CLK,RST,FLUSH,ADD_RD1,RS);
 
-rt_reg : FD generic map (LS) port map (CLK,RST,ADD_RD2,RT);
+rt_reg : FD_INJ generic map (LS) port map (CLK,RST,FLUSH,ADD_RD2,RT);
 
 is_zero : process( BR_TYPE,OUT1, EXT1 )
 begin

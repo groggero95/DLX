@@ -15,8 +15,7 @@ entity BP is
 		NEXT_PC		: in  std_logic_vector(NB-1 downto 0);
 		NEW_PC		: in  std_logic_vector(NB-1 downto 0);
 		INST 		: in  std_logic_vector(NB-1 downto 0);
-		MISS_HIT	: out std_logic;
-		FLUSH_CTL	: out std_logic;
+		MISS_HIT	: out std_logic_vector(1 downto 0);
 		PRED  		: out std_logic_vector(NB-1 downto 0) -- to the PC input
 		);
 end BP;
@@ -41,7 +40,7 @@ architecture behavioral of BP is
 
    	signal INSERT, BRANCH : std_logic;
 
-   	signal H_M : std_logic;
+   	signal H_M : std_logic_vector(1 downto 0);
 
 
 
@@ -53,10 +52,8 @@ PRED_NT <= NEXT_PC;
 PRED <= PRED_TMP;
 MISS_HIT <= H_M;
 
-FLUSH_CTL <= PRED_HISTORY(1)(NB);
-
 -- Process to decide the next PC value
-process(INST,NEW_PC,PC_TABLE,CURR_PC,PRED_TABLE,PRED_NT)
+process(INST,NEW_PC,PC_TABLE,CURR_PC,PRED_TABLE,PRED_NT,PRED_TK,H_M)
 begin
 	if INST(NB-1 downto NB-6) = ITYPE_BEQZ or INST(NB-1 downto NB-6) = ITYPE_BNEZ then
 		if PC_TABLE(to_integer(unsigned(CURR_PC(BP_LEN-1 + 2 downto 0 + 2)))) = CURR_PC then
@@ -72,7 +69,11 @@ begin
 		end if;	
 		BRANCH <= '1';
 	else
-		PRED_TMP <= NEW_PC;
+		case H_M is
+			when "11" => PRED_TMP <= NEW_PC; -- miss
+			when "10" => PRED_TMP <= NEXT_PC; -- hit
+			when others => PRED_TMP <= NEW_PC;
+		end case;
 		INSERT <= '0';
 		BRANCH <= '0';
 	end if; 
@@ -97,12 +98,12 @@ process(PRED_HISTORY,EX_PC)
 begin
 	if PRED_HISTORY(1)(NB) = '1' then
 		if PRED_HISTORY(1)(NB-1 downto 0) = EX_PC then -- HIT
-			H_M <= '0';
+			H_M <= "10";
 		else -- MISS
-			H_M <= '1';
+			H_M <= "11";
 		end if;
 	else
-		H_M <= '1';
+		H_M <= "00";
 	end if;
 end process;
 
@@ -114,7 +115,7 @@ begin
 	elsif CLK'event and CLK = '1' then
 		if PRED_HISTORY(1)(NB) = '1' then
 		--	if PRED_HISTORY(1)(NB-1 downto 0) = NEW_PC then -- HIT
-			if H_M <= '0' then -- HIT
+			if H_M = "10" then -- HIT
 
 				case PRED_TABLE(PC_HISTORY(1)) is
 					when "00" | "01" => PRED_TABLE(PC_HISTORY(1)) <= "00";
