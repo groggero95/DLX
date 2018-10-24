@@ -1,7 +1,21 @@
 \chapter{Additional features}
 \label{chap_add_feat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \section{Data forwarding}
+In order to reduce the number of required stalls in the pipeline and thus improving the efficiency and reducing the average latency of our processor, we have implemented a simple form of data forwarding.
+It is important to notice that, after an initial phase of testing without this capability, some additional signals and components have been added to connect some data at different stages of the pipeline. In particular, these are the following:
+\begin{itemize}
+	\item between \textit{MEM} and \textit{EX} stage
+	\item between \textit{WB} and \textit{EX} stage
+\end{itemize}
+
+Each of these signals goes through a different multiplexer, which select either this data or the data coming from the previous stage. This selection is made by checking the destination and the source registers of two following instructions. When we have that
+\[R^{i-1}_{dest}\quad = \quad R^{i}_{sorce}\]
+then the signal coming from the subsequent stage is selected.
+
 
 \section{Dynamic branch prediction}
 \label{dyn_br}

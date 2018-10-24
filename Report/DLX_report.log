@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  24 OCT 2018 20:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.12)  24 OCT 2018 22:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -547,12 +547,27 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [3]
-<chapters/figures/adder.png, id=30, 811.03pt x 618.31pt>
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[4]
+<chapters/figures/adder.png, id=33, 811.03pt x 618.31pt>
 File: chapters/figures/adder.png Graphic file (type png)
 <use chapters/figures/adder.png>
 Package pdftex.def Info: chapters/figures/adder.png  used on input line 41.
 (pdftex.def)             Requested size: 441.01772pt x 336.23164pt.
-<chapters/figures/logicT2.png, id=32, 382.42876pt x 386.44376pt>
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[5 <./chapters/figures/adder.png>]
+<chapters/figures/logicT2.png, id=40, 382.42876pt x 386.44376pt>
 File: chapters/figures/logicT2.png Graphic file (type png)
 <use chapters/figures/logicT2.png>
 Package pdftex.def Info: chapters/figures/logicT2.png  used on input line 75.
@@ -564,25 +579,18 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[4]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[5 <./chapters/figures/adder.png> <./chapters/figures/logicT2.png>]
-<chapters/figures/comp_us.png, id=42, 505.13719pt x 245.41687pt>
+[6 <./chapters/figures/logicT2.png>]
+<chapters/figures/comp_us.png, id=45, 505.13719pt x 245.41687pt>
 File: chapters/figures/comp_us.png Graphic file (type png)
 <use chapters/figures/comp_us.png>
 Package pdftex.def Info: chapters/figures/comp_us.png  used on input line 92.
 (pdftex.def)             Requested size: 303.08466pt x 147.25125pt.
-<chapters/figures/comp_s1.png, id=43, 542.025pt x 209.28188pt>
+<chapters/figures/comp_s1.png, id=46, 542.025pt x 209.28188pt>
 File: chapters/figures/comp_s1.png Graphic file (type png)
 <use chapters/figures/comp_s1.png>
 Package pdftex.def Info: chapters/figures/comp_s1.png  used on input line 100.
 (pdftex.def)             Requested size: 325.2175pt x 125.57007pt.
-<chapters/figures/comp_mux.png, id=44, 286.82156pt x 276.28218pt>
+<chapters/figures/comp_mux.png, id=47, 286.82156pt x 276.28218pt>
 File: chapters/figures/comp_mux.png Graphic file (type png)
 <use chapters/figures/comp_mux.png>
 Package pdftex.def Info: chapters/figures/comp_mux.png  used on input line 107.
@@ -595,15 +603,8 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6 <./chapters/figures/comp_us.png>]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[7 <./chapters/figures/comp_s1.png> <./chapters/figures/comp_mux.png>]
-<chapters/figures/pc_add.png, id=54, 198.7425pt x 182.18062pt>
+[7 <./chapters/figures/comp_us.png> <./chapters/figures/comp_s1.png>]
+<chapters/figures/pc_add.png, id=53, 198.7425pt x 182.18062pt>
 File: chapters/figures/pc_add.png Graphic file (type png)
 <use chapters/figures/pc_add.png>
 Package pdftex.def Info: chapters/figures/pc_add.png  used on input line 123.
@@ -611,16 +612,16 @@ Package pdftex.def Info: chapters/figures/pc_add.png  used on input line 123.
 )
 (./chapters/chap_mem.tex
 
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 16.
-
-
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[8 <./chapters/figures/pc_add.png>]
+[8 <./chapters/figures/comp_mux.png> <./chapters/figures/pc_add.png>]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 16.
+
 <chapters/figures/ram_ext.png, id=59, 542.025pt x 377.15906pt>
 File: chapters/figures/ram_ext.png Graphic file (type png)
 <use chapters/figures/ram_ext.png>
@@ -646,37 +647,45 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[10 <./chapters/figures/ram_ext.png> <./chapters/figures/wb_stage.png>]
-Chapter 3.
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 15.
-
-<chapters/figures/bht.png, id=69, 601.4972pt x 365.86688pt>
-File: chapters/figures/bht.png Graphic file (type png)
-<use chapters/figures/bht.png>
-Package pdftex.def Info: chapters/figures/bht.png  used on input line 34.
-(pdftex.def)             Requested size: 300.74786pt x 182.93298pt.
-) (./chapters/chap_cu.tex [11
-
-]
+[10 <./chapters/figures/ram_ext.png>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[12 <./chapters/figures/bht.png>]
+[11 <./chapters/figures/wb_stage.png>]
+Chapter 3.
+[12
+
+]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 29.
+
+<chapters/figures/bht.png, id=79, 601.4972pt x 365.86688pt>
+File: chapters/figures/bht.png Graphic file (type png)
+<use chapters/figures/bht.png>
+Package pdftex.def Info: chapters/figures/bht.png  used on input line 48.
+(pdftex.def)             Requested size: 300.74786pt x 182.93298pt.
+) (./chapters/chap_cu.tex
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[13 <./chapters/figures/bht.png>]
 Chapter 4.
-) (./chapters/chap_synth.tex [13
+) (./chapters/chap_synth.tex [14
 
 ]
 Chapter 5.
-) (./appendices/appendix1.tex [14
+) (./appendices/appendix1.tex [15
 
 ]
 Appendix A.
-(./appendices/files/a.b.d-SHIFTER.vhd [15
+(./appendices/files/a.b.d-SHIFTER.vhd [16
 
 ]
 LaTeX Font Info:    Try loading font information for OML+cmr on input line 29.
@@ -693,25 +702,25 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[16]
+[17]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[17]))
+[18]))
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[18] (./DLX_report.aux) ) 
+[19] (./DLX_report.aux) ) 
 Here is how much of TeX's memory you used:
  8411 strings out of 492982
  124684 string characters out of 6134895
- 263100 words of memory out of 5000000
+ 263101 words of memory out of 5000000
  11758 multiletter control sequences out of 15000+600000
  14127 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -720,18 +729,20 @@ Here is how much of TeX's memory you used:
 onts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcs
 c10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmti10.pfb>
-Output written on DLX_report.pdf (20 pages, 446067 bytes).
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmti10.pfb>
+Output written on DLX_report.pdf (21 pages, 465578 bytes).
 PDF statistics:
- 137 PDF objects out of 1000 (max. 8388607)
- 83 compressed objects within 1 object stream
+ 148 PDF objects out of 1000 (max. 8388607)
+ 91 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

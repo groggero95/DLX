@@ -23,3 +23,20 @@ Here are presented the signals involved:
 	\item \textit{FLUSH\_CTL} is a control signal which allows us to clean the pipe in case of a wrong prediction
 \end{itemize}
 
+\subsection{Main units}
+There are several instances we decided to use in this stage. The main ones are reported below.
+\paragraph{Branch predictor}
+The purpose of this unit is to give a reliable dynamic prediction regarding the behaviour of a branch before its correct target address is computed. More details can be found in a dedicated section \ref{dyn_br}.
+\paragraph{IRAM}
+It is the instruction memory, where the operations that have to be executed are stored. It is addressed by the \pc.
+\paragraph{Registers}
+There are several registers that are actually used to store the values of:
+\begin{itemize}
+	\item \textit{PC} counter, current and next value
+	\item \textit{INSTR} which saves the instruction fetched from the \textsf{IRAM}
+	\item \textit{TMP\_RST}, where the reset signal is sampled in order to synchronize the reset phase
+\end{itemize}
+\paragraph{Mux}
+This unit is used here to selected the correct value of the next \pc: either the one coming from the memory or the following instruction, following the normal execution flow.
+\paragraph{Adder}
+This very simple unit just provides the $+4$ value for the new \pc.

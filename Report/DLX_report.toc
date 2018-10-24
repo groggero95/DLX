@@ -8,23 +8,29 @@
 \contentsline {chapter}{\numberline {2}Datapath}{2}
 \contentsline {section}{\numberline {2.1}Fetch Stage}{2}
 \contentsline {subsection}{\numberline {2.1.1}Introduction}{2}
+\contentsline {subsection}{\numberline {2.1.2}Main units}{3}
+\contentsline {paragraph}{Branch predictor}{3}
+\contentsline {paragraph}{IRAM}{3}
+\contentsline {paragraph}{Registers}{3}
+\contentsline {paragraph}{Mux}{3}
+\contentsline {paragraph}{Adder}{3}
 \contentsline {section}{\numberline {2.2}Decode Stage}{3}
 \contentsline {subsection}{\numberline {2.2.1}Introduction}{3}
 \contentsline {section}{\numberline {2.3}Execution Stage}{3}
 \contentsline {subsection}{\numberline {2.3.1}Overview}{3}
-\contentsline {subsection}{\numberline {2.3.2}Adder}{4}
-\contentsline {subsection}{\numberline {2.3.3}Logic}{4}
+\contentsline {subsection}{\numberline {2.3.2}Adder}{5}
+\contentsline {subsection}{\numberline {2.3.3}Logic}{5}
 \contentsline {subsection}{\numberline {2.3.4}Shifter}{6}
-\contentsline {subsection}{\numberline {2.3.5}Logic comparison}{6}
+\contentsline {subsection}{\numberline {2.3.5}Logic comparison}{7}
 \contentsline {subsection}{\numberline {2.3.6}Multiplier}{8}
 \contentsline {subsection}{\numberline {2.3.7}PC adder}{8}
 \contentsline {section}{\numberline {2.4}Memory Stage}{8}
 \contentsline {subsection}{\numberline {2.4.1}Embedded part}{8}
 \contentsline {subsection}{\numberline {2.4.2}External RAM}{9}
-\contentsline {section}{\numberline {2.5}Write Back}{9}
-\contentsline {chapter}{\numberline {3}Additional features}{11}
-\contentsline {section}{\numberline {3.1}Data forwarding}{11}
-\contentsline {section}{\numberline {3.2}Dynamic branch prediction}{11}
-\contentsline {chapter}{\numberline {4}Control Unit}{13}
-\contentsline {chapter}{\numberline {5}Synthesis}{14}
-\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{15}
+\contentsline {section}{\numberline {2.5}Write Back}{10}
+\contentsline {chapter}{\numberline {3}Additional features}{12}
+\contentsline {section}{\numberline {3.1}Data forwarding}{12}
+\contentsline {section}{\numberline {3.2}Dynamic branch prediction}{12}
+\contentsline {chapter}{\numberline {4}Control Unit}{14}
+\contentsline {chapter}{\numberline {5}Synthesis}{15}
+\contentsline {chapter}{\numberline {A}Shifter behavioural VHDL}{16}
