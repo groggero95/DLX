@@ -15,7 +15,8 @@ In the \textit{Execution Unit} are therefore present the following components:
 	\item \textbf{logic}, unit to perform logic bitwise operations, such as \textit{OR, AND, XOR} and so on
 	\item \textbf{comparator}, which purpose is to determine whether an input is greater, smaller or equal than another one
 	\item \textbf{multiplier}, whose goal is to perform multiplications between inputs
-	\item \text{PC adder}, a dedicated adder to increase by the value of the PC, useful in case of a \textit{JMP} operation
+	\item \textbf{PC adder}, a dedicated adder to increase by the value of the 
+	PC, useful in case of a \textit{JMP} operation
 	\item \textbf{registers}, to update the inputs and store the results
 	\item \textbf{muxes}, to select the results coming from the required unit and correctly update the outputs of the stage
 	\item \textbf{inverter}, needed to perform the \textit{2'S complement} and perform the subtraction
@@ -126,7 +127,15 @@ For our multiplier we again reused the \textit{Booth} architecture that has been
 	\label{pc_add_fig}
 \end{wrapfigure}
 
+<<<<<<< HEAD
 In order to perform correctly some jump instruction, the temporary PC needs a +4, which, due to the design of our datapath, can not be performed by the adder. An additional adder, reported in figure \ref{pc_add_fig} is in charge of this specific operation.
+=======
+In order to perform correctly some jump instruction, we need to calculate both 
+the new and the return address, which is the PC coming from the previous stage 
++4 and due to the design of our datapath, can not be performed by the single 
+adder. An additional adder, reported in figure \ref{pc_add_fig} is in charge of 
+this specific operation.
+>>>>>>> origin/testb
 
 
 

@@ -5,6 +5,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Introduction}
+<<<<<<< HEAD
 The decode stage is the second one. Here the instructions stored in the \textit{IRAM} that have been previously read are decomposed in order to correctly identify all the information regarding the operation that will be performed. In this way, we can read the correct source, target and destination address, as well as the immediate values. Moreover, also the \textsf{OPCODE}, which represents the particular instruction to be executed, is read.
 
 The most relevant signals involved in this stage are:
@@ -46,4 +47,7 @@ The most relevant signals involved in this stage are:
 %ADD_RD2:  IN std_logic_vector(LS-1 downto 0);
 %DEST_IN : IN std_logic_vector(LS-1 downto 0);
 %HAZARD:   OUT std_logic;
-%US_TO_EX: OUT std_logic;
+%US_TO_EX: OUT std_logic;
+=======
+The fetch stage is important to provide to our processor a new instruction at every clock cycle, if needed.  However, in this part of the pipeline, there are different components.
+>>>>>>> origin/testb

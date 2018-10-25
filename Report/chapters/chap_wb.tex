@@ -12,7 +12,12 @@ Few signals are needed in the entire unit:
 	\item \textbf{DEST\_IN}, destination address from the memory stage
 	\item \textbf{FROM\_ALU}, coming directly from the execution stage
 	\item \textbf{FROM\_MEM}, that comes from the memory, after a read operation has been performed
+<<<<<<< HEAD
 	\item \textbf{DATA\_OUT}, which contains the data to be written on the \textsf{Rf}
+=======
+	\item \textbf{DATA\_OUT}, which contains the data to be written on the 
+	\textsf{RF}
+>>>>>>> origin/testb
 	\item \textbf{DEST\_OUT}, destination address to the \textsf{RF}
 \end{itemize}
 
@@ -23,7 +28,17 @@ Few signals are needed in the entire unit:
 	\label{wb_overall_fig}
 \end{figure} 
 
+<<<<<<< HEAD
 To simply explain the behavior, one can say that the destination address is contained in the 5 bits of \textit{DEST\_IN}, which are passed to \textit{DEST\_OUT}. This output signal is then connected to the \textsc{RF}, where the \textit{WR} signal enables the writing. The actual value that is written on memory is chosen between the outputs from memory and ALU, and ultimately written to close the pipeline and complete the instruction, which is finally committed.
+=======
+To simply explain the behavior, one can say that the destination address is 
+contained in the 5 bits of \textit{DEST\_IN}, which are passed to 
+\textit{DEST\_OUT}. This output signal is then connected to the \textsc{RF}, 
+where the \textit{WR} signal enables the writing. The actual value that is 
+written on memory is chosen between the outputs from memory and ALU, and 
+ultimately written to close the pipeline and complete the instruction, which is 
+finally committed at the start of the next cycle.
+>>>>>>> origin/testb
 
 
 
