@@ -14,5 +14,5 @@ We are currently planning to add some form of Out of Order execution, as well as
 
 # Contacts
 For any information, you can simply drop an email:
-* [Alberto Anselmo](s251291@studenti.polito.it)
-* [Giulio Roggero](s251311@studenti.polito.it)	
+* [Alberto Anselmo](mailto:s251291@studenti.polito.it)
+* [Giulio Roggero](mailto:s251311@studenti.polito.it)	
