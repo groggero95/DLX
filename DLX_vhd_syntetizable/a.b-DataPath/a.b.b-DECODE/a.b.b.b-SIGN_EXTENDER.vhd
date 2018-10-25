@@ -6,6 +6,8 @@ use work.const.all;
 -- Block used to extend immediate values coming from the instuction
 
 entity SIGN_EXT is
+	generic( NB : integer := 32
+		);
 	Port (	A:	In	std_logic_vector(NB-7 downto 0) ; -- The input is on 26 bits as it is used also with address in jump instructions
 			US:	In	std_logic;	-- 0 -> Sign extend as an unsiged number 1 -> Sign extend as an unsiged number (consider only last 16 bits)
 			JMP: In  std_logic; -- 1 -> extend the 26 bit address as a signed number

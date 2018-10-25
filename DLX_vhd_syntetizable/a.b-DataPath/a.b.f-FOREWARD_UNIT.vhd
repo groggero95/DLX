@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
-use work.myTypes.all;
+use work.const.all;
 
 -- This unit is in charge of forewarding data when needed
 -- from memory or write back in order to reduce hazards 

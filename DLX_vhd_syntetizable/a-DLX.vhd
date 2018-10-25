@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.myTypes.all;
+use work.const.all;
 
 entity DLX is
   generic (

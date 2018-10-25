@@ -7,7 +7,7 @@ use WORK.mfunc.all;
 
 entity DECODE_UNIT is
   generic (NB: integer := 32;
-  			   LS: integer:= 5
+  			LS: integer:= 5
   			);
   port 	 (  CLK :     IN std_logic;
             RST :     IN std_logic;

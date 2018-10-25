@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.ALL;
 use WORK.mfunc.all;
-use work.myTypes.all;
+use work.const.all;
 
 
 entity DATAPATH is
