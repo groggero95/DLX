@@ -3,6 +3,8 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
 
+-- Integer multiplier which takes two half word and generate a word
+
 entity BOOTHMUL is 
 		generic (	NB: integer := 32); -- Number of output bits
 		port (	A: in std_logic_vector((NB/2)-1 downto 0);
@@ -15,7 +17,7 @@ architecture BEHAVIORAL of BOOTHMUL is
 
 component MUX_SHIFT is 
 		generic (	NB: integer:= 32;
-				N_sh: integer:= 0
+					N_sh: integer:= 0
 				);
 		port (	A: in std_logic_vector(NB-1 downto 0);
 				sel: in std_logic_vector(2 downto 0);

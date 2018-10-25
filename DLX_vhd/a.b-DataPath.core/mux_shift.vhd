@@ -3,10 +3,13 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
 
+-- Component used for the boothmultiplier
+-- used to generate a shifted version of one of the 
+-- input according to the other input
 
 entity MUX_SHIFT is 
 		generic (	NB: integer:= 32;
-				N_sh: integer:= 0
+					N_sh: integer:= 0
 				);
 		port (	A: in std_logic_vector(NB-1 downto 0);
 				sel: in std_logic_vector(2 downto 0);
@@ -40,17 +43,14 @@ MUX:	process(A, sel)
 						when "100" => 	
 										temp_A := std_logic_vector(shift_left(resize(signed(A), 2*NB), N_sh+1));
 										B <= not temp_A;
-									--	B <= std_logic_vector(shift_left(signed(neg_A), N_sh+1));
 										AS <= '1';
 						when "101" => 
 										temp_A := std_logic_vector(shift_left(resize(signed(A), 2*NB), N_sh));
 										B <= not temp_A;
-									--	B <= std_logic_vector(shift_left(signed(neg_A), N_sh));
 										AS <= '1';
 						when "110" => 
 										temp_A := std_logic_vector(shift_left(resize(signed(A), 2*NB), N_sh));
 										B <= not temp_A;
-									--	B <= std_logic_vector(shift_left(signed(neg_A), N_sh));
 										AS <= '1';
 						when "111" => 
 										B <= (others => '0');
@@ -58,7 +58,6 @@ MUX:	process(A, sel)
 						when others => 
 										B <= (others => '0');
 										AS <= '0';
---report "unreachable" severity failure;
 					end case;
 		end process;
 	

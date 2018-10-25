@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all; 
---use WORK.constants.all;
+
+-- Simple D flip flop with an additional mux ath the input to inject a zero
 
 entity FD_INJ is
 	Generic (NB : integer := 32);
@@ -20,7 +21,7 @@ architecture BEHAV of FD_INJ is -- flip flop D with syncronous reset
 
 begin
 
-
+-- Simple mux used to inject a zero
 	process(INJ_ZERO,D)
 	begin
 		case INJ_ZERO is
@@ -34,7 +35,7 @@ begin
 	PSYNCH: process(CK,RESET)
 	begin
 
-		if RESET='0' then -- active high reset 
+		if RESET='0' then -- active low reset 
 	      	Q <= (others =>'0'); 
 	  	elsif CK'event and CK='1' then -- positive edge triggered:
 	      	Q <= TMP_D; -- input is written on output
@@ -44,6 +45,10 @@ begin
 end BEHAV;
 
 
+configuration CFG_FD_INJ of FD_INJ is	
+  for BEHAV
+  end for;
+end CFG_FD_INJ;
 
 
 

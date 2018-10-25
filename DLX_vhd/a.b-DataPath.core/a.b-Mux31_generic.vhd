@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all; 
---use WORK.constants.all; 
+
+-- Simple 3 input multiplexer with paremeter NB to decide the width of the inputs 
 
 entity MUX31_generic is
 	Generic (NB: integer:= 32);
@@ -27,9 +28,9 @@ end BEHAVIORAL;
 
 
 
-configuration CFG_MUX21_GEN_BEHAVIORAL of MUX31_generic is
+configuration CFG_MUX31_GEN_BEHAVIORAL of MUX31_generic is
 	for BEHAVIORAL
 	end for;
-end CFG_MUX21_GEN_BEHAVIORAL;
+end CFG_MUX31_GEN_BEHAVIORAL;
 
 

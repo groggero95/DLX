@@ -3,9 +3,11 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
 
+-- Behavioral descriprion of a shifter which implemets
+-- also rotation capability which is not used by the DLX
 
 entity SHIFTER is
-  generic (NB: integer := 32;
+  generic ( NB: integer := 32;
   			LS: integer:= 5
   			);
   port 	 ( 	FUNC: 			IN std_logic_vector(1 downto 0);
@@ -61,3 +63,8 @@ P_ALU: process (FUNC, US, DATA1, DATA2)
   end process P_ALU;
 
 end BEHAVIOR;
+
+configuration CFG_SHIFTER of SHIFTER is
+for BEHAVIOR
+end for;
+end CFG_SHIFTER;

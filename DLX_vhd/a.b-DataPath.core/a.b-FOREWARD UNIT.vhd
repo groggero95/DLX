@@ -4,6 +4,9 @@ use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
 use work.myTypes.all;
 
+-- This unit is in charge of forewarding data when needed
+-- from memory or write back in order to reduce hazards 
+-- and consequently stalls
 
 entity FOREWARD_UNIT is
   generic (NB: integer := 32;
@@ -63,3 +66,8 @@ end process;
 
 
 end BEHAVIOR;
+
+configuration CFG_FOREWARD_UNIT of FOREWARD_UNIT is
+for BEHAVIOR
+end for;
+end CFG_FOREWARD_UNIT;

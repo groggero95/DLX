@@ -45,6 +45,19 @@ port (
   );
 end component;
 
+
+  --Instruction Ram
+component IRAM
+  generic (
+    RAM_DEPTH : integer := 512;
+    I_SIZE : integer := 32;
+    LS : integer := 5);
+  port ( Rst  : in  std_logic;
+         Addr : in  std_logic_vector(I_SIZE - 1 downto 0);
+         Dout : out std_logic_vector(I_SIZE - 1 downto 0)
+    );
+end component;
+
   -- Control Unit
 component dlx_cu
   port (
@@ -111,12 +124,14 @@ component DATAPATH
            BR_TYPE      : IN  std_logic_vector(1 downto 0);
            UN_SEL       : IN  std_logic_vector(2 downto 0); -- unit selection signal
            OP_SEL       : IN  std_logic_vector(3 downto 0); -- operation selection
+           IRAM_OUT     : IN  std_logic_vector(NB-1 downto 0);
            EXT_MEM_IN   : IN  std_logic_vector(NB-1 downto 0); -- output of external memory
            FLUSH        : OUT std_logic;
            US_MEM       : OUT std_logic; -- US output to ext memory
            HAZARD       : OUT std_logic;  -- possible hazard detection
            EXT_MEM_ADD  : OUT std_logic_vector(LS-1 downto 0); -- address to outer memory
            EXT_MEM_DATA : OUT std_logic_vector(NB-1 downto 0); -- data to outer memory
+           CURR_PC      : OUT std_logic_vector(NB-1 downto 0);
            FUNC         : OUT std_logic_vector(FN-1 downto 0); -- out of instruction memory
            OP_CODE      : OUT std_logic_vector(OPC-1 downto 0) -- out of instruction memory     
   );
@@ -154,6 +169,7 @@ signal D_TYPE    : std_logic_vector(1 downto 0);
 signal WR        : std_logic;     -- enables the write port of the register file
 signal MEM_ALU_SEL: std_logic;	-- select data for WB
 
+-- Control signals needed by the foreward unit
 signal INST_T_EX   : std_logic;
 signal INST_EX     : TYPE_STATE;
 signal INST_MEM    : TYPE_STATE;  
@@ -167,16 +183,20 @@ signal EXT_MEM_DATA : std_logic_vector(NB-1 downto 0); -- data to outer memory
 
 signal US_MEM, FLUSH, HAZARD : std_logic;
 
+signal CUR_PC   : std_logic_vector(NB-1 downto 0); 
+signal IRAM_OUT : std_logic_vector(NB-1 downto 0);
+
 
 
   begin  -- DLX
 
-dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, FUNC, OPCODE);    
+dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, IRAM_OUT, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, CUR_PC, FUNC, OPCODE);    
 
 cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,FLUSH,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
 
 mem: RAM port map (CLK, RST, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
 
-    
+imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
+   
     
 end dlx_rtl;

@@ -2,18 +2,20 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all; 
 
+-- Description of a carry select
+
 entity carry_sel_bk is 
-    Generic ( N: integer := 32);
-	Port (	A:	In	std_logic_vector(N-1 downto 0);
-			B:	In	std_logic_vector(N-1 downto 0);
+    Generic ( NB: integer := 32);
+	Port (	A:	In	std_logic_vector(NB-1 downto 0);
+			B:	In	std_logic_vector(NB-1 downto 0);
 			Ci:	In	std_logic;
-			S:	Out	std_logic_vector(N-1 downto 0)
+			S:	Out	std_logic_vector(NB-1 downto 0)
 		);
 end carry_sel_bk; 
 
 architecture behavioral of carry_sel_bk is
 
-	signal out0_b, out1_b : std_logic_vector( N-1 downto 0);
+	signal out0_b, out1_b : std_logic_vector( NB-1 downto 0);
 
 begin
 
@@ -63,21 +65,21 @@ component MUX21
 		Y:	Out	std_logic);
 end component;
 
-	signal Cp0, Cp1 : std_logic_vector( N downto 0);
-	signal out0_s, out1_s : std_logic_vector( N-1 downto 0);
+	signal Cp0, Cp1 : std_logic_vector( NB downto 0);
+	signal out0_s, out1_s : std_logic_vector( NB-1 downto 0);
 
 begin
 
 Cp0(0) <= '0';
 
-rca0_s: for J in 0 to N-1 generate
+rca0_s: for J in 0 to NB-1 generate
 		fa_v_map0 : FA
 			port map( A(J), B(J), Cp0(J), out0_s(J), Cp0(J+1) );
 	end generate;
 
 Cp1(0) <=  '1';
 
-rca1_s: for K in 0 to N-1 generate
+rca1_s: for K in 0 to NB-1 generate
 		fa_v_map1 : FA
 			port map( A(K), B(K), Cp1(K), out1_s(K), Cp1(K+1) );
 	end generate;
@@ -85,7 +87,7 @@ rca1_s: for K in 0 to N-1 generate
 		
 
 
-mux0_s: for I in 0 to N-1 generate
+mux0_s: for I in 0 to NB-1 generate
 		mux_v_map : MUX21  Port Map (out1_s(I), out0_s(I), Ci, S(I)); 
 	end generate;
 

@@ -20,7 +20,7 @@ entity BP is
 		);
 end BP;
 
-architecture behavioral of BP is
+architecture BEHAVIORAL of BP is
 	
 	type PC_table_type is array (0 to (2**BP_LEN)-1) of std_logic_vector(NB-1 downto 0);
 	type PRED_type is array (0 to (2**BP_LEN)-1) of unsigned(1 downto 0);
@@ -170,4 +170,9 @@ begin
 	end if;
 end process;
 
-end behavioral;
+end BEHAVIORAL;
+
+configuration CFG_BP of BP is
+for BEHAVIORAL
+end for;
+end CFG_BP;

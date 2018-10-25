@@ -3,13 +3,15 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all; 
 use work.mfunc.all;
 
+-- This block generate the structure used to compute the carry used by the carry select
+
 entity CSTgen is
 	generic(CW : integer := 4;
-			AB : integer := 32);
-	port(	A  : In 	std_logic_vector( AB-1 downto 0);
-			B  : In 	std_logic_vector( AB-1 downto 0);
+			NB : integer := 32);
+	port(	A  : In 	std_logic_vector( NB-1 downto 0);
+			B  : In 	std_logic_vector( NB-1 downto 0);
 			Ci : In 	std_logic;
-			C  : Out 	std_logic_vector( delimiter(AB,CW) downto 0)
+			C  : Out 	std_logic_vector( delimiter(NB,CW) downto 0)
 	    );
 end CSTgen;
 
@@ -46,12 +48,12 @@ component blockPG
 	);
 end component;
 
-type SignalVector is array ( 0 to f(CW)+f(AB/CW) ) of std_logic_vector(AB-1 downto 0);
+type SignalVector is array ( 0 to f(CW)+f(NB/CW) ) of std_logic_vector(NB-1 downto 0);
 
 signal matrixGen  : SignalVector := ( others => ( others => '0' ) ); 
 signal matrixProp : SignalVector := ( others => ( others => '0' ) );
 
-constant reminder : integer := (AB mod CW); 
+constant reminder : integer := (NB mod CW); 
 signal g0temp : std_logic;
 
 
@@ -59,8 +61,8 @@ begin
 
 matrixGen(0)(0) <=  g0temp or (Ci and matrixProp(0)(0) );
 
-pg_network : 	for z in 0 to closemul(AB,CW) -1 generate
-					pgn0 	:	if (z < AB) generate
+pg_network : 	for z in 0 to closemul(NB,CW) -1 generate
+					pgn0 	:	if (z < NB) generate
 						pgn1 	: 	if (z = 0) generate
 										pg_n0 : pg_net port map ( a => A(z),
 															 	  b => B(z),
@@ -80,13 +82,13 @@ pg_network : 	for z in 0 to closemul(AB,CW) -1 generate
 	     		end generate pg_network; 
 
 
-G1 	: 	for j in 1 to (f(CW)+f(AB/CW)) generate 
-	G2 :	for i in 1 to closemul(AB,CW) generate
+G1 	: 	for j in 1 to (f(CW)+f(NB/CW)) generate 
+	G2 :	for i in 1 to closemul(NB,CW) generate
 
 		G3 :	if (j <= f(CW) ) generate
 			G4 :	if ( (i mod CW) = 0 ) generate
 				G5 : 	for k in 0 to endLoop(j,CW) generate
-					G6 : 	if (i-(k*(2**j)) <= effectivebits(AB, CW) ) generate					
+					G6 : 	if (i-(k*(2**j)) <= effectivebits(NB, CW) ) generate					
 						G7 : 	if ( isG( j, (i-(k*(2**j))), f(CW), CW,CW) ) generate
 
 									gen : G port map ( 	Gij => matrixGen(j)(i-(k*(2**j))-1),
@@ -118,7 +120,7 @@ G1 	: 	for j in 1 to (f(CW)+f(AB/CW)) generate
 		G10 :	if (j > f(CW)) generate
 			G11 :	if ( (i mod (CW*( 2**( j-f(CW) ) ) ) ) = 0 ) generate
 				G12 : 	for k in 1 to ( 2**( j-f(CW) -1) ) generate
-					G13	: 	if ( (i - CW*(k-1)) <= effectivebits(AB, CW) ) generate 
+					G13	: 	if ( (i - CW*(k-1)) <= effectivebits(NB, CW) ) generate 
 						G14 :	if (i = (CW*(2**(j-f(CW)))) ) generate
 								
 									gen2 : G port map (	Gij => matrixGen(j)(i - CW*(k-1) -1), 
@@ -156,22 +158,22 @@ G16 :	for j in 0 to f(reminder) generate
 			G19 : 	if (i mod reminder = 0) generate
 				G20 : 	for k in 0 to endLoop(j,reminder) generate
 
-							pgextra : blockPG  port map (Gij => matrixGen(j)(i-(k*(2**j))+ effectivebits(AB, CW) -1), 
-														 Gik => matrixGen(j-1)(i-(k*(2**j))+ effectivebits(AB, CW) -1), 
-													 	 Gk_1j => matrixGen(j-disp(j,i-(k*(2**j)),reminder))(i -(k*(2**j)) -2**(j-1)+ effectivebits(AB, CW) -1), 
-														 Pij => matrixProp(j)(i-(k*(2**j))+ effectivebits(AB, CW) -1), 
-														 Pik =>  matrixProp(j-1)(i-(k*(2**j))+ effectivebits(AB, CW) -1),
-														 Pk_1j => matrixProp(j-disp(j,i-(k*(2**j)),reminder))(i -(k*(2**j)) -2**(j-1)+ effectivebits(AB, CW) -1)
+							pgextra : blockPG  port map (Gij => matrixGen(j)(i-(k*(2**j))+ effectivebits(NB, CW) -1), 
+														 Gik => matrixGen(j-1)(i-(k*(2**j))+ effectivebits(NB, CW) -1), 
+													 	 Gk_1j => matrixGen(j-disp(j,i-(k*(2**j)),reminder))(i -(k*(2**j)) -2**(j-1)+ effectivebits(NB, CW) -1), 
+														 Pij => matrixProp(j)(i-(k*(2**j))+ effectivebits(NB, CW) -1), 
+														 Pik =>  matrixProp(j-1)(i-(k*(2**j))+ effectivebits(NB, CW) -1),
+														 Pk_1j => matrixProp(j-disp(j,i-(k*(2**j)),reminder))(i -(k*(2**j)) -2**(j-1)+ effectivebits(NB, CW) -1)
 														);
 
 					G21 : 	if (j = f(reminder)) generate
-								genextra : G port map ( Gij => matrixGen(f(CW)+f(AB/CW))(AB-1),
-														Gik => matrixGen(j)(i-(k*(2**j))+ effectivebits(AB, CW) -1), 
-														Gk_1j => matrixGen(f(CW)+f(AB/CW) )(effectivebits(AB, CW)-1),
-														Pik =>  matrixProp(j)(i-(k*(2**j))+ effectivebits(AB, CW) -1)
+								genextra : G port map ( Gij => matrixGen(f(CW)+f(NB/CW))(NB-1),
+														Gik => matrixGen(j)(i-(k*(2**j))+ effectivebits(NB, CW) -1), 
+														Gk_1j => matrixGen(f(CW)+f(NB/CW) )(effectivebits(NB, CW)-1),
+														Pik =>  matrixProp(j)(i-(k*(2**j))+ effectivebits(NB, CW) -1)
 														);
 
-								C(delimiter(AB,CW)) <= matrixGen(f(CW)+f(AB/CW))(AB-1);
+								C(delimiter(NB,CW)) <= matrixGen(f(CW)+f(NB/CW))(NB-1);
 									
 					end generate G21;
 				end generate G20;						

@@ -2,9 +2,9 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.ALL;
 use IEEE.math_real.all;
-use WORK.all;
-use WORK.mfunc.all;
+use work.mfunc.all;
 
+-- Simple register file to store integer registers
 
 entity register_file is
  generic (NB: integer := 32;  	-- bith width of each memory location
@@ -36,7 +36,7 @@ architecture behavioral of register_file is
 
 	
 begin 
--- write your RF code 
+
 REG: process(CLK)
 begin
 	if CLK'event and CLK = '1' then
@@ -72,10 +72,9 @@ begin
 	else 
 		OUT2 <= (others => '0'); -- When disabled the output goes to high impedence
 	end if;
-end process ; -- rd
+end process ;
 end behavioral;
 
-----
 
 
 configuration CFG_RF_BEH of register_file is

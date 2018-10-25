@@ -30,12 +30,14 @@ entity DATAPATH is
            BR_TYPE 	    : IN  std_logic_vector(1 downto 0);
            UN_SEL       : IN  std_logic_vector(2 downto 0); -- unit selection signal
            OP_SEL       : IN  std_logic_vector(3 downto 0); -- operation selection
+           IRAM_OUT     : IN  std_logic_vector(NB-1 downto 0);
            EXT_MEM_IN   : IN  std_logic_vector(NB-1 downto 0); -- output of external memory
            FLUSH        : OUT std_logic;
            US_MEM       : OUT std_logic; -- US output to ext memory
            HAZARD       : OUT std_logic;	-- possible hazard detection
            EXT_MEM_ADD  : OUT std_logic_vector(LS-1 downto 0); -- address to outer memory
            EXT_MEM_DATA : OUT std_logic_vector(NB-1 downto 0); -- data to outer memory
+           CURR_PC      : OUT std_logic_vector(NB-1 downto 0);
            FUNC         : OUT std_logic_vector(FN-1 downto 0); -- out of instruction memory
            OP_CODE      : OUT std_logic_vector(OPC-1 downto 0) -- out of instruction memory     
 	);
@@ -56,8 +58,10 @@ component FETCH_UNIT
             RST_DEC:    IN  std_logic;
             PC_SEL :    IN  std_logic;
             JB_INST :   IN  std_logic_vector(NB-1 downto 0);
+            IRAM_OUT :  IN  std_logic_vector(NB-1 downto 0);
             FUNC :      OUT std_logic_vector(F_SIZE-1 downto 0);
             OPCODE :    OUT std_logic_vector(OP_SIZE-1 downto 0);
+            CURR_PC :   OUT std_logic_vector(NB-1 downto 0);
             NPC :       OUT std_logic_vector(NB-1 downto 0);
             INST_OUT :  OUT std_logic_vector(NB-1 downto 0);
             MISS_HIT :  OUT std_logic_vector(1 downto 0)
@@ -132,7 +136,6 @@ component MEMORY_UNIT
 	generic ( NB : integer := 32;
 			  LS : integer := 5);
 	port ( CLK :     IN  std_logic;
-       --  ENABLE :  IN  std_logic;
          RST :     IN  std_logic;
          DEST_IN :   IN  std_logic_vector(LS-1 downto 0);
          FROM_MEM :  IN  std_logic_vector(NB-1 downto 0);
@@ -146,14 +149,14 @@ end component;
 
 component WRITE_BACK_UNIT
 	generic ( NB : integer := 32;
-			  LS : integer := 5
+			      LS : integer := 5
 		);
 	port (	MEM_ALU_SEL : 	IN std_logic;
-			DEST_IN : 		IN  std_logic_vector(LS-1 downto 0);
-			FROM_ALU :	IN  std_logic_vector(NB-1 downto 0);
-			FROM_MEM : 	IN  std_logic_vector(NB-1 downto 0);
-			DATA_OUT : 	OUT  std_logic_vector(NB-1 downto 0);
-			DEST_OUT : 	OUT std_logic_vector(LS-1 downto 0)
+    			DEST_IN : 		IN  std_logic_vector(LS-1 downto 0);
+    			FROM_ALU :	IN  std_logic_vector(NB-1 downto 0);
+    			FROM_MEM : 	IN  std_logic_vector(NB-1 downto 0);
+    			DATA_OUT : 	OUT  std_logic_vector(NB-1 downto 0);
+    			DEST_OUT : 	OUT std_logic_vector(LS-1 downto 0)
 	);
 end component;
 
@@ -190,13 +193,14 @@ signal FW_MUX1_SEL, FW_MUX2_SEL, MISS_HIT : std_logic_vector(1 downto 0);
 
 signal RST_DEC, STALL_IF : std_logic;
 
+
 begin
 
 RST_DEC <= RST and (MISS_HIT(1) nand MISS_HIT(0));
 
 FLUSH <= RST_DEC;
 
-ife_unit : FETCH_UNIT port map(CLK,STALL,RST,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT);
+ife_unit : FETCH_UNIT port map(CLK,STALL,RST,RST,PC_SEL,TEMP_PC,IRAM_OUT,FUNC,OP_CODE,CURR_PC,NPC,INST,MISS_HIT);
                                                                                                                              --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
 dec_unit : DECODE_UNIT port map (CLK,RST,RST_DEC,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
 

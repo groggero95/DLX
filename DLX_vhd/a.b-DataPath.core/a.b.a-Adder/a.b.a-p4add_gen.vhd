@@ -24,21 +24,21 @@ architecture stuctural of p4addgen is
 
 component CSTgen 
 	generic(CW : integer := 4;
-			AB : integer := 32);
-	port(	A  : In 	std_logic_vector( AB-1 downto 0);
-			B  : In 	std_logic_vector( AB-1 downto 0);
+			NB : integer := 32);
+	port(	A  : In 	std_logic_vector( NB-1 downto 0);
+			B  : In 	std_logic_vector( NB-1 downto 0);
 			Ci : In 	std_logic;
-			C  : Out 	std_logic_vector( delimiter(AB,CW) downto 0)
+			C  : Out 	std_logic_vector( delimiter(NB,CW) downto 0)
 	    );
 end component;
 
 component sum_gen 
-        Generic ( Nrca: integer := 4;
-		 		 N : integer := 32 );
-	Port (	A:	In	std_logic_vector(N-1 downto 0);
-			B:	In	std_logic_vector(N-1 downto 0);
-			Ci:	In	std_logic_vector(delimiter(N,Nrca) downto 0);
-			S:	Out	std_logic_vector(N-1 downto 0)
+         Generic ( Nrca: integer := 4;
+		  NB : integer := 32 );
+	Port (	A:	In	std_logic_vector(NB-1 downto 0);
+			B:	In	std_logic_vector(NB-1 downto 0);
+			Ci:	In	std_logic_vector(delimiter(NB,Nrca) downto 0);
+			S:	Out	std_logic_vector(NB-1 downto 0)
 		);
 end component;
 
@@ -51,7 +51,7 @@ carry_sh(0) <= Ci;
 
 sparse_tree : CSTgen 
 	generic map ( 	CW => CW,
-					AB => NB
+					NB => NB
 				)
 	port map (	A => A, 
 				B => B,
@@ -61,7 +61,7 @@ sparse_tree : CSTgen
 
 carry_sel : sum_gen
 	generic map (	Nrca => CW,
-					N => NB
+					NB => NB
 				)
 	port map (	A => A, 
 				B => B,

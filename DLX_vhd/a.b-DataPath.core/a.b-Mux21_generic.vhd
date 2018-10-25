@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.std_logic_1164.all; 
---use WORK.constants.all; 
+
+-- Simple 2 input multiplexer with paremeter NB to decide the width of the inputs
 
 entity MUX21_generic is
 	Generic (NB: integer:= 32);

@@ -3,7 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_misc.all; 
 
-entity comparator is
+-- Coparator which use the result coming from the subtraction
+-- of the adder in the execution unit
+
+entity COMPARATOR is
 		generic (NB : integer := 32);
         Port (	AdderRes :	In	std_logic_vector(NB-1 downto 0);
         -- first digit for A, second digit for B
@@ -13,11 +16,11 @@ entity comparator is
 		US: 	 In std_logic;
 		SOUT :   Out std_logic_vector(NB-1 downto 0)
 	);
-end comparator;
+end COMPARATOR;
 
 
 
-architecture behavioral of comparator is
+architecture BEHAVIORAL of COMPARATOR is
 
 signal EQ, LE, LT, GE, GT : std_logic;
 
@@ -80,10 +83,15 @@ begin
 
 	end process;
 
-	SOUT(NB-1 downto 1) <= (others => '0');--"0000000000000000000000000000000";--(others => '0');
+	SOUT(NB-1 downto 1) <= (others => '0');
 
 
-end behavioral;
+end BEHAVIORAL;
+
+configuration CFG_COMPARATOR of COMPARATOR is
+for BEHAVIORAL
+end for;
+end CFG_COMPARATOR;
 
 
 

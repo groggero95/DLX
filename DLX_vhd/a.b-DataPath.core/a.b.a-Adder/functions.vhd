@@ -1,6 +1,8 @@
 library ieee; 
 use ieee.std_logic_1164.all;
 
+-- Set of functions used to generate the P4 adder
+
 package mfunc is
 	function indexgen ( a : integer; b : integer ) return integer;
 

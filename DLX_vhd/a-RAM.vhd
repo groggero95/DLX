@@ -7,15 +7,10 @@ generic ( NB : integer := 32;
           LS : integer := 5);
 port (
     CLOCK   	: IN  std_logic;
-    RST 	: IN  std_logic;
-<<<<<<< HEAD
-    --ENABLE  	: IN  std_logic;
-    RW      : IN  std_logic; -- read haigh write low
-=======
-    WR      : IN  std_logic; -- read haigh write low
->>>>>>> origin/testb
-    D_TYPE	: IN  std_logic_vector(1 downto 0);
-    US 		: IN  std_logic;
+    RST 		: IN  std_logic;
+    WR      	: IN  std_logic; -- read haigh write low
+    D_TYPE		: IN  std_logic_vector(1 downto 0);
+    US 			: IN  std_logic;
     ADDRESS 	: IN  std_logic_vector(LS-1 downto 0);
     MEMIN   	: IN  std_logic_vector(NB-1 downto 0);
     MEMOUT  	: OUT std_logic_vector(NB-1 downto 0)
@@ -50,7 +45,6 @@ begin
 			        memory(to_integer(unsigned(ADDRESS))+2) <= MEMIN(15 downto 8);
 			        memory(to_integer(unsigned(ADDRESS))+3) <= MEMIN(7 downto 0);
 			    when others =>
-			    	memory <= memory;
 		    end case;
 	        address_buff <= ADDRESS;
 	      end if;
@@ -58,7 +52,7 @@ begin
     end if;
   end process;
 
-  MEM_out: process(address_buff, US, D_TYPE)
+  MEM_out: process(address_buff, US, D_TYPE,memory)
   		variable tmp : std_logic_vector(NB-1 downto 0);
   	begin
 	  	if (US='1') then

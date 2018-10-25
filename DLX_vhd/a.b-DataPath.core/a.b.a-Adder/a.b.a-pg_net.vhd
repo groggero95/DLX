@@ -2,11 +2,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all; 
 
+-- G block used to compute carry in the P4 adder
+
 entity pg_net is 
         Port (	a:	In	std_logic;
-		b:		In	std_logic;
-		p:  	Out     std_logic;
-		g:    	Out 	std_logic
+				b:		In	std_logic;
+				p:  	Out     std_logic;
+				g:    	Out 	std_logic
 	);
 end pg_net;
 
