@@ -1,17 +1,24 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package myTypes is
+package const is
+    
+-- Constants used to define the bit number and address size
+    constant NB : integer := 32;
+    constant AS : integer := 5;
 
-type TYPE_STATE is (
-                        reset,
-                        fetch,
-                        stall_if
+
+
+-- Type used in the fsm inside the control unit
+    type TYPE_STATE is (
+                            reset,
+                            fetch,
+                            stall_if
     );
 
 -- Control unit input sizes
-	constant CW_SIZE	  : integer :=  23;--26;
-    constant OP_SIZE : integer :=  6;                                              -- OPCODE field size
+	constant CW_SIZE   : integer :=  23;
+    constant OP_SIZE   : integer :=  6;                                              -- OPCODE field size
     constant F_SIZE    : integer :=  11;                                             -- FUNC field size
 
 -- R-Type instruction -> FUNC field
@@ -107,5 +114,6 @@ type TYPE_STATE is (
     constant ITYPE_SGEUI : std_logic_vector(OP_SIZE - 1 downto 0) :=  "111101";    -- ADDI1 RS1,RD,INP1
 
     constant ADD_ZERO : std_logic_vector(4 downto 0) := "00000";
-end myTypes;
+
+end const;
 

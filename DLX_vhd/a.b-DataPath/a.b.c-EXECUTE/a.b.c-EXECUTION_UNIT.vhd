@@ -12,8 +12,8 @@ entity EXECUTION_UNIT is
             FW_MUX2_SEL : IN std_logic_vector(1 downto 0);
             FW_EX :  IN std_logic_vector(NB-1 downto 0);
             FW_MEM : IN std_logic_vector(NB-1 downto 0);
-            	A : 			IN std_logic_vector(NB-1 downto 0);
-  		B : 			IN std_logic_vector(NB-1 downto 0);
+            A : 			IN std_logic_vector(NB-1 downto 0);
+  		      B : 			IN std_logic_vector(NB-1 downto 0);
            	C : 			IN std_logic_vector(NB-1 downto 0);
            	D : 			IN std_logic_vector(NB-1 downto 0);
            	DEST_IN : 		IN std_logic_vector(LS-1 downto 0);
@@ -111,7 +111,7 @@ component MUX31_generic
     );
 end component;
 
-component comparator
+component COMPARATOR
 		generic (NB : integer := 32);
         Port (	AdderRes :	In	std_logic_vector(NB-1 downto 0);
         -- first digit for A, second digit for B
@@ -214,3 +214,48 @@ begin
 end process ; -- dest_sel
 
 end BEHAVIOR;
+
+
+configuration CFG_EXECUTION_UNIT of EXECUTION_UNIT is
+for BEHAVIOR
+
+  for all:SHIFTER 
+    use configuration WORK.CFG_SHIFTER;
+  end for;
+
+  for all:MUX21_generic 
+    use configuration WORK.CFG_MUX21_GEN_BEHAVIORAL;
+  end for;
+
+  for all:BOOTHMUL 
+    use configuration WORK.CFG_BOOTHMUL_STRUCTURAL;
+  end for;
+
+  for all:LOGIC 
+    use configuration WORK.CFG_LOGIC;
+  end for;
+
+  for all:p4addgen 
+    use configuration WORK.CFG_P4ADDGEN_STRUC;
+  end for;
+
+  for all:FD 
+    use configuration WORK.CFG_FD;
+  end for;
+
+  for all:MUX31_generic 
+    use configuration WORK.CFG_MUX31_GEN_BEHAVIORAL;
+  end for;
+
+  for all:COMPARATOR 
+    use configuration WORK.CFG_COMPARATOR;
+  end for;
+
+  for all:MUX61_generic 
+    use configuration WORK.CFG_MUX61_GEN_BEHAVIORAL;
+  end for;
+
+
+end for;
+end CFG_EXECUTION_UNIT;
+

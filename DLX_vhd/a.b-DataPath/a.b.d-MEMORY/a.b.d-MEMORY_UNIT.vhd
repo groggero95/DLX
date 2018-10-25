@@ -44,3 +44,11 @@ dest_reg : FD generic map (LS) port map (CLK,RST,DEST_IN,DEST_OUT);
 
 	
 end architecture BEHAVIORAL;
+
+configuration CFG_MEMORY_UNIT of MEMORY_UNIT is
+for BEHAVIORAL
+	for all:FD
+		use configuration WORK.CFG_FD;
+	end for;
+end for;
+end CFG_MEMORY_UNIT;

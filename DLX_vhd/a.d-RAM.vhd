@@ -88,3 +88,8 @@ begin
 	end process;
 
 end BEHAVIORAL;
+
+configuration CFG_RAM of RAM is
+for BEHAVIORAL
+end for;
+end CFG_RAM;

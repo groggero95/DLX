@@ -60,3 +60,9 @@ begin  -- IRam_Bhe
   end process FILL_MEM_P;
 
 end IRam_Bhe;
+
+
+configuration CFG_IRAM of IRAM is
+for IRam_Bhe
+ end for;
+end CFG_IRAM;

@@ -26,15 +26,6 @@ end FOREWARD_UNIT;
 
 architecture BEHAVIOR of FOREWARD_UNIT is
 
-
-component MUX21_generic
-	Generic (NB: integer:= 32);
-	Port (	A:	In	std_logic_vector(NB-1 downto 0) ;
-		B:	In	std_logic_vector(NB-1 downto 0);
-		SEL:	In	std_logic;
-		Y:	Out	std_logic_vector(NB-1 downto 0));
-end component;
-
 begin
 
 foreward_mux1 : process (Rd_MEM,Rs_EX,Rd_WB,INST_EX,INST_MEM)

@@ -10,8 +10,17 @@ entity DLX is
     LS           : integer := 5
     );       -- ALU_OPC_SIZE if explicit ALU Op Code Word Size
   port (
-    CLK : in std_logic;
-    RST : in std_logic);                -- Active Low
+    CLK 	: IN std_logic;
+    RST 	: IN std_logic;       -- Active Low
+    D_TYPE  : OUT  std_logic_vector(1 downto 0);
+	EXT_MEM_IN   : IN  std_logic_vector(NB-1 downto 0); -- output of external memory
+    IRAM_OUT : IN  std_logic_vector(NB-1 downto 0);
+	RW      : OUT  std_logic;
+    US_MEM       : OUT std_logic; -- US output to ext memory
+    IRAM_ADD : OUT  std_logic_vector(NB-1 downto 0);
+    EXT_MEM_ADD   : OUT  std_logic_vector(LS-1 downto 0);
+    EXT_MEM_DATA  : OUT  std_logic_vector(NB-1 downto 0)
+    );        
 end DLX;
 
 
@@ -27,36 +36,6 @@ architecture DLX_RTL of DLX is
  --------------------------------------------------------------------
  -- Components Declaration
  --------------------------------------------------------------------
-
--- Memory (won't be synthesized)
-
-component RAM
-generic ( NB : integer := 32;
-          LS : integer := 5);
-port (
-    CLOCK     : IN  std_logic;
-    RST   : IN  std_logic;
-    WR      : IN  std_logic; -- read haigh write low
-    D_TYPE  : IN  std_logic_vector(1 downto 0);
-    US    : IN  std_logic;
-    ADDRESS   : IN  std_logic_vector(LS-1 downto 0);
-    MEMIN     : IN  std_logic_vector(NB-1 downto 0);
-    MEMOUT    : OUT std_logic_vector(NB-1 downto 0)
-  );
-end component;
-
-
-  --Instruction Ram
-component IRAM
-  generic (
-    RAM_DEPTH : integer := 512;
-    I_SIZE : integer := 32;
-    LS : integer := 5);
-  port ( Rst  : in  std_logic;
-         Addr : in  std_logic_vector(I_SIZE - 1 downto 0);
-         Dout : out std_logic_vector(I_SIZE - 1 downto 0)
-    );
-end component;
 
   -- Control Unit
 component DLX_CU
@@ -163,8 +142,8 @@ signal OP_SEL    : std_logic_vector(3 downto 0); -- operation select
 signal PC_SEL    : std_logic;    -- 0 -> pc+4 | 1 -> j/b
 -- FOURTH PITAGE OUTPUTS
 signal ENMEM     : std_logic;
-signal RW        : std_logic;
-signal D_TYPE    : std_logic_vector(1 downto 0);
+--signal RW        : std_logic;
+--signal D_TYPE    : std_logic_vector(1 downto 0);
 -- FIFTH PIPAGE OUTPUTS
 signal WR        : std_logic;     -- enables the write port of the register file
 signal MEM_ALU_SEL: std_logic;	-- select data for WB
@@ -177,27 +156,17 @@ signal INST_MEM    : TYPE_STATE;
 
 
   -- Data Ram Bus signals
-signal EXT_MEM_IN   : std_logic_vector(NB-1 downto 0); -- output of external memory
-signal EXT_MEM_ADD  : std_logic_vector(LS-1 downto 0); -- address to outer memory
-signal EXT_MEM_DATA : std_logic_vector(NB-1 downto 0); -- data to outer memory
+--signal EXT_MEM_IN   : std_logic_vector(NB-1 downto 0); -- output of external memory
+--signal EXT_MEM_ADD  : std_logic_vector(LS-1 downto 0); -- address to outer memory
+--signal EXT_MEM_DATA : std_logic_vector(NB-1 downto 0); -- data to outer memory
 
-signal US_MEM, FLUSH, HAZARD : std_logic;
-
-signal CUR_PC   : std_logic_vector(NB-1 downto 0); 
-signal IRAM_OUT : std_logic_vector(NB-1 downto 0);
-
-
+signal FLUSH, HAZARD : std_logic;
 
   begin  -- DLX
 
-dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, IRAM_OUT, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, CUR_PC, FUNC, OPCODE);    
+dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, IRAM_OUT, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, IRAM_ADD, FUNC, OPCODE);    
 
 cu : DLX_CU port map(CLK,RST,OPCODE,FUNC,FLUSH,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
-
-mem: RAM port map (CLK, RST, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
-
-imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
-   
     
 end DLX_RTL;
 
@@ -209,14 +178,6 @@ for DLX_RTL
 
   for all:DLX_CU
     use configuration WORK.CFG_DLX_CU;
-  end for;
-
-  for all:RAM
-    use configuration WORK.CFG_RAM;
-  end for;
-
-  for all:IRAM
-    use configuration WORK.CFG_IRAM;
   end for;
 
 end for;
