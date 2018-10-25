@@ -31,6 +31,7 @@ entity DATAPATH is
            UN_SEL       : IN  std_logic_vector(2 downto 0); -- unit selection signal
            OP_SEL       : IN  std_logic_vector(3 downto 0); -- operation selection
            EXT_MEM_IN   : IN  std_logic_vector(NB-1 downto 0); -- output of external memory
+           FLUSH        : OUT std_logic;
            US_MEM       : OUT std_logic; -- US output to ext memory
            HAZARD       : OUT std_logic;	-- possible hazard detection
            EXT_MEM_ADD  : OUT std_logic_vector(LS-1 downto 0); -- address to outer memory
@@ -59,8 +60,7 @@ component FETCH_UNIT
             OPCODE :    OUT std_logic_vector(OP_SIZE-1 downto 0);
             NPC :       OUT std_logic_vector(NB-1 downto 0);
             INST_OUT :  OUT std_logic_vector(NB-1 downto 0);
-            MISS_HIT :  OUT std_logic;
-            FLUSH_CTL : OUT std_logic
+            MISS_HIT :  OUT std_logic_vector(1 downto 0)
           );
 end component;
 
@@ -70,6 +70,7 @@ component DECODE_UNIT
   			);
   port   (  CLK :     IN std_logic;
             RST :     IN std_logic;
+            FLUSH :   IN std_logic;
             DATAIN :  IN std_logic_vector(NB-1 downto 0);
             IMM1 :    IN std_logic_vector(NB-7 downto 0);
             IMM2 :    IN std_logic_vector(NB-1 downto 0);
@@ -185,19 +186,19 @@ signal TEMP_PC : std_logic_vector(NB-1 downto 0);
 signal TMP_MEM : std_logic_vector(NB-1 downto 0);
 
 signal US_TO_EX : std_logic;
-signal FW_MUX1_SEL, FW_MUX2_SEL : std_logic_vector(1 downto 0);
+signal FW_MUX1_SEL, FW_MUX2_SEL, MISS_HIT : std_logic_vector(1 downto 0);
 
-signal MISS_HIT, FLUSH_CTL, RST_DEC, STALL_IF : std_logic;
+signal RST_DEC, STALL_IF : std_logic;
 
 begin
 
-RST_DEC <= RST and (FLUSH_CTL nand MISS_HIT);
+RST_DEC <= RST and (MISS_HIT(1) nand MISS_HIT(0));
 
-STALL_IF <= (FLUSH_CTL nand MISS_HIT);
+FLUSH <= RST_DEC;
 
-ife_unit : FETCH_UNIT port map(CLK,STALL,RST,RST_DEC,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT,FLUSH_CTL);
+ife_unit : FETCH_UNIT port map(CLK,STALL,RST,RST,PC_SEL,TEMP_PC,FUNC,OP_CODE,NPC,INST,MISS_HIT);
                                                                                                                              --     Rs = RD1          Rt = RD2          Rd = dest add                                                                            
-dec_unit : DECODE_UNIT port map (CLK,RST,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
+dec_unit : DECODE_UNIT port map (CLK,RST,RST_DEC,DATA_WB,INST(25 downto 0),NPC,BR_TYPE,JMP,RI,US,RD1,RD2,WR,DEST_FROM_WRBU,INST(25 downto 21),INST(20 downto 16),INST(15 downto 11),HAZARD,US_TO_EX,A,B,C,D,RT,RS,DEST_FROM_DECU);
 
 exe_unit : EXECUTION_UNIT port map (FW_MUX1_SEL,FW_MUX2_SEL,ALU_OUT,DATA_WB,A,B,C,D,DEST_FROM_DECU,CLK,RST,US_TO_EX,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,US_MEM,TEMP_PC,ALU_OUT,EXT_MEM_DATA,DEST_FROM_EXEU);
  

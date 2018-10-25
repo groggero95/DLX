@@ -8,12 +8,12 @@ entity EXECUTION_UNIT is
   generic (NB: integer := 32;
   			LS: integer:= 5
   			);
-  port 	 ( 	FW_MUX1_SEL : IN std_logic_vector(1 downto 0);
+  port 	 ( FW_MUX1_SEL : IN std_logic_vector(1 downto 0);
             FW_MUX2_SEL : IN std_logic_vector(1 downto 0);
             FW_EX :  IN std_logic_vector(NB-1 downto 0);
             FW_MEM : IN std_logic_vector(NB-1 downto 0);
-            A : 			IN std_logic_vector(NB-1 downto 0);
-  			    B : 			IN std_logic_vector(NB-1 downto 0);
+            	A : 			IN std_logic_vector(NB-1 downto 0);
+  		B : 			IN std_logic_vector(NB-1 downto 0);
            	C : 			IN std_logic_vector(NB-1 downto 0);
            	D : 			IN std_logic_vector(NB-1 downto 0);
            	DEST_IN : 		IN std_logic_vector(LS-1 downto 0);
@@ -24,8 +24,8 @@ entity EXECUTION_UNIT is
            	MUX2_SEL : 		IN std_logic;
            	UN_SEL : 		IN std_logic_vector(2 downto 0);
            	OP_SEL :		IN std_logic_vector(3 downto 0);
-            US_MEM :    OUT std_logic;
-            TEMP_PC :   OUT std_logic_vector(NB-1 downto 0);
+            	US_MEM :    		OUT std_logic;
+           	TEMP_PC :   		OUT std_logic_vector(NB-1 downto 0);
            	ALU_OUT :		OUT std_logic_vector(NB-1 downto 0);
            	IMM_OUT : 		OUT std_logic_vector(NB-1 downto 0);
            	DEST_OUT: 		OUT std_logic_vector(LS-1 downto 0)
@@ -39,7 +39,7 @@ component SHIFTER
   			LS: integer:= 5
   			);
   port 	 ( 	FUNC: 			IN std_logic_vector(1 downto 0);
-  			US: 			IN std_logic;
+  		US: 			IN std_logic;
            	DATA1: 			IN std_logic_vector(NB-1 downto 0);
            	DATA2: 			IN std_logic_vector(LS-1 downto 0);
            	OUTSHFT: 		OUT std_logic_vector(NB-1 downto 0)
@@ -50,8 +50,8 @@ end component;
 component BOOTHMUL 
 		generic (NB: integer:= 32); -- Number of output bits
 		port (	A: in std_logic_vector((NB/2)-1 downto 0);
-				B: in std_logic_vector((NB/2)-1 downto 0);
-				C: out std_logic_vector(NB-1 downto 0)
+			B: in std_logic_vector((NB/2)-1 downto 0);
+			C: out std_logic_vector(NB-1 downto 0)
 			);
 end component;
 
@@ -130,7 +130,7 @@ component MUX61_generic
 		C:	In	std_logic_vector(NB-1 downto 0);
 		D:	In	std_logic_vector(NB-1 downto 0);
 		E:	In	std_logic_vector(NB-1 downto 0);
-    F:  In  std_logic_vector(NB-1 downto 0);
+    		F:  In  std_logic_vector(NB-1 downto 0);
 		SEL:	In	std_logic_vector(2 downto 0);
 		Y:	Out	std_logic_vector(NB-1 downto 0));
 end component;

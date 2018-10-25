@@ -13,6 +13,8 @@ entity dlx_cu is
             OPCODE    : IN std_logic_vector(OP_SIZE-1 downto 0);
             FUNC      : IN std_logic_vector(F_SIZE-1 downto 0);
 
+            FLUSH	  : IN std_logic;
+
             -- FIRST PIPE STAGE OUTPUTS
             STALL      	: OUT std_logic;    -- 1 -> en   | 0 -> dis 
             -- SECOND PIPE STAGE OUTPUTS
@@ -52,6 +54,16 @@ component FD
     	  Q:  Out std_logic_vector (NB-1 downto 0) 
     );
 end component;
+
+component FD_INJ
+  Generic (NB : integer := 32);
+  Port (  CK: In  std_logic;
+    RESET:  In  std_logic;
+    INJ_ZERO : In std_logic;
+    D:  In  std_logic_vector (NB-1 downto 0);
+    Q:  Out std_logic_vector (NB-1 downto 0) 
+    );
+end component;
                                 
   signal cw   : std_logic_vector(CW_SIZE - 1 downto 0); -- full control word read from cw_mem
   
@@ -68,13 +80,13 @@ end component;
   signal OPCODE1, OPCODE2, OPCODE3, OPCODE4 : std_logic_vector(OP_SIZE-1 downto 0);
   signal FUNC1, FUNC2 : std_logic_vector(F_SIZE-1 downto 0); 
 
-  signal TMP1E ,TMP2E, TMP5E, TMP11M, TMP12M, TMP11W, TMP21W, TMP12W, TMP22W, TMP13W, TMP23W : std_logic_vector(0 downto 0);
+  signal TMP1E ,TMP2E, TMP5E, TMP11M, TMP12M, TMP11W, TMP21W, TMP12W, TMP22W, TMP13W, TMP23W, ABC, ABCD : std_logic_vector(0 downto 0);
   signal TMP1, TMP2, TMP3, TMP4, TMP5, TMP6, TMP7, TMP8, TMP9, TMP10, TMP11 : std_logic_vector(0 downto 0);
   signal TMP22M, TMP21M : std_logic_vector(1 downto 0);
   signal TMP3E : std_logic_vector(2 downto 0);
   signal TMP4E : std_logic_vector(3 downto 0);
 
-  signal INST_TMP, INST_TMP1, INST_TMP2, INST_TMP3 : std_logic_vector(0 downto 0);
+  signal INST_TMP, INST_TMP1, INST_TMP2 : std_logic_vector(0 downto 0);
   
 
 begin  -- dlx_cu_rtl
@@ -304,10 +316,28 @@ RW <= TMP9(0);
 
 -- FIFTH PIPE STAGE OUTPUTS
 
-pipe1_WR  : FD generic map(1) port map(CLK,RST,cw(CW_SIZE-22 downto CW_SIZE-22),TMP11W);
+--aaa : process( cw,FLUSH )
+--begin
+--  case FLUSH is
+--    when '1' =>  ABC <= cw(CW_SIZE-22 downto CW_SIZE-22);
+--    when '0' => ABC <= (others => '0');
+--    when others => ABC <= (others => '0');
+--  end case;
+--end process ; -- aaa
+
+--aaaa : process( TMP11W,FLUSH )
+--begin
+--  case FLUSH is
+--    when '1' =>  ABCD <= TMP11W;
+--    when '0' => ABCD <= (others => '0');
+--    when others => ABCD <= (others => '0');
+--  end case;
+--end process ; -- aaa
+
+pipe1_WR  : FD_INJ generic map(1) port map(CLK,RST,FLUSH,cw(CW_SIZE-22 downto CW_SIZE-22),TMP11W);
 pipe1_MM  : FD generic map(1) port map(CLK,RST,cw(CW_SIZE-23 downto CW_SIZE-23),TMP21W);
 
-pipe2_WR  : FD generic map(1) port map(CLK,RST,TMP11W,TMP12W);
+pipe2_WR  : FD_INJ generic map(1) port map(CLK,FLUSH,RST,TMP11W,TMP12W);
 pipe2_MM  : FD generic map(1) port map(CLK,RST,TMP21W,TMP22W);
 
 pipe3_WR  : FD generic map(1) port map(CLK,RST,TMP12W,TMP13W);

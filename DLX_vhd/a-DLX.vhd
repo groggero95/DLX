@@ -34,15 +34,14 @@ component RAM
 generic ( NB : integer := 32;
           LS : integer := 5);
 port (
-    CLOCK   : IN  std_logic;
-    RST     : IN  std_logic;
-    --ENABLE  : IN  std_logic;
-    RW      : IN  std_logic; -- read haigh write low
+    CLOCK     : IN  std_logic;
+    RST   : IN  std_logic;
+    WR      : IN  std_logic; -- read haigh write low
     D_TYPE  : IN  std_logic_vector(1 downto 0);
-    US      : IN  std_logic;
-    ADDRESS : IN  std_logic_vector(LS-1 downto 0);
-    MEMIN   : IN  std_logic_vector(NB-1 downto 0);
-    MEMOUT  : OUT std_logic_vector(NB-1 downto 0)
+    US    : IN  std_logic;
+    ADDRESS   : IN  std_logic_vector(LS-1 downto 0);
+    MEMIN     : IN  std_logic_vector(NB-1 downto 0);
+    MEMOUT    : OUT std_logic_vector(NB-1 downto 0)
   );
 end component;
 
@@ -54,6 +53,8 @@ component dlx_cu
             RST       : IN std_logic;       -- the TB requires it active low
             OPCODE    : IN std_logic_vector(OP_SIZE-1 downto 0);
             FUNC      : IN std_logic_vector(F_SIZE-1 downto 0);
+
+            FLUSH     : IN std_logic;
 
             -- FIRST PIPE STAGE OUTPUTS
             STALL       : OUT std_logic;    -- 1 -> en   | 0 -> dis 
@@ -111,6 +112,7 @@ component DATAPATH
            UN_SEL       : IN  std_logic_vector(2 downto 0); -- unit selection signal
            OP_SEL       : IN  std_logic_vector(3 downto 0); -- operation selection
            EXT_MEM_IN   : IN  std_logic_vector(NB-1 downto 0); -- output of external memory
+           FLUSH        : OUT std_logic;
            US_MEM       : OUT std_logic; -- US output to ext memory
            HAZARD       : OUT std_logic;  -- possible hazard detection
            EXT_MEM_ADD  : OUT std_logic_vector(LS-1 downto 0); -- address to outer memory
@@ -163,15 +165,15 @@ signal EXT_MEM_IN   : std_logic_vector(NB-1 downto 0); -- output of external mem
 signal EXT_MEM_ADD  : std_logic_vector(LS-1 downto 0); -- address to outer memory
 signal EXT_MEM_DATA : std_logic_vector(NB-1 downto 0); -- data to outer memory
 
-signal US_MEM, HAZARD : std_logic;
+signal US_MEM, FLUSH, HAZARD : std_logic;
 
 
 
   begin  -- DLX
 
-dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, EXT_MEM_IN, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, FUNC, OPCODE);    
+dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, FUNC, OPCODE);    
 
-cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
+cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,FLUSH,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
 
 mem: RAM port map (CLK, RST, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
 
