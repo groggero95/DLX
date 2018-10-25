@@ -127,15 +127,11 @@ For our multiplier we again reused the \textit{Booth} architecture that has been
 	\label{pc_add_fig}
 \end{wrapfigure}
 
-<<<<<<< HEAD
-In order to perform correctly some jump instruction, the temporary PC needs a +4, which, due to the design of our datapath, can not be performed by the adder. An additional adder, reported in figure \ref{pc_add_fig} is in charge of this specific operation.
-=======
 In order to perform correctly some jump instruction, we need to calculate both 
 the new and the return address, which is the PC coming from the previous stage 
 +4 and due to the design of our datapath, can not be performed by the single 
 adder. An additional adder, reported in figure \ref{pc_add_fig} is in charge of 
 this specific operation.
->>>>>>> origin/testb
 
 
 

@@ -32,12 +32,8 @@ All these registers share the same reset, clock and enable signals. They differ 
 \label{ram}
 The external RAM receives signals both from the datapath and from the CU. An overview can be seen in figure \ref{ext_ram_fig}. This part is external since it will not be synthesized. In particular, here are presented the most relevant ones:
 \begin{itemize}
-<<<<<<< HEAD
-	\item \textit{ENABLE, RW} are signals used to control the writing on the memory. They should be both high to complete a write
-=======
 	\item \textit{WR} is a signal used to control the writing on the memory.It 
 	si intended as active high to complete a write
->>>>>>> origin/testb
 	\item \textit{D\_TYPE} specifies the kind of data we are reading or writing in/from memory, i.e byte, half-word, word
 	\item \textit{US} defines a signed/unsigned representation for the data; it is relevant to correctly extend the data on 32 bits
 	\item \textit{ADDRESS} obviously used to correctly point to a precise memory location
@@ -45,15 +41,11 @@ The external RAM receives signals both from the datapath and from the CU. An ove
 	\item \textit{MEMOUT} is the output signal which cotains the data read from the memory
 \end{itemize}
 
-<<<<<<< HEAD
-While the writing is performed synchronously only if the \textit{RW} signal is high, there is always a value in correspondence of the output signal. This means that a read always happens, and a value is written every time on the \textit{MEMOUT} signal. This value will be eventually discarded in the following stages.
-=======
 While the writing is performed synchronously only if the \textit{WR} signal is 
 high, there is always a value in correspondence of the output signal. This 
 means that a read always happens, and a value is written every time on the 
 \textit{MEMOUT} signal. This value will be eventually discarded in the 
 following stages.
->>>>>>> origin/testb
 
 \begin{figure}
 	\centering
