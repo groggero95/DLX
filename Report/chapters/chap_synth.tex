@@ -1,6 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\graphicspath{chapters/figures/}
-\chapter{Synthesis}
+\chapter{Synthesis and Place\&Route}
 \label{chap_synth}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+After the design phase, we used the Synopsis DC Compiler tool to produce a synthesized version of our \dlx processor. We decided to run the script, provided in appendix \ref{syn_scr} for the synthesis several times, and we obtained quite different results.
+At first, we have compiled all the needed components respecting the existing hierarchies. It is worth nothing that we have provided for every component also the configuration, in order to have the possibility of trying different implementations for future improvement. At first the script for the synthesis just launches a medium effort compilation, so that we can get an overall idea of the slack that we have and the maximum clock frequency that we can reach. 
+Then, reports for area, power and timing are generated.
+
+After this step, in the first versions of the script, we were just launching 

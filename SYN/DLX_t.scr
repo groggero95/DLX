@@ -1,0 +1,76 @@
+##############################################################
+#SCRIPT FOR SPEEDING UP and RECORDING the ADDER SYNTHESIS#
+# analyzing and checking vhdl netlist#
+# here the analyze command is used for each file from bottom to top #
+##############################################################
+# here we do a cleanup of all designs before anything else
+remove_design -designs
+##############################################################
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/00-CONSTANTS.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/01-FUNCTIONS.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/02-FD.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/03-FD_INJ.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/04-Mux21_generic.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.e-WRITE_BACK/a.b.e-WRITE_BACK_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.d-MEMORY/a.b.d-MEMORY_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.a.a-G.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.a.b-PG_NET.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.a.c-PG.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.a-CST_GEN.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.b.a.a-MUX21.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.b.a.b-FA.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.b.a-CARRY_SEL_BK.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a.b-SUM_GEN.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.a-Adder/a.b.c.a-P4ADD_GEN.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.b-LOGIC.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.c.a-MUX_SHIFT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.c-BOOTHMUL.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.d-SHIFTER.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.e-COMPARATOR.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.f-Mux31_generic.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c.g-Mux61_generic.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.c-EXECUTE/a.b.c-EXECUTION_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.b-DECODE/a.b.b.a-RRGISTERFILE.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.b-DECODE/a.b.b.b-SIGN_EXTENDER.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.b-DECODE/a.b.b-DECODE_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.a-FETCH/a.b.a.a-BP.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.a-FETCH/a.b.a-FETCH_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b.f-FOREWARD_UNIT.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.b-DataPath/a.b-DATAPATH.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a.a-CU_FSM.vhd}
+analyze -library WORK -format vhdl {./DLX_vhd_syntetizable/a-DLX.vhd}
+##############################################################
+# elaborating the top entity 
+# choose the architecture you want
+elaborate CFG_DLX -library WORK
+current_design DLX
+
+check_design > warn
+
+uniquify -force
+##########################################
+set_wire_load_model -name 0K_hvratio_1_4
+create_clock -name "CLK" -period 2.25 {"CLK"}
+set_max_delay 2.25 -from [all_inputs] -to [all_outputs]
+
+####################################################################################
+# optimize
+compile -map_effort medium
+####################################################################################
+
+report_power > ./DLX_noopt_pw.rpt
+report_timing > ./DLX_noopt_t.rpt
+report_area > ./DLX_noopt_a.rpt
+
+####################################################################################
+# optimize
+compile -map_effort high -incremental_mapping
+####################################################################################
+# saving files
+write -hierarchy -f verilog -output ./DLX_RTL.v
+report_power > ./DLX_timeopt_pw.rpt
+report_timing > ./DLX_timeopt_t.rpt
+report_area > ./DLX_timeopt_a.rpt
+write_sdc ./DLX.sdc
+
+
