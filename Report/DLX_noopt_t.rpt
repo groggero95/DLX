@@ -1,0 +1,186 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DLX
+Version: Z-2007.03-SP1
+Date   : Fri Oct 26 09:15:25 2018
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: dp/exe_unit/destination_register/TMP_Q_reg[1]
+              (rising edge-triggered flip-flop clocked by CLK)
+  Endpoint: dp/ife_unit/BP_UNIT/PRED_HISTORY_reg[0][31]
+            (rising edge-triggered flip-flop clocked by CLK)
+  Path Group: CLK
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock CLK (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  dp/exe_unit/destination_register/TMP_Q_reg[1]/CK (SDFFR_X1)
+                                                          0.00 #     0.00 r
+  dp/exe_unit/destination_register/TMP_Q_reg[1]/Q (SDFFR_X1)
+                                                          0.08       0.08 f
+  dp/exe_unit/destination_register/Q[1] (FD_NB5_1)        0.00       0.08 f
+  dp/exe_unit/DEST_OUT[1] (EXECUTION_UNIT_NB32_LS5_0)     0.00       0.08 f
+  dp/fw_unit/Rd_MEM[1] (FOREWARD_UNIT_NB32_LS5_0)         0.00       0.08 f
+  dp/fw_unit/U19/ZN (NOR2_X1)                             0.05       0.13 r
+  dp/fw_unit/U21/ZN (NAND3_X1)                            0.03       0.16 f
+  dp/fw_unit/U13/ZN (NAND2_X1)                            0.03       0.20 r
+  dp/fw_unit/U24/ZN (NOR2_X1)                             0.02       0.22 f
+  dp/fw_unit/U31/ZN (NAND3_X1)                            0.03       0.26 r
+  dp/fw_unit/U5/ZN (AND4_X2)                              0.07       0.32 r
+  dp/fw_unit/CTL_MUX2[1] (FOREWARD_UNIT_NB32_LS5_0)       0.00       0.32 r
+  dp/exe_unit/FW_MUX2_SEL[1] (EXECUTION_UNIT_NB32_LS5_0)
+                                                          0.00       0.32 r
+  dp/exe_unit/fw_mux2/SEL[1] (MUX31_generic_NB32_0)       0.00       0.32 r
+  dp/exe_unit/fw_mux2/U43/ZN (NAND2_X1)                   0.04       0.36 f
+  dp/exe_unit/fw_mux2/U22/Z (BUF_X2)                      0.05       0.41 f
+  dp/exe_unit/fw_mux2/U51/ZN (OAI221_X1)                  0.07       0.49 r
+  dp/exe_unit/fw_mux2/Y[0] (MUX31_generic_NB32_0)         0.00       0.49 r
+  dp/exe_unit/U29/ZN (XNOR2_X1)                           0.07       0.56 r
+  dp/exe_unit/adder/B[0] (p4addgen_NB32_CW4_8)            0.00       0.56 r
+  dp/exe_unit/adder/sparse_tree/B[0] (CSTgen_CW4_NB32_8)
+                                                          0.00       0.56 r
+  dp/exe_unit/adder/sparse_tree/pg_n0_0/b (pg_net_287)
+                                                          0.00       0.56 r
+  dp/exe_unit/adder/sparse_tree/pg_n0_0/U2/Z (XOR2_X1)
+                                                          0.07       0.63 r
+  dp/exe_unit/adder/sparse_tree/pg_n0_0/p (pg_net_287)
+                                                          0.00       0.63 r
+  dp/exe_unit/adder/sparse_tree/U7/ZN (NAND2_X1)          0.03       0.66 f
+  dp/exe_unit/adder/sparse_tree/U8/ZN (NAND2_X1)          0.03       0.69 r
+  dp/exe_unit/adder/sparse_tree/gen_1_4_1/Gk_1j (G_80)
+                                                          0.00       0.69 r
+  dp/exe_unit/adder/sparse_tree/gen_1_4_1/U1/ZN (NAND2_X1)
+                                                          0.02       0.71 f
+  dp/exe_unit/adder/sparse_tree/gen_1_4_1/U3/ZN (NAND2_X1)
+                                                          0.03       0.74 r
+  dp/exe_unit/adder/sparse_tree/gen_1_4_1/Gij (G_80)      0.00       0.74 r
+  dp/exe_unit/adder/sparse_tree/gen_2_4_0/Gk_1j (G_79)
+                                                          0.00       0.74 r
+  dp/exe_unit/adder/sparse_tree/gen_2_4_0/U2/ZN (NAND2_X1)
+                                                          0.02       0.77 f
+  dp/exe_unit/adder/sparse_tree/gen_2_4_0/U1/ZN (NAND2_X1)
+                                                          0.03       0.79 r
+  dp/exe_unit/adder/sparse_tree/gen_2_4_0/Gij (G_79)      0.00       0.79 r
+  dp/exe_unit/adder/sparse_tree/gen2_3_8_1/Gk_1j (G_78)
+                                                          0.00       0.79 r
+  dp/exe_unit/adder/sparse_tree/gen2_3_8_1/U2/ZN (NAND2_X1)
+                                                          0.03       0.82 f
+  dp/exe_unit/adder/sparse_tree/gen2_3_8_1/U1/ZN (NAND2_X1)
+                                                          0.03       0.85 r
+  dp/exe_unit/adder/sparse_tree/gen2_3_8_1/Gij (G_78)     0.00       0.85 r
+  dp/exe_unit/adder/sparse_tree/gen2_4_16_1/Gk_1j (G_77)
+                                                          0.00       0.85 r
+  dp/exe_unit/adder/sparse_tree/gen2_4_16_1/U2/ZN (NAND2_X1)
+                                                          0.03       0.89 f
+  dp/exe_unit/adder/sparse_tree/gen2_4_16_1/U1/ZN (NAND2_X2)
+                                                          0.06       0.95 r
+  dp/exe_unit/adder/sparse_tree/gen2_4_16_1/Gij (G_77)
+                                                          0.00       0.95 r
+  dp/exe_unit/adder/sparse_tree/gen2_5_32_3/Gk_1j (G_73)
+                                                          0.00       0.95 r
+  dp/exe_unit/adder/sparse_tree/gen2_5_32_3/U2/ZN (NAND2_X1)
+                                                          0.04       0.99 f
+  dp/exe_unit/adder/sparse_tree/gen2_5_32_3/U1/ZN (NAND2_X2)
+                                                          0.05       1.04 r
+  dp/exe_unit/adder/sparse_tree/gen2_5_32_3/Gij (G_73)
+                                                          0.00       1.04 r
+  dp/exe_unit/adder/sparse_tree/C[5] (CSTgen_CW4_NB32_8)
+                                                          0.00       1.04 r
+  dp/exe_unit/adder/carry_sel/Ci[6] (sum_gen_Nrca4_NB32_8)
+                                                          0.00       1.04 r
+  dp/exe_unit/adder/carry_sel/csa_6/Ci (carry_sel_bk_NB4_65)
+                                                          0.00       1.04 r
+  dp/exe_unit/adder/carry_sel/csa_6/U26/ZN (NAND2_X1)     0.03       1.07 f
+  dp/exe_unit/adder/carry_sel/csa_6/U27/ZN (NAND2_X1)     0.03       1.10 r
+  dp/exe_unit/adder/carry_sel/csa_6/U30/ZN (NAND2_X1)     0.03       1.13 f
+  dp/exe_unit/adder/carry_sel/csa_6/U5/ZN (NAND2_X1)      0.03       1.15 r
+  dp/exe_unit/adder/carry_sel/csa_6/U7/ZN (NAND2_X1)      0.03       1.18 f
+  dp/exe_unit/adder/carry_sel/csa_6/S[1] (carry_sel_bk_NB4_65)
+                                                          0.00       1.18 f
+  dp/exe_unit/adder/carry_sel/S[25] (sum_gen_Nrca4_NB32_8)
+                                                          0.00       1.18 f
+  dp/exe_unit/adder/S[25] (p4addgen_NB32_CW4_8)           0.00       1.18 f
+  dp/exe_unit/TEMP_PC[25] (EXECUTION_UNIT_NB32_LS5_0)     0.00       1.18 f
+  dp/ife_unit/JB_INST[25] (FETCH_UNIT_NB32_LS5_0)         0.00       1.18 f
+  dp/ife_unit/BP_UNIT/EX_PC[25] (BP_NB32_BP_LEN4_0)       0.00       1.18 f
+  dp/ife_unit/BP_UNIT/eq_100/B[25] (BP_NB32_BP_LEN4_0_DW01_cmp6_0)
+                                                          0.00       1.18 f
+  dp/ife_unit/BP_UNIT/eq_100/U13/ZN (XNOR2_X1)            0.06       1.24 f
+  dp/ife_unit/BP_UNIT/eq_100/U49/ZN (NOR4_X1)             0.06       1.31 r
+  dp/ife_unit/BP_UNIT/eq_100/U43/ZN (NAND4_X1)            0.05       1.35 f
+  dp/ife_unit/BP_UNIT/eq_100/U19/ZN (NOR2_X1)             0.05       1.40 r
+  dp/ife_unit/BP_UNIT/eq_100/EQ (BP_NB32_BP_LEN4_0_DW01_cmp6_0)
+                                                          0.00       1.40 r
+  dp/ife_unit/BP_UNIT/U1334/ZN (NOR2_X1)                  0.03       1.43 f
+  dp/ife_unit/BP_UNIT/MISS_HIT[0] (BP_NB32_BP_LEN4_0)     0.00       1.43 f
+  dp/ife_unit/U19/ZN (AOI21_X2)                           0.06       1.49 r
+  dp/ife_unit/flush_mux/SEL (MUX21_generic_NB32_4)        0.00       1.49 r
+  dp/ife_unit/flush_mux/U9/Z (CLKBUF_X3)                  0.07       1.56 r
+  dp/ife_unit/flush_mux/U21/Z (MUX2_X1)                   0.09       1.66 f
+  dp/ife_unit/flush_mux/Y[11] (MUX21_generic_NB32_4)      0.00       1.66 f
+  dp/ife_unit/BP_UNIT/INST[11] (BP_NB32_BP_LEN4_0)        0.00       1.66 f
+  dp/ife_unit/BP_UNIT/add_49_2/B[11] (BP_NB32_BP_LEN4_0_DW01_add_1)
+                                                          0.00       1.66 f
+  dp/ife_unit/BP_UNIT/add_49_2/U43/ZN (OR2_X1)            0.06       1.71 f
+  dp/ife_unit/BP_UNIT/add_49_2/U186/ZN (NAND2_X1)         0.03       1.74 r
+  dp/ife_unit/BP_UNIT/add_49_2/U22/ZN (OAI211_X1)         0.03       1.78 f
+  dp/ife_unit/BP_UNIT/add_49_2/U287/ZN (INV_X1)           0.03       1.81 r
+  dp/ife_unit/BP_UNIT/add_49_2/U215/ZN (NOR2_X1)          0.03       1.83 f
+  dp/ife_unit/BP_UNIT/add_49_2/U210/ZN (NOR2_X1)          0.04       1.87 r
+  dp/ife_unit/BP_UNIT/add_49_2/U170/ZN (AND3_X1)          0.05       1.92 r
+  dp/ife_unit/BP_UNIT/add_49_2/U199/ZN (OAI21_X1)         0.03       1.95 f
+  dp/ife_unit/BP_UNIT/add_49_2/U28/ZN (AOI21_X1)          0.05       2.00 r
+  dp/ife_unit/BP_UNIT/add_49_2/U211/ZN (OAI21_X1)         0.03       2.03 f
+  dp/ife_unit/BP_UNIT/add_49_2/U274/ZN (INV_X1)           0.03       2.06 r
+  dp/ife_unit/BP_UNIT/add_49_2/U203/ZN (OAI21_X1)         0.03       2.09 f
+  dp/ife_unit/BP_UNIT/add_49_2/U35/ZN (AOI21_X1)          0.04       2.13 r
+  dp/ife_unit/BP_UNIT/add_49_2/U206/ZN (OAI21_X1)         0.03       2.16 f
+  dp/ife_unit/BP_UNIT/add_49_2/U62/ZN (AOI21_X1)          0.04       2.20 r
+  dp/ife_unit/BP_UNIT/add_49_2/U214/ZN (OAI21_X1)         0.03       2.23 f
+  dp/ife_unit/BP_UNIT/add_49_2/U34/ZN (AOI21_X1)          0.05       2.28 r
+  dp/ife_unit/BP_UNIT/add_49_2/U205/ZN (OAI21_X1)         0.03       2.31 f
+  dp/ife_unit/BP_UNIT/add_49_2/U266/ZN (INV_X1)           0.03       2.34 r
+  dp/ife_unit/BP_UNIT/add_49_2/U69/ZN (OAI21_X1)          0.03       2.37 f
+  dp/ife_unit/BP_UNIT/add_49_2/U207/ZN (AOI21_X1)         0.04       2.41 r
+  dp/ife_unit/BP_UNIT/add_49_2/U213/ZN (OAI21_X1)         0.03       2.44 f
+  dp/ife_unit/BP_UNIT/add_49_2/U261/ZN (INV_X1)           0.03       2.47 r
+  dp/ife_unit/BP_UNIT/add_49_2/U212/ZN (OAI21_X1)         0.03       2.50 f
+  dp/ife_unit/BP_UNIT/add_49_2/U225/ZN (AOI21_X1)         0.04       2.55 r
+  dp/ife_unit/BP_UNIT/add_49_2/U218/ZN (XNOR2_X1)         0.06       2.61 r
+  dp/ife_unit/BP_UNIT/add_49_2/SUM[31] (BP_NB32_BP_LEN4_0_DW01_add_1)
+                                                          0.00       2.61 r
+  dp/ife_unit/BP_UNIT/U73/ZN (NAND2_X1)                   0.03       2.63 f
+  dp/ife_unit/BP_UNIT/U1184/ZN (NAND2_X1)                 0.03       2.66 r
+  dp/ife_unit/BP_UNIT/PRED_HISTORY_reg[0][31]/D (DFFR_X2)
+                                                          0.01       2.67 r
+  data arrival time                                                  2.67
+
+  clock CLK (rise edge)                                   2.25       2.25
+  clock network delay (ideal)                             0.00       2.25
+  dp/ife_unit/BP_UNIT/PRED_HISTORY_reg[0][31]/CK (DFFR_X2)
+                                                          0.00       2.25 r
+  library setup time                                     -0.03       2.22
+  data required time                                                 2.22
+  --------------------------------------------------------------------------
+  data required time                                                 2.22
+  data arrival time                                                 -2.67
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.46
+
+
+1
