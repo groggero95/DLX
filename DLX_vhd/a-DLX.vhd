@@ -22,7 +22,7 @@ end DLX;
 -- instruction ram memory (complete)
 -- control unit (UNCOMPLETE)
 --
-architecture DLX_RTL of DLX is
+architecture dlx_rtl of DLX is
 
  --------------------------------------------------------------------
  -- Components Declaration
@@ -59,7 +59,7 @@ component IRAM
 end component;
 
   -- Control Unit
-component DLX_CU
+component dlx_cu
   port (
              -- INPUTS
             CLK       : IN std_logic;
@@ -192,32 +192,11 @@ signal IRAM_OUT : std_logic_vector(NB-1 downto 0);
 
 dp : DATAPATH port map(CLK, STALL, RST, INST_EX, INST_MEM, INST_T_EX, JMP, RI, RD1, RD2, WR, PC_SEL, MEM_ALU_SEL, US, MUX1_SEL, MUX2_SEL, BR_TYPE, UN_SEL, OP_SEL, IRAM_OUT, EXT_MEM_IN, FLUSH, US_MEM, HAZARD, EXT_MEM_ADD, EXT_MEM_DATA, CUR_PC, FUNC, OPCODE);    
 
-cu : DLX_CU port map(CLK,RST,OPCODE,FUNC,FLUSH,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
+cu : dlx_cu port map(CLK,RST,OPCODE,FUNC,FLUSH,STALL,JMP,RI,BR_TYPE,RD1,RD2,US,MUX1_SEL,MUX2_SEL,UN_SEL,OP_SEL,PC_SEL,RW,D_TYPE,WR,MEM_ALU_SEL,INST_T_EX,INST_EX,INST_MEM);
 
 mem: RAM port map (CLK, RST, RW, D_TYPE, US_MEM, EXT_MEM_ADD, EXT_MEM_DATA, EXT_MEM_IN);
 
 imem : IRAM port map (RST,CUR_PC,IRAM_OUT);
    
     
-end DLX_RTL;
-
-configuration CFG_DLX of DLX is
-for DLX_RTL
-  for all:DATAPATH
-    use configuration WORK.CFG_DATAPATH;
-  end for;
-
-  for all:DLX_CU
-    use configuration WORK.CFG_DLX_CU;
-  end for;
-
-  for all:RAM
-    use configuration WORK.CFG_RAM;
-  end for;
-
-  for all:IRAM
-    use configuration WORK.CFG_IRAM;
-  end for;
-
-end for;
-end CFG_DLX;
+end dlx_rtl;

@@ -5,7 +5,7 @@ use ieee.std_logic_arith.all;
 use work.myTypes.all;
 
 
-entity DLX_CU is
+entity dlx_cu is
   port (
             -- INPUTS
             CLK       : IN std_logic;
@@ -42,9 +42,9 @@ entity DLX_CU is
             INST_EX		: OUT TYPE_STATE;
             INST_MEM	: OUT TYPE_STATE
   );
-end DLX_CU;
+end dlx_cu;
 
-architecture DLX_CU_FSM of DLX_CU is
+architecture dlx_cu_fsm of dlx_cu is
   
 component FD
   Generic (NB : integer := 32);
@@ -80,7 +80,7 @@ end component;
   signal OPCODE1, OPCODE2, OPCODE3, OPCODE4 : std_logic_vector(OP_SIZE-1 downto 0);
   signal FUNC1, FUNC2 : std_logic_vector(F_SIZE-1 downto 0); 
 
-  signal TMP1E ,TMP2E, TMP5E, TMP11M, TMP12M, TMP11W, TMP21W, TMP12W, TMP22W, TMP13W, TMP23W : std_logic_vector(0 downto 0);
+  signal TMP1E ,TMP2E, TMP5E, TMP11M, TMP12M, TMP11W, TMP21W, TMP12W, TMP22W, TMP13W, TMP23W, ABC, ABCD : std_logic_vector(0 downto 0);
   signal TMP1, TMP2, TMP3, TMP4, TMP5, TMP6, TMP7, TMP8, TMP9, TMP10, TMP11 : std_logic_vector(0 downto 0);
   signal TMP22M, TMP21M : std_logic_vector(1 downto 0);
   signal TMP3E : std_logic_vector(2 downto 0);
@@ -121,11 +121,23 @@ begin  -- dlx_cu_rtl
           
           	when reset => NEXT_INST <= fetch;
 
+          --when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR) or (OPCODE = ITYPE_BEQZ) or (OPCODE = ITYPE_BNEZ) ) then 
+          --					NEXT_INST <= stall_if;
+          --				else
+          --					NEXT_INST <= fetch;
+          --				end if;
+
 			when fetch => if ( (OPCODE = ITYPE_J) or (OPCODE = ITYPE_JAL) or (OPCODE = ITYPE_JR) or (OPCODE = ITYPE_JALR)) then 
 	          					NEXT_INST <= stall_if;
 	          				else
 	          					NEXT_INST <= fetch;
 	          				end if;
+
+          --when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) or (OPCODE1 = ITYPE_BEQZ) or (OPCODE1 = ITYPE_BNEZ) ) then 
+          --						NEXT_INST <= stall_if;
+          --					else
+          --						NEXT_INST <= fetch;
+          --					end if;
 
 
            when stall_if => 	if ( (OPCODE1 = ITYPE_J) or (OPCODE1 = ITYPE_JAL) or (OPCODE1 = ITYPE_JR) or (OPCODE1 = ITYPE_JALR) ) then 
@@ -134,7 +146,7 @@ begin  -- dlx_cu_rtl
 	          						NEXT_INST <= fetch;
 	          					end if;
 
-          when others => NEXT_INST <= reset;
+          when others => NEXT_INST <= reset;	--TODO we need to  stall the pipe for 2 cycle (maybe 3) after a jump
         
         end case;  
 
@@ -302,6 +314,26 @@ pipe3_DT  : FD generic map(2) port map(CLK,RST,TMP22M,D_TYPE);
 
 RW <= TMP9(0);
 
+-- FIFTH PIPE STAGE OUTPUTS
+
+--aaa : process( cw,FLUSH )
+--begin
+--  case FLUSH is
+--    when '1' =>  ABC <= cw(CW_SIZE-22 downto CW_SIZE-22);
+--    when '0' => ABC <= (others => '0');
+--    when others => ABC <= (others => '0');
+--  end case;
+--end process ; -- aaa
+
+--aaaa : process( TMP11W,FLUSH )
+--begin
+--  case FLUSH is
+--    when '1' =>  ABCD <= TMP11W;
+--    when '0' => ABCD <= (others => '0');
+--    when others => ABCD <= (others => '0');
+--  end case;
+--end process ; -- aaa
+
 pipe1_WR  : FD_INJ generic map(1) port map(CLK,RST,FLUSH,cw(CW_SIZE-22 downto CW_SIZE-22),TMP11W);
 pipe1_MM  : FD generic map(1) port map(CLK,RST,cw(CW_SIZE-23 downto CW_SIZE-23),TMP21W);
 
@@ -368,17 +400,4 @@ INST_EX  <= INST2;
 INST_MEM <= INST3;
 
 
-end DLX_CU_FSM;
-
-configuration CFG_DLX_CU of DLX_CU is
-for DLX_CU_FSM
-  for all:FD
-    use configuration WORK.CFG_FD;
-  end for;
-
-  for all:FD_INJ
-    use configuration WORK.CFG_FD_INJ;
-  end for;
-
-end for;
-end CFG_DLX_CU;
+end dlx_cu_fsm;
