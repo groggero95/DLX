@@ -1,0 +1,39 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\graphicspath{chapters/figures/}
+\section{Decode Stage}
+\label{chap_dec}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Introduction}
+The decode stage is the second one. Here the instructions stored in the \textit{IRAM} that have been previously read are decomposed in order to correctly identify all the information regarding the operation that will be performed. In this way, we can read the correct source, target and destination address, as well as the immediate values. Moreover, also the \textsf{OPCODE}, which represents the particular instruction to be executed, is read.
+
+The most relevant signals involved in this stage are:
+\begin{itemize}
+	\item \textit{FLUSH} is a control signal, which is necessary to clean the pipe
+	\item \textit{DATAIN} stores the value to be written on the \rf when the write back happens
+	\item \textit{IMM1, IMM2} stores the immediate values coming from the instruction, which will be then extended on 32 bits by an appropriate component
+	\item \textit{BR\_TYPE} takes values different from zero when a branch is fetched, according to the branch type
+	\item \textit{JMP} is high when a jump instruction is fetched
+	\item \textit{RI} is a signal which allows us to distinguish between \textit{R-type} and \textit{I-type} instructions, with the goal of correctly identifying the target register
+	\item \textit{US} is the signal giving information about the encoded representation, either signed or unsigned
+	\item \textit{WR, RD1, RD2} are the enable for the ports of our \rf
+	\item \textit{ADD\_WR, ADD\_RD1, ADD\_RD2} are the addresses for the write, read 1 and read 2 ports of the \rf
+	\item \textit{DEST\_IN} is the address of the destination address
+	\item \textit{US\_TO\_EX} is used to transfer the information regarding unsigned/signed representation to the following stages of the pipe
+	\item \textit{A,B,C,D} are the outputs, storing the values coming from the \textsf{RF} and the two immediate values
+	\item \textit{RT, RS} are the addresses of the target and source address respectively, which are needed to implement the data forwarding
+	\item \textit{DEST\_OUT} is the address for the final commit during the write back stage
+\end{itemize}
+
+
+This stage is mainly centered on the \rf component, which is read in order to pick the operands. Of course other components are present.
+
+\paragraph{RF}
+As said, the role played by the \rf is central. Getting into details, it has the same specifications as the one used for the laboratories: one write port, two read ports. There are 32 registers, each one storing a 32-bit value. Here are contained the information needed for the current execution, and the temporary results are stored. In each operation there is always a register involved, at least, except for the \textsc{J} instruction.
+
+\paragraph{FD\_INJ}
+This is a particular register, which ha, instead of the normal enable signal, has another particular "reset", which is used to store a "zero" at the next clock cycle. This is particularly useful when we need to flush the pipeline.
+
+\paragraph{Sign Extender}
+This unit is used to extend the immediate values, which are on 16 bits or 26 bits (for the \textsc{J}-like instruction) on a 32 bits signed value.
+
