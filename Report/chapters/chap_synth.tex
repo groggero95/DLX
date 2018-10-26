@@ -14,15 +14,15 @@ After this step, in the first versions of the script, we were just launching aga
 	compile -map_effort high -incremental_mapping
 \end{lstlisting}
 
-We also noticed that, while trying to decrease the \textit{MAX\_DELAY}, the results obtained change in a relevant way ($65 \space ns$ of difference). In general, the second compilation is capable of sensibly improving the results obtained before, in almost all ways (area, power, timing). In table \ref{tab_rep} are shown the results related to the two stage of the compilation we finally obtained.
+We also noticed that, while trying to decrease the \textit{MAX\_DELAY}, the results obtained change in a relevant way (\SI{62}{\nano\second} of difference). In general, the second compilation is capable of sensibly improving the results obtained before, in almost all ways (area, power, timing). In table \ref{tab_rep} are shown the results related to the two stage of the compilation we finally obtained.
 
 \begin{table}[]
 	\centering
 	\begin{tabular}{l|cc}
 		\toprule
-				& Medium  					& High  								\\
+				& Medium  						& High  								\\
 		\midrule
-		Area	& \SI{24002.24}{\nano\meter^2}	&  	\SI{24071.93}{\nano\meter^2}			\\
+		Area	& \SI{24002.24}{\nano\meter^2}	&  	\SI{24071.93}{\nano\meter^2}		\\
 		Power	& \SI{8.5142}{\milli\watt}		&  	\SI{8.5306}{\milli\watt}			\\
 		Slack	& \SI{-0.46}{\nano\second}		&	\SI{0.0}{\nano\second}				\\ 
 		\bottomrule
@@ -30,3 +30,7 @@ We also noticed that, while trying to decrease the \textit{MAX\_DELAY}, the resu
 \caption{Comparison for synthesis results}
 \label{tab_rep}
 \end{table}
+
+\section{Place \& Route}
+
+Using the \textit{Cadence} tool, we were finally able to physically place on the die the synthesized compinents obtained before. We modified the \textit{.globals} file
