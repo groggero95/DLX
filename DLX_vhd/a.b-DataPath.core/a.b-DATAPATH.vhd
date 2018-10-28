@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.ALL;
 use WORK.mfunc.all;
-use work.myTypes.all;
+use work.const.all;
 
 
 entity DATAPATH is
@@ -216,3 +216,34 @@ EXT_MEM_ADD <= ALU_OUT(LS-1 downto 0);
 
 	
 end architecture BEHAVIORAL;
+
+configuration CFG_DATAPATH of DATAPATH is
+for BEHAVIORAL
+
+  for all:FETCH_UNIT 
+    use configuration WORK.CFG_FETCH_UNIT;
+  end for;
+
+  for all:DECODE_UNIT 
+    use configuration WORK.CFG_DECODE_UNIT;
+  end for;
+
+  for all:EXECUTION_UNIT 
+    use configuration WORK.CFG_EXECUTION_UNIT;
+  end for;
+
+  for all:MEMORY_UNIT 
+    use configuration WORK.CFG_MEMORY_UNIT;
+  end for;
+
+  for all:WRITE_BACK_UNIT 
+    use configuration WORK.CFG_WRITE_BACK_UNIT;
+  end for;
+
+  for all:FOREWARD_UNIT 
+    use configuration WORK.CFG_FOREWARD_UNIT;
+  end for;
+
+
+end for;
+end CFG_DATAPATH;

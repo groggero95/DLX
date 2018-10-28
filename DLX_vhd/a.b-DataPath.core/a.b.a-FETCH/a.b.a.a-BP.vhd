@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use work.myTypes.all;
+use work.const.all;
 
 
 entity BP is
@@ -53,7 +53,7 @@ PRED <= PRED_TMP;
 MISS_HIT <= H_M;
 
 -- Process to decide the next PC value
-process(INST,NEW_PC,PC_TABLE,CURR_PC,PRED_TABLE,PRED_NT,PRED_TK,H_M)
+process(INST,NEW_PC,PC_TABLE,CURR_PC,PRED_TABLE,PRED_NT,PRED_TK,H_M,NEXT_PC)
 begin
 	if INST(NB-1 downto NB-6) = ITYPE_BEQZ or INST(NB-1 downto NB-6) = ITYPE_BNEZ then
 		if PC_TABLE(to_integer(unsigned(CURR_PC(BP_LEN-1 + 2 downto 0 + 2)))) = CURR_PC then

@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
-use work.myTypes.all;
+use work.const.all;
 
 
 entity FETCH_UNIT is
@@ -131,7 +131,23 @@ end BEHAVIOR;
 
 configuration CFG_FETCH_UNIT of FETCH_UNIT is
 for BEHAVIOR
-  for BP 
+  for all:BP 
     use configuration WORK.CFG_BP;
   end for;
+
+  for all:FD 
+    use configuration WORK.CFG_FD;
+  end for;
+
+  for all:FD_INJ 
+    use configuration WORK.CFG_FD_INJ;
+  end for;
+
+  for all:MUX21_generic 
+    use configuration WORK.CFG_MUX21_GEN_BEHAVIORAL;
+  end for;
+end for;
+
+end CFG_FETCH_UNIT;
+
 
