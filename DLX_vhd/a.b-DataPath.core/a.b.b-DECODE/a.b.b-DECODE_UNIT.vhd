@@ -7,7 +7,7 @@ use WORK.mfunc.all;
 
 entity DECODE_UNIT is
   generic (NB: integer := 32;
-  			   LS: integer:= 5
+  			LS: integer:= 5
   			);
   port 	 (  CLK :     IN std_logic;
             RST :     IN std_logic;
@@ -148,3 +148,20 @@ end process ; -- is_zero
 
 
 end BEHAVIOR;
+
+configuration CFG_DECODE_UNIT of DECODE_UNIT is
+for BEHAVIOR
+   for all:FD_INJ 
+    use configuration WORK.CFG_FD_INJ;
+  end for;
+
+  for all:MUX21_generic 
+    use configuration WORK.CFG_MUX21_GEN_BEHAVIORAL;
+  end for;
+
+  for all:SIGN_EXT 
+    use configuration WORK.CFG_SIGN_EXT;
+  end for;
+
+end for;
+end CFG_DECODE_UNIT;

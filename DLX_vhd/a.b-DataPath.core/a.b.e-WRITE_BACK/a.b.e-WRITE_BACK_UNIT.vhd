@@ -36,3 +36,11 @@ wb_mux : MUX21_generic generic map (NB) port map (FROM_ALU,FROM_MEM,MEM_ALU_SEL,
 DEST_OUT <= DEST_IN ;
 	
 end architecture BEHAVIORAL;
+
+configuration CFG_WRITE_BACK_UNIT of WRITE_BACK_UNIT is
+for BEHAVIORAL
+	for all:MUX21_generic
+		use configuration WORK.CFG_MUX21_GEN_BEHAVIORAL;
+	end for;
+end for;
+end CFG_WRITE_BACK_UNIT;

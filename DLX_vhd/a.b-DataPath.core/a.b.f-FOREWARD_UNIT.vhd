@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_unsigned.all;
-use work.myTypes.all;
+use work.const.all;
 
 -- This unit is in charge of forewarding data when needed
 -- from memory or write back in order to reduce hazards 
@@ -25,15 +25,6 @@ entity FOREWARD_UNIT is
 end FOREWARD_UNIT;
 
 architecture BEHAVIOR of FOREWARD_UNIT is
-
-
-component MUX21_generic
-	Generic (NB: integer:= 32);
-	Port (	A:	In	std_logic_vector(NB-1 downto 0) ;
-		B:	In	std_logic_vector(NB-1 downto 0);
-		SEL:	In	std_logic;
-		Y:	Out	std_logic_vector(NB-1 downto 0));
-end component;
 
 begin
 
