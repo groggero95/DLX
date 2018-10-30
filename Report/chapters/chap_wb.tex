@@ -8,7 +8,8 @@
 The \textit{Write Back} stage is needed to write in the registers the final result obtained after the execution and the access to memory. With this goal, an destination address is needed, as well as some muxes to select the right signal to be sent back to the \textsf{RF}. The overall structure is presented in figure \ref{wb_overall_fig}.
 Few signals are needed in the entire unit:
 \begin{itemize}
-	\item \textbf{MEM\_ALU\_SEL}, selection signal coming from the control word, controlling the output mux
+	\item \textbf{MEM\_ALU\_SEL}, selection signal coming from the control 
+	word, it controls the output mux
 	\item \textbf{DEST\_IN}, destination address from the memory stage
 	\item \textbf{FROM\_ALU}, coming directly from the execution stage
 	\item \textbf{FROM\_MEM}, that comes from the memory, after a read operation has been performed
@@ -24,7 +25,7 @@ Few signals are needed in the entire unit:
 	\label{wb_overall_fig}
 \end{figure} 
 
-To simply explain the behavior, one can say that the destination address is 
+To simply explain the behaviour, one can say that the destination address is 
 contained in the 5 bits of \textit{DEST\_IN}, which are passed to 
 \textit{DEST\_OUT}. This output signal is then connected to the \textsc{RF}, 
 where the \textit{WR} signal enables the writing. The actual value that is 
