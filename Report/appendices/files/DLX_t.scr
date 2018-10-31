@@ -48,24 +48,24 @@ current_design DLX
 check_design > warn
 
 uniquify -force
-##########################################
+##############################################################
 set_wire_load_model -name 0K_hvratio_1_4
 create_clock -name "CLK" -period 2.25 {"CLK"}
 set_max_delay 2.25 -from [all_inputs] -to [all_outputs]
 
-####################################################################################
+##############################################################
 # optimize
 compile -map_effort medium
-####################################################################################
+##############################################################
 
 report_power > ./DLX_noopt_pw.rpt
 report_timing > ./DLX_noopt_t.rpt
 report_area > ./DLX_noopt_a.rpt
 
-####################################################################################
+##############################################################
 # optimize
 compile -map_effort high -incremental_mapping
-####################################################################################
+##############################################################
 # saving files
 write -hierarchy -f verilog -output ./DLX_RTL.v
 report_power > ./DLX_timeopt_pw.rpt

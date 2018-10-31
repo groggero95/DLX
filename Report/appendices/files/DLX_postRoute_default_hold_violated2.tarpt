@@ -1,0 +1,44 @@
+Beginpoint: EXT_MEM_IN[15]                      (^) triggered by  leading edge 
+of '@'
+Path Groups: {default}
+Analysis View: default
+Other End Arrival Time          0.000
++ Hold                          0.004
++ Phase Shift                   0.000
+= Required Time                 0.004
+  Arrival Time                  0.003
+  Slack Time                   -0.000
+     Clock Rise Edge                      0.000
+     + Input Delay                        0.000
+     = Beginpoint Arrival Time            0.000
+     Timing Path:
+     +----------------------------------------------------------------------------------------------------+ 
+     |                 Pin                 | Edge |      Net       |  Cell   | Delay | Arrival | Required | 
+     |                                     |      |                |         |       |  Time   |   Time   | 
+     |-------------------------------------+------+----------------+---------+-------+---------+----------| 
+     | EXT_MEM_IN[15]                      |  ^   | EXT_MEM_IN[15] |         |       |   0.000 |    0.000 | 
+     | dp/mem_unit/mem_reg/TMP_Q_reg[15]/D |  ^   | EXT_MEM_IN[15] | DFFR_X1 | 0.003 |   0.003 |    0.004 | 
+     +----------------------------------------------------------------------------------------------------+ 
+     Clock Rise Edge                      0.000
+     = Beginpoint Arrival Time            0.000
+     Other End Path:
+     +------------------------------------------------------------------------------------------+ 
+     |                 Pin                  | Edge | Net |  Cell   | Delay | Arrival | Required | 
+     |                                      |      |     |         |       |  Time   |   Time   | 
+     |--------------------------------------+------+-----+---------+-------+---------+----------| 
+     | CLK                                  |  ^   | CLK |         |       |   0.000 |   -0.000 | 
+     | dp/mem_unit/mem_reg/TMP_Q_reg[15]/CK |  ^   | CLK | DFFR_X1 | 0.000 |   0.000 |   -0.000 | 
+     +------------------------------------------------------------------------------------------+ 
+Path 3: VIOLATED Hold Check with Pin dp/mem_unit/mem_reg/TMP_Q_reg[13]/CK 
+Endpoint:   dp/mem_unit/mem_reg/TMP_Q_reg[13]/D (^) checked with  leading edge 
+of 'CLK'
+Beginpoint: EXT_MEM_IN[13]                      (^) triggered by  leading edge 
+of '@'
+Path Groups: {default}
+Analysis View: default
+Other End Arrival Time          0.000
++ Hold                          0.004
++ Phase Shift                   0.000
+= Required Time                 0.004
+  Arrival Time                  0.004
+  Slack Time                   -0.000 
