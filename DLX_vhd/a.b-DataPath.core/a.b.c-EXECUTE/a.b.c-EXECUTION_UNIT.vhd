@@ -24,7 +24,7 @@ entity EXECUTION_UNIT is
            	MUX2_SEL : 		IN std_logic;
            	UN_SEL : 		IN std_logic_vector(2 downto 0);
            	OP_SEL :		IN std_logic_vector(3 downto 0);
-            	US_MEM :    		OUT std_logic;
+            US_MEM :    		OUT std_logic;
            	TEMP_PC :   		OUT std_logic_vector(NB-1 downto 0);
            	ALU_OUT :		OUT std_logic_vector(NB-1 downto 0);
            	IMM_OUT : 		OUT std_logic_vector(NB-1 downto 0);
@@ -188,7 +188,7 @@ log_un : LOGIC port map (OP_SEL, TERM1, TERM2, LOGIC_OUT);
 
 destination_register : FD generic map (LS) port map (CLK,RST,TMP_DEST_OUT,DEST_OUT);
 output_register : FD port map (CLK,RST,MUX2_OUT,ALU_OUT);
-imm_register : FD port map (CLK,RST,B,IMM_OUT); -- da rivedere
+imm_register : FD port map (CLK,RST,B,IMM_OUT); 
 us_register : FD generic map (1) port map (CLK,RST,US_TMP1,US_TMP2);
 
 mux_out : MUX61_generic port map (ADD_OUT,COMP_OUT,MUL_OUT,SHFT_OUT,LOGIC_OUT,JMP_RET,UN_SEL,MUX2_OUT);

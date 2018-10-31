@@ -13,7 +13,7 @@ entity DLX_CU is
             OPCODE    : IN std_logic_vector(OP_SIZE-1 downto 0);
             FUNC      : IN std_logic_vector(F_SIZE-1 downto 0);
 
-            FLUSH	  : IN std_logic;
+            FLUSH	    : IN std_logic;
 
             -- FIRST PIPE STAGE OUTPUTS
             STALL      	: OUT std_logic;    -- 1 -> en   | 0 -> dis 
