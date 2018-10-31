@@ -15,6 +15,7 @@ After this step, in the first versions of the script, we were just launching aga
 \end{lstlisting}
 
 We also noticed that, while trying to decrease the \textit{MAX\_DELAY}, the results obtained change in a relevant way (\SI{62}{\nano\second} of difference). In general, the second compilation is capable of sensibly improving the results obtained before, in almost all ways (area, power, timing). In table \ref{tab_rep} are shown the results related to the two stage of the compilation we finally obtained.
+The final reports generated are reported in appendix \ref{syn_rpt}.
 
 \begin{table}[]
 	\centering
@@ -33,4 +34,4 @@ We also noticed that, while trying to decrease the \textit{MAX\_DELAY}, the resu
 
 \section{Place \& Route}
 
-Using the \textit{Cadence} tool, we were finally able to physically place on the die the synthesized compinents obtained before. We modified the \textit{.globals} file
+Using the \textit{Cadence} tool, we were finally able to physically place on the die the synthesized components obtained before. We modified the \textit{.globals} file, including the post synthesis file generated in the previous phase. Then, we used the tool as we did in the last laboratory, and we finally got the requested result. Several reports were generated as well, which are included in the \textsc{SYN} folder. Even after this phase, we noticed that some of the paths does not exactly respect the hold time required. A possible workaround could be to simply slightly increase the clock period, as well as remapping the entire \dlx and proceed in a new place \& route. We still decided not to proceed, since all the three violations are related to signals which are supposed to deal with the external memory as it can be seen in \ref{pr_rpt}, whose performances are unknown. In particular, the analysis could lead to a wrong estimation of the timing requirements. We decided not to proceed with further changes and stick with the current version.

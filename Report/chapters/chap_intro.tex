@@ -4,7 +4,7 @@
 \label{chap_intro}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this brief overall presentation, we will just summarize the main design choices we have made for the development of our project. 
+In this brief overall presentation, we will just summarize the main design choices and procedures adopted while developing our project.
 
 \paragraph{Instruction Set}
 The first thing to be noticed is that we have decided to implement all the possible instructions that were included in the set assigned, except for the floating point operations, which would have lowered down a lot the maximum operating frequency, if not pipelined in more stages.
@@ -18,5 +18,9 @@ For this part, we decided that the most suitable approach for our project was th
 \paragraph{Additional features}
 After having finished with the previous points, we decided to include \textit{Dynamic Branch Prediction} and \textit{Data Forwarding} as additional features for our processor. In particular, a \textit{Branch History Table} has been added to the \textit{Fetch} stage and some additional signals now bypass some registers, when needed.
 
+\paragraph{Testing}
+In parallel to the design phase, we tested all the new components and features added to the \dlx, both as a singular entity to surely comprehend its behaviour and in the whole project to confirm that the single components produces the expected results when included in the processor. However, for practical reasons, we have used a locally installed version of \textit{ModelSim}.
+
+
 \paragraph{Synthesis}
-Finally, the whole processor has been synthesized using the script provided in appendix \textbf{ADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD HERE}
+Finally, the whole processor has been synthesized using the \textit{Synopsys} design compiler, and subsequently we used the  \textit{Cadence} to place \& route.
