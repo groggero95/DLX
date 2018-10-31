@@ -1,6 +1,7 @@
 Loading db file '/home/mariagrazia.graziano/do/libnangate/NangateOpenCellLibrary_typical_ecsm.db'
 Information: Updating design information... (UID-85)
-Warning: Design 'DLX' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+Warning: Design 'DLX' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay 
+calculations involving these nets. (TIM-134)
 Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
 Warning: Design has unannotated primary inputs. (PWR-414)
 Warning: Design has unannotated sequential cell outputs. (PWR-415)

@@ -3,7 +3,8 @@
 #  OS:                Linux x86_64(Host ID microelnsys)
 #  Generated on:      Fri Oct 26 16:19:15 2018
 #  Design:            DLX
-#  Command:           timeDesign -postRoute -hold -pathReports -slackReports -numPaths 50 -prefix DLX_postRoute -outDir timingReports
+#  Command:           timeDesign -postRoute -hold -pathReports -slackReports 
+					  -numPaths 50 -prefix DLX_postRoute -outDir timingReports
 ###############################################################
 
 ------------------------------------------------------------
