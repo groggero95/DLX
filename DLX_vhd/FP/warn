@@ -1,0 +1,6 @@
+Warning: In design 'FP_ADDER_NB32', cell 'B_18' does not drive any nets. (LINT-1)
+Warning: In design 'FP_ADDER_NB32', cell 'B_19' does not drive any nets. (LINT-1)
+Warning: In design 'FP_ADDER_NB32', cell 'B_20' does not drive any nets. (LINT-1)
+Warning: In design 'FP_ADDER_NB32', cell 'C1013' does not drive any nets. (LINT-1)
+Warning: In design 'FP_ADDER_NB32', cell 'B_22' does not drive any nets. (LINT-1)
+1

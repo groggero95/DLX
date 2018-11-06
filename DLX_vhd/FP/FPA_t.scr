@@ -1,0 +1,46 @@
+##############################################################
+#SCRIPT FOR SPEEDING UP and RECORDING the ADDER SYNTHESIS#
+# analyzing and checking vhdl netlist#
+# here the analyze command is used for each file from bottom to top #
+##############################################################
+# here we do a cleanup of all designs before anything else
+remove_design -all
+##############################################################
+analyze -library WORK -format vhdl {./COUNT_LEADING_ZERO.vhd}
+analyze -library WORK -format vhdl {./FP_ADDER.vhd}
+analyze -library WORK -format vhdl {./PIPED_FPA.vhd}
+##############################################################
+# elaborating the top entity 
+# choose the architecture you want
+elaborate CFG_PIPED_FPA -library WORK
+current_design PIPED_FPA
+
+check_design > warn
+
+uniquify -force
+##########################################
+set_wire_load_model -name 1K_hvratio_1_4
+create_clock -name "CLK" -period 1.9 {"CLK"}
+set_max_delay 1.9 -from [all_inputs] -to [all_outputs]
+
+####################################################################################
+# optimize
+compile -map_effort medium
+####################################################################################
+
+#report_power > ./DLX_noopt_pw.rpt
+#report_timing > ./DLX_noopt_t.rpt
+#report_area > ./DLX_noopt_a.rpt
+
+####################################################################################
+# optimize
+compile -map_effort high -incremental_mapping
+#compile_ultra
+####################################################################################
+# saving files
+write -hierarchy -f verilog -output ./FPA_RTL.v
+report_power > ./FPA_timeopt_pw.rpt
+report_timing > ./FPA_timeopt_t.rpt
+report_area > ./FPA_timeopt_a.rpt
+
+
