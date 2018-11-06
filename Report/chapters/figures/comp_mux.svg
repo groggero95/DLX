@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="comp_mux.svg"
+   inkscape:version="0.92.3 (unknown)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 210 292"
+   height="1103.6221"
+   width="793.70081">
+  <sodipodi:namedview
+     units="px"
+     inkscape:pagecheckerboard="false"
+     inkscape:window-maximized="1"
+     inkscape:window-y="55"
+     inkscape:window-x="0"
+     inkscape:window-height="1923"
+     inkscape:window-width="3840"
+     showgrid="true"
+     inkscape:current-layer="svg8"
+     inkscape:document-units="px"
+     inkscape:cy="739.71173"
+     inkscape:cx="758.57432"
+     inkscape:zoom="2.7488655"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7952"
+       empspacing="10"
+       empcolor="#a94c8b"
+       empopacity="0.25098039" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <symbol
+       id="And_Gate">
+      <title
+         id="title56">And Gate</title>
+      <path
+         style="stroke-width:0.26458332"
+         inkscape:connector-curvature="0"
+         d="M 6.6145833,18.520833 V 15.875 13.229167 10.583333 7.9375 h 7.9374997 c 2.922507,0 5.291667,2.36916 5.291667,5.291667 0,2.922506 -2.36916,5.291666 -5.291667,5.291666 z"
+         id="path58" />
+    </symbol>
+    <symbol
+       id="Nor_Gate">
+      <title
+         id="title37">Nor Gate</title>
+      <path
+         style="stroke-width:0.26458332"
+         inkscape:connector-curvature="0"
+         d="M 6.5236328,18.520833 H 11.90625 c 5.291667,0 7.9375,-5.291666 7.9375,-5.291666 0,0 -1.322917,-5.291667 -7.9375,-5.291667 H 6.5236328 c 0.4735846,0.8186706 0.8337984,1.7074809 1.0748698,2.645833 0.2173208,0.845905 0.3389974,1.731915 0.3389974,2.645834 0,0.913918 -0.1216766,1.799928 -0.3389974,2.645833 -0.2410714,0.938352 -0.6012852,1.827163 -1.0748698,2.645833 z"
+         id="path39" />
+      <path
+         style="stroke-width:0.26458332"
+         inkscape:connector-curvature="0"
+         d="m 21.166667,13.229167 c 0,0.365313 -0.296145,0.661458 -0.661459,0.661458 -0.365313,0 -0.661458,-0.296145 -0.661458,-0.661458 0,-0.365314 0.296145,-0.661459 0.661458,-0.661459 0.365314,0 0.661459,0.296145 0.661459,0.661459 z"
+         id="path41" />
+    </symbol>
+    <symbol
+       id="Not_Gate_Small">
+      <title
+         id="title78">Not Gate Small</title>
+      <path
+         d="m 67.5,50 c 0,1.380712 -1.119288,2.5 -2.5,2.5 -1.380712,0 -2.5,-1.119288 -2.5,-2.5 0,-1.380712 1.119288,-2.5 2.5,-2.5 C 66.380712,47.5 67.5,48.619288 67.5,50 Z"
+         id="path80" />
+      <path
+         d="m 37.711573,40 25,10 L 37.711573,60 Z"
+         style="stroke-miterlimit:2"
+         id="path82" />
+    </symbol>
+    <symbol
+       id="Not_Gate">
+      <title
+         id="title66">Not Gate</title>
+      <path
+         style="stroke-miterlimit:2"
+         d="M 25,30 75,50 25,70 25,50 Z"
+         id="path68" />
+      <path
+         d="m 80,50 c 0,1.380712 -1.119288,2.5 -2.5,2.5 C 76.119288,52.5 75,51.380712 75,50 75,48.619288 76.119288,47.5 77.5,47.5 78.880712,47.5 80,48.619288 80,50 Z"
+         id="path70" />
+    </symbol>
+    <symbol
+       id="Or_Gate">
+      <title
+         id="title44">Or Gate</title>
+      <path
+         d="M 24.65625,70 45,70 C 65,70 75,50 75,50 75,50 70,30 45,30 l -20.34375,0 c 1.789926,3.094188 3.151364,6.453471 4.0625,10 C 29.54012,43.197121 30,46.545819 30,50 30,53.454181 29.54012,56.802879 28.71875,60 27.807614,63.546529 26.446176,66.905812 24.65625,70 Z"
+         id="path46" />
+    </symbol>
+    <symbol
+       id="Xor_Gate">
+      <title
+         id="title30">Xor Gate</title>
+      <path
+         d="M 24.65625,70 45,70 C 65,70 75,50 75,50 75,50 70,30 45,30 l -20.34375,0 c 1.789926,3.094188 3.151364,6.453471 4.0625,10 C 29.54012,43.197121 30,46.545819 30,50 30,53.454181 29.54012,56.802879 28.71875,60 27.807614,63.546529 26.446176,66.905812 24.65625,70 Z"
+         id="path32" />
+      <path
+         d="M 18.65625,70 C 22.629549,64.322431 25,57.455703 25,50 25,42.544297 22.629549,35.677569 18.65625,30"
+         id="path34" />
+    </symbol>
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-5)">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot12481"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'sans-serif, Normal';font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal"><flowRegion
+         id="flowRegion12483"><rect
+           id="rect12485"
+           width="150"
+           height="100"
+           x="40"
+           y="143.62207" /></flowRegion><flowPara
+         id="flowPara12487" /></flowRoot>    <path
+       style="fill:none;stroke:#000000;stroke-width:0.14967093px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 238.12499,82.687505 H 195.79166"
+       id="path8095"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path4789"
+       d="M 238.12499,109.14584 H 195.79166"
+       style="fill:none;stroke:#000000;stroke-width:0.1312701px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path4791"
+       d="M 238.12499,53.583339 H 195.79166"
+       style="fill:none;stroke:#000000;stroke-width:0.1312701px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.35277778px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 238.12499,61.812505 H 195.79166"
+     id="path5313"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.0002503px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 195.79166,90.916672 v 0"
+     id="path5315"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="190.5"
+     y="75.041672"
+     id="text5327"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan5325"
+       x="190.5"
+       y="75.041672"
+       style="stroke-width:0.26458332">EQ</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="190.5"
+     y="59.166672"
+     id="text5331"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan5329"
+       x="190.5"
+       y="59.166672"
+       style="stroke-width:0.26458332">GT</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="190.5"
+     y="45.937504"
+     id="text5335"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan5333"
+       x="190.5"
+       y="45.937504"
+       style="stroke-width:0.26458332">GE</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="190.54703"
+     y="88.174583"
+     id="text5339"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan5337"
+       x="190.54703"
+       y="88.174583"
+       style="stroke-width:0.26458332">LT</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="190.5"
+     y="101.50001"
+     id="text5343"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan5341"
+       x="190.5"
+       y="101.50001"
+       style="stroke-width:0.26458332">LE</tspan></text>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 195.79166,90.916672 H 238.125"
+     id="path4058"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="M 238.125,38.000006 V 112.08334 L 254,96.208338 V 56.520839 L 238.125,38.000006"
+     id="path4060"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 254,77.687505 h 31.75"
+     id="path4062"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 248.70833,101.5 v 26.45834"
+     id="path4064"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="269.875"
+     y="75.041672"
+     id="text4068"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan4066"
+       x="269.875"
+       y="75.041672"
+       style="stroke-width:0.26458332">SOUT(0)</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+     x="224.59615"
+     y="133.6886"
+     id="text4072"
+     inkscape:export-filename="/home/roggero/Desktop/DLX/Report/chapters/figures/comp_mux.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"><tspan
+       sodipodi:role="line"
+       id="tspan4070"
+       x="224.59615"
+       y="133.6886"
+       style="stroke-width:0.26458332">OP_SEL(2 downto 0)</tspan></text>
+</svg>
